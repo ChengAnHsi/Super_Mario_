@@ -7,16 +7,13 @@
 
 void App::Start() {
     LOG_TRACE("Start");
-    std::vector<std::string> marioImages;
-    marioImages.reserve(3);
-    for (int i = 0; i < 3; ++i) {
-        marioImages.emplace_back(RESOURCE_DIR"/Entities/mario" + std::to_string(i) + ".png");
-    }
+    std::vector<std::string> marioImages = {RESOURCE_DIR"/Entities/mario_stand.png"};
     m_Mario = std::make_shared<Mario>(0,3,0,marioImages);
     m_Mario->SetPosition({-112.5f, -140.5f});
     m_Mario->SetZIndex(50);
     m_Mario->SetPlaying(true);
     m_Mario->SetLooping(true);
+    m_Mario->m_Transform.scale = glm::vec2(2.0f, 2.0f);
 
     m_Root.AddChild(m_Mario);
 
@@ -28,6 +25,7 @@ void App::Start() {
     m_Coin = std::make_shared<AnimatedCharacter>(coinImages);
     m_Coin->SetPosition({-180.f, 285.f});
     m_Coin->SetZIndex(5);
+    m_Coin->m_Transform.scale = glm::vec2(2.0f, 2.0f);
     m_Root.AddChild(m_Coin);
 
     /**for (int i = 0; i < 3; ++i) {

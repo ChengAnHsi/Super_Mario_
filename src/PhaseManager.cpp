@@ -24,20 +24,28 @@ PhaseResourceManger::PhaseResourceManger(std::shared_ptr<Mario> mario)
     m_OtherText->SetTxtIdx(0, 0);
 
     std::vector<std::string> imageFiles = {
-        RESOURCE_DIR"/Scenery/Overworld/mountain2.png",
-        RESOURCE_DIR"/Scenery/Overworld/bush1.png",
+        RESOURCE_DIR"/Temp/Image/gray.png",
+        RESOURCE_DIR"/Blocks/Overworld/block.png",
         RESOURCE_DIR"/Scenery/Overworld/floorbricks.png",
-        RESOURCE_DIR"/Scenery/Overworld/floorbricks.png"
+        RESOURCE_DIR"/Blocks/Overworld/immovableBlock.png",
+        RESOURCE_DIR"/Blocks/Overworld/misteryBlock0.png",
+        RESOURCE_DIR"/Blocks/Overworld/misteryBlock1.png",
+        RESOURCE_DIR"/Blocks/Overworld/misteryBlock2.png"
     };
+
+    // 0: nothing 1: ground 2: blocks 3: immovable block 4: mistery block
+    // 1 block size = 30
 
     for (int i = 0; i < imageFiles.size(); i++) {
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background[i]->ChangeImg(imageFiles[i]);
+        if (i != 0) {
+            m_Background[i]->SetSize(2.0f, 2.0f);
+        }else {
+            m_Background[i]->SetSize(0.5f, 0.5f);
+        }
+        m_Background[i]->SetPosition(i * 30, -280);
     }
-    m_Background[0]->SetPosition(-400, -280);
-    m_Background[1]->SetPosition(100, -280);
-    m_Background[2]->SetPosition(-400, -300);
-    m_Background[3]->SetPosition(100, -300);
 }
 
 void PhaseResourceManger::NextPhase() {

@@ -45,24 +45,40 @@ void Mario::move() {
         this->SetImages(this->AnimationJump);
     }
 
+    if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
+        this->SetLooping(false);
+        this->SetImages(this->AnimationGrow);
+        if (this->IfAnimationEnds()) {
+            this->SetLooping(true);
+            this->SetImages(this->AnimationStandGrow);
+        }
+    }
+
     if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
         this->SetPosition({mario_x - 5.0f, mario_y});
-        this->SetImages(this->AnimationRun);
         if (facing == 'l') {
+
         }else {
+            this->SetImages(this->AnimationRun);
+            this->SetPlaying(true);
+            this->SetLooping(true);
         }
         facing = 'l';
-    }
-    if (Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
+    }else if (Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
         this->SetPosition({mario_x + 5.0f, mario_y});
-        this->SetImages(this->AnimationRun);
+
         if (facing == 'l') {
+            this->SetImages(this->AnimationRun);
+            this->SetPlaying(true);
+            this->SetLooping(true);
         }else {
+
         }
         facing = 'r';
+    }else {
+        this->SetImages(this->AnimationStand);
     }
 }
-
 
 void Mario::Increase_Coin(const int coin) {
     this->coin += coin;
