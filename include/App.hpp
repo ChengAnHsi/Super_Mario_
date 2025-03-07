@@ -3,6 +3,14 @@
 
 #include "pch.hpp" // IWYU pragma: export
 
+#include "Util/Renderer.hpp"
+#include "Character.hpp"
+#include "Util/Text.hpp"
+#include "Util/BGM.hpp"
+#include "PhaseResourceManger.hpp"
+#include "AnimatedCharacter.hpp"
+#include "Mario.hpp"
+
 class App {
 public:
     enum class State {
@@ -23,7 +31,27 @@ private:
     void ValidTask();
 
 private:
+    enum class Phase {
+        Start,
+        Level1_1,
+        Level1_2,
+        Level1_3
+    };
+
+
     State m_CurrentState = State::START;
+    Phase m_Phase = Phase::Start;
+
+    Util::Renderer m_Root;
+
+    std::shared_ptr<Mario> m_Mario;
+    //std::vector<std::shared_ptr<Character>> m_Doors;
+
+    std::shared_ptr<AnimatedCharacter> m_Coin;
+    std::shared_ptr<PhaseResourceManger> m_PRM;
+    std::shared_ptr<Util::BGM> m_BGM;
+
+    bool m_EnterDown = false;
 };
 
 #endif
