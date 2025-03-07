@@ -19,7 +19,8 @@ public:
         this->score = score;
     };
     void move();
-    //void update(float dt);
+    void jump();
+    void update();
     void Increase_Coin(int coin);
     int Get_Coin();
     void Set_Live(int live);
@@ -32,8 +33,12 @@ private:
     int score = 0;
     char facing = 'r';
 
-    std::vector<float> velocity = {2, 2};
-    std::vector<float> gravity = {0, -2};
+    float velocityY = 0;      // 角色在 Y 軸的速度
+    bool isJumping = false;
+
+    float GRAVITY = 9.8f;  // 重力加速度
+    float JUMP_STRENGTH = 30.0f;  // 跳躍的初速度
+
 
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/mario0.png",RESOURCE_DIR"/Entities/mario1.png",RESOURCE_DIR"/Entities/mario2.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/marioDead.png"};

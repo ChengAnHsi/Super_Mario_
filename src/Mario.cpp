@@ -7,23 +7,38 @@
 #include "Util/Keycode.hpp"
 #include <chrono>
 
-/*void Mario::update(float dt) {
-    float mario_x =  this->GetPosition().x + velocity[0] * dt;
-    float mario_y =  this->GetPosition().y + velocity[1] * dt;
-    velocity[0] = velocity[0] + gravity[0] * dt;
-    velocity[1] = velocity[1] + gravity[1] * dt;
-    SetPosition({mario_x,mario_y});
-}*/
+void Mario::jump() {
+    if (!isJumping) {
+        // setting jump base speed
+        velocityY = JUMP_STRENGTH;
+        isJumping = true;
+    }
+}
+
+void Mario::update() {
+    if (isJumping) {
+        float mario_x = GetPosition().x;
+        float mario_y = GetPosition().y;
+
+        // update Y axis position with gravity
+        mario_y += velocityY;
+        // Gravity continuously slows down the character's ascent and speeds up his descent
+        velocityY -= GRAVITY;
+
+        // assume y = 0 is floor
+        if (mario_y <= -140.5) {
+            mario_y = -140.5;
+            isJumping = false;
+            velocityY = 0;
+        }
+
+        SetPosition({mario_x, mario_y});
+    }
+}
 
 void Mario::move() {
     float mario_x =  this->GetPosition().x;
     float mario_y =  this->GetPosition().y;
-
-    /**float fl_previous_time = 0;
-    auto now = std::chrono::system_clock::now();
-    auto duration = now.time_since_epoch();
-    float fl_current_time = std::chrono::duration<float>(duration).count();**/
-
 
     if (is_dead) {
         this->SetImages(this->AnimationDead);
@@ -31,7 +46,9 @@ void Mario::move() {
     }
 
     if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
-        this->SetPosition({mario_x, mario_y + 5.0f});
+        this->SetImages(this->AnimationJump);
+        jump();
+        update();
         /**fl_previous_time = fl_current_time;
         now = std::chrono::system_clock::now();
         duration = now.time_since_epoch();
@@ -42,7 +59,6 @@ void Mario::move() {
             dt = 0.15f;
         }
         update(dt);**/
-        this->SetImages(this->AnimationJump);
     }
 
     if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
@@ -56,21 +72,22 @@ void Mario::move() {
 
     if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
         this->SetPosition({mario_x - 5.0f, mario_y});
+        this->SetImages(this->AnimationRun);
+        this->SetPlaying(true);
+        this->SetLooping(true);
         if (facing == 'l') {
 
         }else {
-            this->SetImages(this->AnimationRun);
-            this->SetPlaying(true);
-            this->SetLooping(true);
+
         }
         facing = 'l';
     }else if (Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
         this->SetPosition({mario_x + 5.0f, mario_y});
-
+        this->SetImages(this->AnimationRun);
+        this->SetPlaying(true);
+        this->SetLooping(true);
         if (facing == 'l') {
-            this->SetImages(this->AnimationRun);
-            this->SetPlaying(true);
-            this->SetLooping(true);
+
         }else {
 
         }
