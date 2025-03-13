@@ -24,6 +24,8 @@ void App::ValidTask() {
             /**m_Phase = Phase::Level1_2;
             m_PRM->NextPhase();**/
             break;
+        default:
+            break;
         /**case Phase::Level1_2:
             LOG_DEBUG("Congratulations! You have completed Level1-2!");
             m_Phase = Phase::Level1_3;
@@ -33,6 +35,7 @@ void App::ValidTask() {
             LOG_DEBUG("Congratulations! You have completed Super Mario!");
             m_CurrentState = State::END;
             break;**/
+
         /**case Phase::CHANGE_CHARACTER_IMAGE:
             if (m_Giraffe->GetImagePath() == GA_RESOURCE_DIR"/Image/Character/giraffe.png") {
                 m_Phase = Phase::ABLE_TO_MOVE;
@@ -54,22 +57,6 @@ void App::ValidTask() {
                 m_PRM->NextPhase();
             } else {
                 LOG_DEBUG("The giraffe is not inside the square");
-            }
-            break;
-
-        case Phase::COLLIDE_DETECTION:
-            if (m_Giraffe->IfCollides(m_Chest)) {
-                if (m_Chest->GetVisibility()) {
-                    LOG_DEBUG("The giraffe collided with the chest but the chest is still visible");
-                } else {
-                    m_Phase = Phase::BEE_ANIMATION;
-                    m_Giraffe->SetVisible(false);
-                    m_Bee->SetVisible(true);
-
-                    m_PRM->NextPhase();
-                }
-            } else {
-                LOG_DEBUG("The giraffe is not colliding with the chest");
             }
             break;
 
@@ -100,15 +87,6 @@ void App::ValidTask() {
                 m_PRM->NextPhase();
             } else {
                 LOG_DEBUG("At least one door is not open");
-            }
-            break;
-
-        case Phase::COUNTDOWN:
-            if (m_Ball->IfAnimationEnds()) {
-                LOG_DEBUG("Congratulations! You have completed Giraffe Adventure!");
-                m_CurrentState = State::END;
-            } else{
-                LOG_DEBUG("The ball animation is not ended");
             }
             break;**/
     }

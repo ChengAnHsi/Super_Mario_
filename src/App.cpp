@@ -9,7 +9,7 @@ void App::Start() {
     LOG_TRACE("Start");
     std::vector<std::string> marioImages = {RESOURCE_DIR"/Entities/mario_stand.png"};
     m_Mario = std::make_shared<Mario>(0,3,0,marioImages);
-    m_Mario->SetPosition({-112.5f, -140.5f});
+    m_Mario->SetPosition({-112.5f, 0.0f});
     m_Mario->SetZIndex(50);
     m_Mario->SetPlaying(true);
     m_Mario->SetLooping(true);
@@ -48,7 +48,7 @@ void App::Start() {
 
 void App::Update() {
     
-    m_Mario->move();
+    float dis = m_Mario->move();
 
     if(m_Phase == Phase::Start) {
         m_Coin->SetLooping(true);
@@ -58,23 +58,6 @@ void App::Update() {
         m_Coin->SetLooping(false);
         m_Coin->SetPlaying(false);
     }
-
-    /**if(m_Phase == Phase::OPEN_THE_DOORS) {
-        for(size_t i = 0; i < m_Doors.size(); i++) {
-            if (m_Giraffe->IfCollides(m_Doors[i])) {
-                m_Doors[i]->SetImage(GA_RESOURCE_DIR"/Image/Character/door_open.png");
-            }
-        }
-    }
-
-    if(m_Phase == Phase::COUNTDOWN) {
-        m_Ball->SetVisible(true);
-        m_Ball->SetPlaying(true);
-        if(m_Ball->IfAnimationEnds()) {
-            m_Ball->SetLooping(false);
-            m_Ball->SetPlaying(false);
-        }
-    }**/
     
     /*
      * Do not touch the code below as they serve the purpose for
@@ -92,7 +75,7 @@ void App::Update() {
     }
     m_EnterDown = Util::Input::IsKeyPressed(Util::Keycode::RETURN);
 
-    m_Root.Update();
+    m_Root.Update({dis,0.0f});
 }
 
 void App::End() { // NOLINT(this method will mutate members in the future)

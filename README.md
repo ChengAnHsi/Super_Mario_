@@ -28,6 +28,8 @@
 - 製作參考：https://github.com/MitchellSternke/Mario/blob/master/source/Camera.cpp
 - 重力參考：https://www.youtube.com/watch?v=RFPn9r9mKe0&t=70s
 - 重力參考：https://pastebin.com/eJEjjQwv
+- 重力參考：https://www.youtube.com/watch?v=V0cGs2ZENSY&ab_channel=Voidmatrix
+- 重力參考：https://www.youtube.com/watch?v=JwRYJLI3P0Q&ab_channel=Voidmatrix
 
 # Development timeline
 

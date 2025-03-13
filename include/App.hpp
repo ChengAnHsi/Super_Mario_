@@ -30,7 +30,6 @@ public:
 private:
     void ValidTask();
 
-private:
     enum class Phase {
         Start,
         Level1_1,

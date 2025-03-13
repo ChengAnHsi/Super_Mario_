@@ -5,103 +5,160 @@
 #include "Mario.hpp"
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
-#include <chrono>
 
-void Mario::jump() {
-    if (!isJumping) {
-        // setting jump base speed
-        velocityY = JUMP_STRENGTH;
-        isJumping = true;
-    }
-}
-
-void Mario::update() {
-    if (isJumping) {
-        float mario_x = GetPosition().x;
-        float mario_y = GetPosition().y;
-
-        // update Y axis position with gravity
-        mario_y += velocityY;
-        // Gravity continuously slows down the character's ascent and speeds up his descent
-        velocityY -= GRAVITY;
-
-        // assume y = 0 is floor
-        if (mario_y <= -140.5) {
-            mario_y = -140.5;
-            isJumping = false;
-            velocityY = 0;
-        }
-
-        SetPosition({mario_x, mario_y});
-    }
-}
-
-void Mario::move() {
-    float mario_x =  this->GetPosition().x;
-    float mario_y =  this->GetPosition().y;
-
-    if (is_dead) {
-        this->SetImages(this->AnimationDead);
+void Mario::on_jump() {
+    if (velocityY != 0) {
         return ;
     }
+    velocityY += jump_velocity;
+}
 
-    if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
+void Mario::on_run(float distance) {
+    float mario_x =  this->GetPosition().x;
+    float mario_y =  this->GetPosition().y;
+    mario_x += distance;
+    this->SetPosition({mario_x, mario_y});
+}
+
+void Mario::move_and_collision(int delta) {
+    float mario_x =  this->GetPosition().x;
+    float mario_y =  this->GetPosition().y;
+    velocityY += GRAVITY * delta;
+    mario_y += velocityY * float(delta);
+    if (velocityY > 0) {
+        // travel all the blocks
+        // collision judge
+        // collision judge with line
+        //bool is_collide_x = (std::max(mario_x + 30), blocks.right) - std::min(mario_x, blocks.left)
+       // <= 30 + (blocks.right - blocks.left(30));
+        // video 6:50
+    }
+    // 暫時的地板
+    if (mario_x >= -150 && mario_x <= -50) {
+        if (mario_y <= 0) {
+            mario_y = 0;
+        }
+    }else {
+        if (mario_y <= -50) {
+            mario_y = -50;
+        }
+    }
+
+    this->SetPosition({mario_x, mario_y});
+}
+
+float Mario::on_update(int delta) {
+    // action: 0(stand) 1(run)
+    int direction = is_right_key_down - is_left_key_down;
+    if (direction != 0) {
+        is_facing_right = direction == 1;
+        // animation(run) update
+        if (is_facing_right) {
+
+        }else {
+
+        }
+    }else {
+        // animation(stand) update
+        isRunning = false;
+        if (is_facing_right) {
+            this->SetImages(this->AnimationStand);
+        }else {
+            this->SetImages(this->AnimationStand);
+        }
+    }
+    float distance = direction * run_velocity * delta;
+    on_run(distance);
+    move_and_collision(delta);
+    return distance;
+}
+
+float Mario::move() {
+    if (is_dead) {
+        this->SetImages(this->AnimationDead);
+        return 0.0f;
+    }
+    /**float mario_x =  this->GetPosition().x;
+    float mario_y =  this->GetPosition().y;
+
+    if (Util::Input::IsKeyPressed(Util::Keycode::UP) and is_on_floor()) {
+        // setting jump base speed
+        velocityY = JUMP_STRENGTH;
         this->SetImages(this->AnimationJump);
-        jump();
-        update();
-        /**fl_previous_time = fl_current_time;
-        now = std::chrono::system_clock::now();
-        duration = now.time_since_epoch();
-        fl_current_time = std::chrono::duration<double>(duration).count();
+        isJumping = true;
 
-        float dt = fl_current_time - fl_previous_time;
-        if (dt > 0.15f) {
-            dt = 0.15f;
-        }
-        update(dt);**/
+        velocityY += GRAVITY * delta_time;
+        mario_y += velocityY * delta_time;
     }
 
-    if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
-        this->SetLooping(false);
-        this->SetImages(this->AnimationGrow);
-        if (this->IfAnimationEnds()) {
-            this->SetLooping(true);
-            this->SetImages(this->AnimationStandGrow);
+    if (velocityY > 0) {
+        if (velocityY >= MAX_JUMP_VELOCITY) {
+            velocityY = 0;
+        }else {
+            if (Util::Input::IsKeyPressed(Util::Keycode::UP) and velocityY < MAX_JUMP_VELOCITY) {
+                velocityY += additional_jump_force;
+            }
         }
     }
+
+    if (is_on_floor()) {
+        velocityY = 0;
+        this->SetImages(this->AnimationStand);
+        isJumping = false;
+    }
+    mario_y += velocityY * delta_time;**/
+
+    // XX test grow animation XX
+    /**if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
+        if (!is_grow) {
+            this->SetLooping(false);
+            this->SetImages(this->AnimationGrow);
+            is_grow = true;
+        }
+    }
+    if (this->IfAnimationEnds() and is_grow) {
+        this->SetLooping(true);
+        this->SetImages(this->AnimationStandGrow);
+        is_grow = false;
+    }**/
 
     if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
-        this->SetPosition({mario_x - 5.0f, mario_y});
-        this->SetImages(this->AnimationRun);
-        this->SetPlaying(true);
-        this->SetLooping(true);
-        if (facing == 'l') {
-
-        }else {
-
+        is_left_key_down = true;
+        if (!isRunning) {
+            this->SetImages(this->AnimationRun);
+            this->SetPlaying(true);
+            this->SetLooping(true);
+            isRunning = true;
         }
-        facing = 'l';
     }else if (Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
-        this->SetPosition({mario_x + 5.0f, mario_y});
-        this->SetImages(this->AnimationRun);
-        this->SetPlaying(true);
-        this->SetLooping(true);
-        if (facing == 'l') {
-
-        }else {
-
+        is_right_key_down = true;
+        if (!isRunning) {
+            this->SetImages(this->AnimationRun);
+            this->SetPlaying(true);
+            this->SetLooping(true);
+            isRunning = true;
         }
-        facing = 'r';
-    }else {
-        this->SetImages(this->AnimationStand);
     }
+    if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
+        on_jump();
+    }
+    /**if (is_on_floor()) {
+        this->SetImages(this->AnimationStand);
+    }**/
+    if (Util::Input::IsKeyUp(Util::Keycode::LEFT)) {
+        is_left_key_down = false;
+    }
+    if (Util::Input::IsKeyUp(Util::Keycode::RIGHT)) {
+        is_right_key_down = false;
+    }
+    return on_update(1);
 }
 
 void Mario::Increase_Coin(const int coin) {
     this->coin += coin;
 }
 
-int Mario::Get_Coin() {
+int Mario::Get_Coin() const {
     return coin;
 }
 
@@ -109,7 +166,7 @@ void Mario::Set_Live(const int live) {
     this->live = live;
 }
 
-int Mario::Get_Live() {
+int Mario::Get_Live() const {
     return coin;
 }
 
@@ -117,6 +174,6 @@ void Mario::Increase_Score(const int score) {
     this->score += score;
 }
 
-int Mario::Get_Score() {
+int Mario::Get_Score() const {
     return coin;
 }
