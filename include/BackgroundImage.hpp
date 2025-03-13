@@ -8,7 +8,7 @@ class BackgroundImage : public Util::GameObject {
 
 public:
     BackgroundImage() : GameObject(
-    std::make_unique<Util::Image>(RESOURCE_DIR"/Scenery/Overworld/sky.png"), -10) {
+    std::make_unique<Util::Image>(RESOURCE_DIR"/Scenery/logo.png"), -10) {
     }
 
     void NextPhase(const int phase) {

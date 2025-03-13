@@ -50,6 +50,7 @@ private:
     std::shared_ptr<PhaseResourceManger> m_PRM;
     std::shared_ptr<Util::BGM> m_BGM;
 
+    float camera_movement_dis = 0.0f;
     bool m_EnterDown = false;
 };
 

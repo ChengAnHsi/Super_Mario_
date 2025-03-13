@@ -9,7 +9,7 @@
 
 class PhaseResourceManger {
 public:
-    PhaseResourceManger(std::shared_ptr<Mario>);
+    PhaseResourceManger();
 
     [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren() const {
         std::vector<std::shared_ptr<Util::GameObject>> all_obj= {m_MarioText, m_MoneyText, m_WorldText, m_TimeText, m_OtherText};
@@ -20,6 +20,7 @@ public:
     }
 
     void NextPhase();
+    void reset_position() const;
 
 private:
     std::shared_ptr<TaskText> m_MarioText;

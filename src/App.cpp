@@ -36,7 +36,8 @@ void App::Start() {
         m_Root.AddChild(m_Doors[i]);
     }**/
 
-    m_PRM = std::make_shared<PhaseResourceManger>(m_Mario);
+    m_PRM = std::make_shared<PhaseResourceManger>();
+
     m_Root.AddChildren(m_PRM->GetChildren());
 
     m_BGM = std::make_shared<Util::BGM>(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
@@ -47,18 +48,18 @@ void App::Start() {
 }
 
 void App::Update() {
-    
-    float dis = m_Mario->move();
+    float dis = 0.0f;
+    if(m_Phase != Phase::Start) {
+        dis = m_Mario->move();
+    }
 
-    if(m_Phase == Phase::Start) {
+    if(m_Phase != Phase::Start) {
         m_Coin->SetLooping(true);
         m_Coin->SetPlaying(true);
     }
-    else {
-        m_Coin->SetLooping(false);
-        m_Coin->SetPlaying(false);
-    }
-    
+    m_Coin->SetPosition({-180.f, 285.f});
+    m_PRM->reset_position();
+
     /*
      * Do not touch the code below as they serve the purpose for
      * closing the window.
@@ -75,7 +76,24 @@ void App::Update() {
     }
     m_EnterDown = Util::Input::IsKeyPressed(Util::Keycode::RETURN);
 
+    // The camera cannot be moved to the left
+
+    if (dis < 0.0f) {
+        dis = 0.0f;
+    }
+    if(m_Mario->GetPosition().x <= 0) {
+        dis = 0.0f;
+    }
+
+    // to solve mario left margin
+    if(m_Mario->GetPosition().x < -600) {
+        // Correct offset
+        m_Mario->SetPosition({-580, m_Mario->GetPosition().y});
+    }
+    camera_movement_dis += dis;
+
     m_Root.Update({dis,0.0f});
+
 }
 
 void App::End() { // NOLINT(this method will mutate members in the future)
