@@ -29,6 +29,9 @@ public:
     [[nodiscard]] int Get_Live() const;
     void Increase_Score(int score);
     [[nodiscard]] int Get_Score() const;
+    bool has_block_underneath() const;
+    void calculate_falling_speed();
+
 private:
     int coin = 0;
     int live = 3;
@@ -45,7 +48,7 @@ private:
     float jump_velocity = 3.85f;
     float velocityY = 0;      // 角色在 Y 軸的速度
     float GRAVITY = -3.0f;  // 重力加速度
-    float JUMP_STRENGTH = 10.0f;  // 跳躍的初速度
+    float JUMP_STRENGTH = 20.0f;  // 跳躍的初速度
     float MAX_JUMP_VELOCITY = 50.0f; // 最高跳躍值
     float additional_jump_force = 0.1f; // 玩家按下按鍵時間，跳躍提升值
 

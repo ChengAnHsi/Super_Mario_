@@ -7,13 +7,15 @@
 #include "Util/Keycode.hpp"
 
 void Mario::on_jump() {
-        if (jump_velocity+JUMP_STRENGTH >= MAX_JUMP_VELOCITY)
-        {
-            velocityY=MAX_JUMP_VELOCITY;
-        }else{
-            velocityY += (jump_velocity+JUMP_STRENGTH);
+    // 只有在垂直速度為 0（代表在地板上或靜止狀態）時才允許跳躍
+    if (velocityY == 0) {
+        // 當累計的跳躍衝力超過最大跳躍速度，就直接設定最大值
+        if (jump_velocity + JUMP_STRENGTH >= MAX_JUMP_VELOCITY) {
+            velocityY = MAX_JUMP_VELOCITY;
+        } else {
+            velocityY += (jump_velocity + JUMP_STRENGTH);
         }
-
+    }
 }
 
 void Mario::on_run(float distance) {
@@ -24,27 +26,22 @@ void Mario::on_run(float distance) {
 }
 
 void Mario::move_and_collision(int delta) {
-    float mario_x =  this->GetPosition().x;
-    float mario_y =  this->GetPosition().y;
-    velocityY += GRAVITY * delta;
-    mario_y += velocityY * float(delta);
-    if (velocityY > 0) {
-        // travel all the blocks
-        // collision judge
-        // collision judge with line
-        //bool is_collide_x = (std::max(mario_x + 30), blocks.right) - std::min(mario_x, blocks.left)
-       // <= 30 + (blocks.right - blocks.left(30));
-        // video 6:50
-    }
-    // 暫時的地板
-    if (mario_x >= -150 && mario_x <= -50) {
-        if (mario_y <= 0) {
-            mario_y = 0;
-        }
-    }else {
-        if (mario_y <= -50) {
-            mario_y = -50;
-        }
+    float mario_x = this->GetPosition().x;
+    float mario_y = this->GetPosition().y;
+
+    // 根據目前速度更新位置
+    mario_y += velocityY * delta;
+
+    // 根據 x 座標決定地板高度
+    float ground_level = (mario_x >= -150 && mario_x <= -50) ? 0.0f : -50.0f;
+
+    // 如果 Mario 正在下落，且已經到達或低於地板，就修正位置與速度
+    if (velocityY < 0 && mario_y <= ground_level) {
+        mario_y = ground_level;
+        velocityY = 0;
+    } else if (velocityY >= 0) {
+        // 當上升時持續施加重力
+        calculate_falling_speed();
     }
 
     this->SetPosition({mario_x, mario_y});
@@ -79,6 +76,34 @@ float Mario::on_update(int delta) {
     move_and_collision(delta);
     return distance;
 }
+// 檢查是否有區塊在 Mario 下方
+bool Mario::has_block_underneath() const {
+    float mario_x = this->GetPosition().x;
+    float mario_y = this->GetPosition().y;
+
+    // 假設 x 在 [-150, -50] 時地板高度為 0，其它位置為 -50
+    if (mario_x >= -150 && mario_x <= -50) {
+        return mario_y <= 0;
+    } else {
+        return mario_y <= -50;
+    }
+}
+void Mario::calculate_falling_speed() {
+    const int BLOCK_SIZE = 30;
+    const double SPEED_MAX_RATIO = 1111111.7;
+    const double GRAVITY_CONST = 3.0;  // 可根據需求增加數值，例如 1.5 或 2.0
+
+    double max_falling_speed = BLOCK_SIZE * SPEED_MAX_RATIO;
+
+    // 施加重力：上升時 velocityY 會逐步減少，下降後 velocityY 變成負值
+    velocityY -= GRAVITY_CONST;
+
+    // 當 Mario 下落時，若速度小於負的最大下降速度，就限制在 -max_falling_speed
+    if (velocityY < -max_falling_speed) {
+        velocityY = -max_falling_speed;
+    }
+}
+
 
 float Mario::move() {
     if (is_dead) {
@@ -147,8 +172,7 @@ float Mario::move() {
         }
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
-
-            on_jump();
+        on_jump();
     }
     /**if (is_on_floor()) {
         this->SetImages(this->AnimationStand);
