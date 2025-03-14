@@ -21,6 +21,7 @@ public:
 
     void NextPhase();
     void reset_position() const;
+    std::shared_ptr<BackgroundImage> get_Background(int idx);
 
 private:
     std::shared_ptr<TaskText> m_MarioText;

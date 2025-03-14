@@ -26,10 +26,12 @@
 - 遊玩網站：https://supermarioplay.com/
 - 製作參考：https://www.youtube.com/watch?v=7D4uoSoQsjw&t=60s
 - 製作參考：https://github.com/MitchellSternke/Mario/blob/master/source/Camera.cpp
-- 重力參考：https://www.youtube.com/watch?v=RFPn9r9mKe0&t=70s
-- 重力參考：https://pastebin.com/eJEjjQwv
-- 重力參考：https://www.youtube.com/watch?v=V0cGs2ZENSY&ab_channel=Voidmatrix
-- 重力參考：https://www.youtube.com/watch?v=JwRYJLI3P0Q&ab_channel=Voidmatrix
+- 移動參考：https://www.youtube.com/watch?v=dMbP4nvwONc
+- 重力參考(js)：https://www.youtube.com/watch?v=RFPn9r9mKe0&t=70s
+- 重力參考(python)：https://pastebin.com/eJEjjQwv
+- 重力參考(C++)：https://www.youtube.com/watch?v=V0cGs2ZENSY&ab_channel=Voidmatrix
+- 跳躍參考(C++)：https://www.youtube.com/watch?v=JwRYJLI3P0Q&ab_channel=Voidmatrix
+- 碰撞參考(C++)：https://www.youtube.com/watch?v=IaUcAt0jDqs
 
 # Development timeline
 
@@ -37,7 +39,7 @@
     - [x] 蒐集遊戲的素材
 
 - Week 2：處理遊戲的封面
-    - [ ] 遊戲加載封面
+    - [x] 遊戲加載封面
 - Week 3：實作地圖關卡
     - [ ] 地圖背景
     - [ ] 地板
@@ -48,17 +50,17 @@
     - [ ] 碰撞箱
 
 - Week 5：人物移動邏輯
-    - [ ] 角色左右移動邏輯
+    - [x] 角色左右移動邏輯
     - [ ] 角色跳躍及碰撞箱邏輯
     - [ ] 碰撞音效
     - [ ] 動畫
 - Week 6：人物移動邏輯
-    - [ ] 角色左右移動邏輯
+    - [x] 角色左右移動邏輯
     - [ ] 角色跳躍及碰撞箱邏輯
     - [ ] 碰撞音效
     - [ ] 動畫
 - Week 7：人物移動邏輯
-    - [ ] 角色左右移動邏輯
+    - [x] 角色左右移動邏輯
     - [ ] 角色跳躍及碰撞箱邏輯
     - [ ] 碰撞音效
     - [ ] 動畫

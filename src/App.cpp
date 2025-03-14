@@ -16,6 +16,7 @@ void App::Start() {
     m_Mario->m_Transform.scale = glm::vec2(2.0f, 2.0f);
 
     m_Root.AddChild(m_Mario);
+    m_Camera = std::make_shared<Camera>();
 
     std::vector<std::string> coinImages;
     coinImages.reserve(3);
@@ -77,22 +78,36 @@ void App::Update() {
     m_EnterDown = Util::Input::IsKeyPressed(Util::Keycode::RETURN);
 
     // The camera cannot be moved to the left
-
     if (dis < 0.0f) {
         dis = 0.0f;
     }
-    if(m_Mario->GetPosition().x <= 0) {
+    if(m_Mario->GetPosition().x <= -112.5f) {
         dis = 0.0f;
     }
 
     // to solve mario left margin
-    if(m_Mario->GetPosition().x < -600) {
+    if(m_Mario->GetPosition().x < -620) {
         // Correct offset
-        m_Mario->SetPosition({-580, m_Mario->GetPosition().y});
+        m_Mario->SetPosition({-600, m_Mario->GetPosition().y});
     }
+
+
+    // m_Camera->Update(m_Mario);
+
+    // visible object if the camera captures the object
     camera_movement_dis += dis;
 
+    // test
+    if (camera_movement_dis >= 22 * 30) {
+        std::shared_ptr<BackgroundImage> tmp = m_PRM->get_Background(1);
+        tmp->SetVisible(true);
+        tmp->SetPosition(0.0f,0.0f);
+    }
+
+    //camera_movement_dis -= m_Camera->getPositionX();
+
     m_Root.Update({dis,0.0f});
+    //m_Root.Update({dis,0.0f});
 
 }
 

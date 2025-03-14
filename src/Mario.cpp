@@ -50,14 +50,18 @@ void Mario::move_and_collision(int delta) {
 float Mario::on_update(int delta) {
     // action: 0(stand) 1(run)
     int direction = is_right_key_down - is_left_key_down;
+
+    // facing update
+    if (is_facing_right and direction == -1 || !is_facing_right and direction == 1) {
+        // facing left
+        m_Transform.scale = glm::vec2{-2, 2};
+    }else if (is_facing_right and direction == 1 || is_facing_right and direction == 1) {
+        // facing right
+        m_Transform.scale = glm::vec2{2, 2};
+    }
+
     if (direction != 0) {
-        is_facing_right = direction == 1;
-        // animation(run) update
-        if (is_facing_right) {
-
-        }else {
-
-        }
+        is_facing_right = direction;
     }else {
         // animation(stand) update
         isRunning = false;

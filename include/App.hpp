@@ -9,6 +9,7 @@
 #include "Util/BGM.hpp"
 #include "PhaseResourceManger.hpp"
 #include "AnimatedCharacter.hpp"
+#include "Camera.hpp"
 #include "Mario.hpp"
 
 class App {
@@ -44,6 +45,7 @@ private:
     Util::Renderer m_Root;
 
     std::shared_ptr<Mario> m_Mario;
+    std::shared_ptr<Camera> m_Camera;
     //std::vector<std::shared_ptr<Character>> m_Doors;
 
     std::shared_ptr<AnimatedCharacter> m_Coin;
