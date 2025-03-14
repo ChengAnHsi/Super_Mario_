@@ -47,8 +47,8 @@ private:
     float run_velocity = 5.0f;
     float jump_velocity = 12.7f;
     float velocityY = 0.0f;      // 角色在 Y 軸的速度
-    float GRAVITY = -12.8f;  // 重力加速度
-    float JUMP_STRENGTH = 150.0f;  // 跳躍的初速度
+    float GRAVITY = -11.6f;  // 重力加速度
+    float JUMP_STRENGTH = 100.0f;  // 跳躍的初速度
     float MAX_JUMP_VELOCITY = 60.0f; // 最高跳躍值
     float additional_jump_forc0 = 0.1f; // 玩家按下按鍵時間，跳躍提升值
 

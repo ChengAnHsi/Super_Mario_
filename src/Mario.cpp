@@ -100,13 +100,13 @@ bool Mario::has_block_underneath() const {
 }
 void Mario::calculate_falling_speed() {
     const int BLOCK_SIZE = 30;
-    const double SPEED_MAX_RATIO = 2.7f;
+    const double SPEED_MAX_RATIO = 1.7f;
 
     double max_falling_speed = BLOCK_SIZE * SPEED_MAX_RATIO;
 
     // 施加重力：上升時 velocityY 會逐步減少，下降後 velocityY 變成負值
 
-    velocityY += GRAVITY;
+    velocityY = velocityY+GRAVITY;
 
     // 當 Mario 下落時，若速度小於負的最大下降速度，就限制在 -max_falling_speed
     if (velocityY < -max_falling_speed) {
