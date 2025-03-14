@@ -29,14 +29,6 @@ void App::Start() {
     m_Coin->m_Transform.scale = glm::vec2(2.0f, 2.0f);
     m_Root.AddChild(m_Coin);
 
-    /**for (int i = 0; i < 3; ++i) {
-        m_Doors.push_back(std::make_shared<Character>(GA_RESOURCE_DIR"/Image/Character/door_close.png"));
-        m_Doors[i]->SetZIndex(5);
-        m_Doors[i]->SetPosition({205.5f - 80.f * i, -3.5f});
-        m_Doors[i]->SetVisible(false);
-        m_Root.AddChild(m_Doors[i]);
-    }**/
-
     m_PRM = std::make_shared<PhaseResourceManger>();
 
     m_Root.AddChildren(m_PRM->GetChildren());
@@ -45,6 +37,8 @@ void App::Start() {
     m_BGM->SetVolume(70);
     m_BGM->Play();
 
+    m_BM = std::make_shared<BlockManger>();
+    m_Root.AddChildren(m_BM->GetChildren());
     m_CurrentState = State::UPDATE;
 }
 
@@ -98,12 +92,18 @@ void App::Update() {
     camera_movement_dis += dis;
 
     // test
-    if (camera_movement_dis >= 22 * 30) {
+
+    /**if (camera_movement_dis == 22 * 30) {
         std::shared_ptr<BackgroundImage> tmp = m_PRM->get_Background(1);
         tmp->SetVisible(true);
         tmp->SetPosition(0.0f,0.0f);
     }
+    if (camera_movement_dis >= 22*30 + 600) {
+        std::shared_ptr<BackgroundImage> tmp = m_PRM->get_Background(1);
+        tmp->SetVisible(false);
+    }**/
 
+    m_BM->block_visible(camera_movement_dis);
     //camera_movement_dis -= m_Camera->getPositionX();
 
     m_Root.Update({dis,0.0f});
