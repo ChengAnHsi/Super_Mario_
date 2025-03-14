@@ -23,6 +23,7 @@ private:
     std::vector<std::shared_ptr<BackgroundImage>> m_Backgrounds;
     std::vector<float> m_PositionX;
     std::vector<float> m_PositionY;
+    std::vector<bool> is_visible = {};
 };
 
 #endif //BLOCKMANAGER_HPP

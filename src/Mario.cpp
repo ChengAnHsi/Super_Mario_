@@ -44,7 +44,7 @@ void Mario::move_and_collision(int delta) {
     mario_y += velocityY * delta;
 
     // 根據 x 座標決定地板高度
-    float ground_level = (mario_x >= -150 && mario_x <= -50) ? 0.0f : -50.0f;
+    float ground_level = (mario_x >= -150 && mario_x <= -50) ? -240.0f : -270.0f;
 
     // 如果 Mario 正在下落，且已經到達或低於地板，就修正位置與速度
     if (velocityY < 0 && mario_y <= ground_level) {
@@ -63,10 +63,10 @@ float Mario::on_update(int delta) {
     int direction = is_right_key_down - is_left_key_down;
 
     // facing update
-    if (is_facing_right and direction == -1 || !is_facing_right and direction == 1) {
+    if ((is_facing_right && direction == -1) || (!is_facing_right && direction == 1)) {
         // facing left
         m_Transform.scale = glm::vec2{-2, 2};
-    }else if (is_facing_right and direction == 1 || is_facing_right and direction == 1) {
+    }else if ((is_facing_right && direction == 1) || (is_facing_right && direction == 1)) {
         // facing right
         m_Transform.scale = glm::vec2{2, 2};
     }
@@ -92,12 +92,11 @@ bool Mario::has_block_underneath() const {
     float mario_x = this->GetPosition().x;
     float mario_y = this->GetPosition().y;
 
-    // 假設 x 在 [-150, -50] 時地板高度為 0，其它位置為 -50
     if (mario_x >= -150 && mario_x <= -50) {
-        return mario_y <= 0;
-    } else {
-        return mario_y <= -50;
+        return mario_y <= -240;
     }
+    return mario_y <= -270;
+
 }
 void Mario::calculate_falling_speed() {
     const int BLOCK_SIZE = 30;

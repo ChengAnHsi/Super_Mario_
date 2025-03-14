@@ -9,7 +9,7 @@ void App::Start() {
     LOG_TRACE("Start");
     std::vector<std::string> marioImages = {RESOURCE_DIR"/Entities/mario_stand.png"};
     m_Mario = std::make_shared<Mario>(0,3,0,marioImages);
-    m_Mario->SetPosition({-112.5f, 0.0f});
+    m_Mario->SetPosition({-112.5f, -270.0f});
     m_Mario->SetZIndex(50);
     m_Mario->SetPlaying(true);
     m_Mario->SetLooping(true);
@@ -52,7 +52,7 @@ void App::Update() {
         m_Coin->SetLooping(true);
         m_Coin->SetPlaying(true);
     }
-    m_Coin->SetPosition({-180.f, 285.f});
+    m_Coin->SetPosition({-180.0f, 280.0f});
     m_PRM->reset_position();
 
     /*
