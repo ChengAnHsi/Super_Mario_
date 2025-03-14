@@ -7,10 +7,13 @@
 #include "Util/Keycode.hpp"
 
 void Mario::on_jump() {
-    if (velocityY != 0) {
-        return ;
-    }
-    velocityY += jump_velocity;
+        if (jump_velocity+JUMP_STRENGTH >= MAX_JUMP_VELOCITY)
+        {
+            velocityY=MAX_JUMP_VELOCITY;
+        }else{
+            velocityY += (jump_velocity+JUMP_STRENGTH);
+        }
+
 }
 
 void Mario::on_run(float distance) {
@@ -144,7 +147,8 @@ float Mario::move() {
         }
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
-        on_jump();
+
+            on_jump();
     }
     /**if (is_on_floor()) {
         this->SetImages(this->AnimationStand);
