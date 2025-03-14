@@ -8,6 +8,7 @@
 #include "Util/Text.hpp"
 #include "Util/BGM.hpp"
 #include "PhaseResourceManger.hpp"
+#include "BlockManager.hpp"
 #include "AnimatedCharacter.hpp"
 #include "Camera.hpp"
 #include "Mario.hpp"
@@ -46,10 +47,10 @@ private:
 
     std::shared_ptr<Mario> m_Mario;
     std::shared_ptr<Camera> m_Camera;
-    //std::vector<std::shared_ptr<Character>> m_Doors;
 
     std::shared_ptr<AnimatedCharacter> m_Coin;
     std::shared_ptr<PhaseResourceManger> m_PRM;
+    std::shared_ptr<BlockManger> m_BM;
     std::shared_ptr<Util::BGM> m_BGM;
 
     float camera_movement_dis = 0.0f;

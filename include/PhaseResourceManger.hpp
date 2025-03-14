@@ -12,7 +12,7 @@ public:
     PhaseResourceManger();
 
     [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren() const {
-        std::vector<std::shared_ptr<Util::GameObject>> all_obj= {m_MarioText, m_MoneyText, m_WorldText, m_TimeText, m_OtherText};
+        std::vector<std::shared_ptr<Util::GameObject>> all_obj = {m_MarioText, m_MoneyText, m_WorldText, m_TimeText, m_OtherText};
         for (int i = 0; i < m_Background.size(); i++) {
             all_obj.emplace_back(m_Background[i]);
         }
