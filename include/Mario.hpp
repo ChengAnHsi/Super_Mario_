@@ -39,13 +39,13 @@ private:
 
     bool isJumping = false;
     bool isRunning = false;
-
+    float temp= 0.0f;      //暫存
     float delta_time = 1.0f;
     float run_velocity = 5.0f;
-    float jump_velocity = -0.85f;
+    float jump_velocity = 3.85f;
     float velocityY = 0;      // 角色在 Y 軸的速度
     float GRAVITY = -3.0f;  // 重力加速度
-    float JUMP_STRENGTH = 30.0f;  // 跳躍的初速度
+    float JUMP_STRENGTH = 10.0f;  // 跳躍的初速度
     float MAX_JUMP_VELOCITY = 50.0f; // 最高跳躍值
     float additional_jump_force = 0.1f; // 玩家按下按鍵時間，跳躍提升值
 
