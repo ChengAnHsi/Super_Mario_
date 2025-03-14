@@ -6,6 +6,17 @@
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
 
+void Mario::on_smalljump()
+{
+    if (velocityY == 0) {
+        // 當累計的跳躍衝力超過最大跳躍速度，就直接設定最大值
+        if (jump_velocity + JUMP_STRENGTH >= MAX_JUMP_VELOCITY) {
+            velocityY = MAX_JUMP_VELOCITY/1.5;
+        } else {
+            velocityY += (jump_velocity + JUMP_STRENGTH)/1.5 ;
+        }
+    }
+}
 void Mario::on_jump() {
     // 只有在垂直速度為 0（代表在地板上或靜止狀態）時才允許跳躍
     if (velocityY == 0) {
@@ -90,17 +101,17 @@ bool Mario::has_block_underneath() const {
 }
 void Mario::calculate_falling_speed() {
     const int BLOCK_SIZE = 30;
-    const double SPEED_MAX_RATIO = 1111111.7;
-    const double GRAVITY_CONST = 3.0;  // 可根據需求增加數值，例如 1.5 或 2.0
+    const double SPEED_MAX_RATIO = 3.7;
+
 
     double max_falling_speed = BLOCK_SIZE * SPEED_MAX_RATIO;
 
     // 施加重力：上升時 velocityY 會逐步減少，下降後 velocityY 變成負值
-    velocityY -= GRAVITY_CONST;
+    velocityY += GRAVITY;
 
     // 當 Mario 下落時，若速度小於負的最大下降速度，就限制在 -max_falling_speed
     if (velocityY < -max_falling_speed) {
-        velocityY = -max_falling_speed;
+
     }
 }
 
@@ -173,6 +184,10 @@ float Mario::move() {
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
         on_jump();
+    }
+    if (Util::Input::IsKeyPressed(Util::Keycode::SPACE))
+    {
+        on_smalljump();
     }
     /**if (is_on_floor()) {
         this->SetImages(this->AnimationStand);

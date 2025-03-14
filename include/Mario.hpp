@@ -31,7 +31,7 @@ public:
     [[nodiscard]] int Get_Score() const;
     bool has_block_underneath() const;
     void calculate_falling_speed();
-
+    void on_smalljump();
 private:
     int coin = 0;
     int live = 3;
@@ -45,12 +45,12 @@ private:
     float temp= 0.0f;      //暫存
     float delta_time = 1.0f;
     float run_velocity = 5.0f;
-    float jump_velocity = 3.85f;
-    float velocityY = 0;      // 角色在 Y 軸的速度
-    float GRAVITY = -3.0f;  // 重力加速度
-    float JUMP_STRENGTH = 20.0f;  // 跳躍的初速度
-    float MAX_JUMP_VELOCITY = 50.0f; // 最高跳躍值
-    float additional_jump_force = 0.1f; // 玩家按下按鍵時間，跳躍提升值
+    float jump_velocity = 12.7f;
+    float velocityY = 0.4f;      // 角色在 Y 軸的速度
+    float GRAVITY = -9.8f;  // 重力加速度
+    float JUMP_STRENGTH = 150.0f;  // 跳躍的初速度
+    float MAX_JUMP_VELOCITY = 60.0f; // 最高跳躍值
+    float additional_jump_forc0 = 0.1f; // 玩家按下按鍵時間，跳躍提升值
 
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/mario0.png",RESOURCE_DIR"/Entities/mario1.png",RESOURCE_DIR"/Entities/mario2.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/marioDead.png"};
