@@ -41,12 +41,12 @@
 - Week 2：處理遊戲的封面
     - [x] 遊戲加載封面
 - Week 3：實作地圖關卡
-    - [ ] 地圖背景
-    - [ ] 地板
+    - [x] 地圖背景
+    - [x] 地板
     - [ ] 碰撞箱
 - Week 4：實作地圖關卡
-    - [ ] 地圖背景
-    - [ ] 地板
+    - [x] 地圖背景
+    - [x] 地板
     - [ ] 碰撞箱
 
 - Week 5：人物移動邏輯
@@ -118,3 +118,11 @@
     - [ ] 針對遊戲細節進行優化
 - Week 17：收尾
     - [ ] 針對遊戲細節進行優化
+
+# 備註
+- 程式修改
+  - config.hpp size 720, 720
+  - renderer.cpp curr.m_GameObject->m_Transform.translation -= offset;
+  - renderer.hpp const glm::vec2 &offset = {0.0f, 0.0f}
+- git clone
+  - git clone git@github.com:ChengAnHsi/Super_Mario_.git --recursive

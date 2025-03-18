@@ -53,7 +53,7 @@ private:
     std::shared_ptr<BlockManger> m_BM;
     std::shared_ptr<Util::BGM> m_BGM;
 
-    float camera_movement_dis = 112.5f;
+    float camera_movement_dis = 90.5f;
     bool m_EnterDown = false;
 };
 

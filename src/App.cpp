@@ -53,7 +53,7 @@ void App::Update() {
         m_Coin->SetPlaying(true);
     }
     m_Coin->SetPosition({-180.0f, 280.0f});
-    m_PRM->reset_position();
+    m_PRM->ResetPosition();
 
     /*
      * Do not touch the code below as they serve the purpose for
@@ -87,28 +87,14 @@ void App::Update() {
 
 
     // m_Camera->Update(m_Mario);
+    // camera_movement_dis -= m_Camera->getPositionX();
 
-    // visible object if the camera captures the object
     camera_movement_dis += dis;
 
-    // test
-
-    /**if (camera_movement_dis == 22 * 30) {
-        std::shared_ptr<BackgroundImage> tmp = m_PRM->get_Background(1);
-        tmp->SetVisible(true);
-        tmp->SetPosition(0.0f,0.0f);
-    }
-    if (camera_movement_dis >= 22*30 + 600) {
-        std::shared_ptr<BackgroundImage> tmp = m_PRM->get_Background(1);
-        tmp->SetVisible(false);
-    }**/
-
-    m_BM->block_visible(camera_movement_dis);
-    //camera_movement_dis -= m_Camera->getPositionX();
+    // visible object if the camera captures the object
+    // block_idx = m_BM->block_visible(camera_movement_dis, block_idx);
 
     m_Root.Update({dis,0.0f});
-    //m_Root.Update({dis,0.0f});
-
 }
 
 void App::End() { // NOLINT(this method will mutate members in the future)

@@ -1,70 +1,66 @@
-#include "BlockManager.hpp"
 //
 // Created by 112590007 on 2025/3/14.
 //
+#include "BlockManager.hpp"
+
 BlockManger::BlockManger() {
-    std::vector<std::string> imageFiles = {
-        RESOURCE_DIR"/Blocks/Overworld/block.png",
-        RESOURCE_DIR"/Blocks/Underworld/block2.png",
-        RESOURCE_DIR"/Scenery/Overworld/floorbricks.png",
-        RESOURCE_DIR"/Scenery/Underworld/floorbricks.png",
-        RESOURCE_DIR"/Blocks/Overworld/immovableBlock.png",
-        RESOURCE_DIR"/Blocks/Underworld/immovableBlock.png",
-        RESOURCE_DIR"/Blocks/Overworld/misteryBlock0.png",
-        RESOURCE_DIR"/Blocks/Overworld/misteryBlock1.png",
-        RESOURCE_DIR"/Blocks/Overworld/misteryBlock2.png",
-        RESOURCE_DIR"/Blocks/Underworld/misteryBlock0.png",
-        RESOURCE_DIR"/Blocks/Underworld/misteryBlock1.png",
-        RESOURCE_DIR"/Blocks/Underworld/misteryBlock2.png"
-    };
-
-    // 0-1: block 2-3: floor 4-5: immovable block 6-11: mistery block
-    std::vector tmp_x = {22,80,81,82,83,84,85,86,87,91,92,93,94,109,121,122,123,128,129,130,131,188,189,
-        187,188,189,
-        186,187,188,189,
-        64,185,186,187,188,189,
-    16,20,21,22,23,24,77,78,79,94,100,101,106,109,112,118,129,130,137,140,151,152,155,168,169,170,171,184,185,186,187,188,189,
-    136,137,140,141,150,151,152,155,184,185,186,187,188,189,
-    135,136,137,140,141,142,149,150,151,152,155,156,157,182,183,184,185,186,187,188,189};
-    std::vector tmp_y = {9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
-        8,8,8,
-        7,7,7,7,
-        6,6,6,6,6,6,
-    5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
-    4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
-    3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3};
-    std::vector imgidx = {6,0,0,0,0,0,0,0,0,0,0,0,6,6,0,0,0,0,0,0,0,4,4,
-        4,4,4,
-        4,4,4,4,
-        6,4,4,4,4,4,
-    6,0,6,0,6,0,0,6,0,0,0,0,6,6,6,0,0,0,4,4,4,4,4,0,0,6,0,4,4,4,4,4,4,
-    4,4,4,4,4,4,4,4,0,0,6,0,4,4,4,4,4,4,
-    4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4};
-
-    for (int i = 0; i < imgidx.size();i++) {
+    int imgidx_size = imgidx.size();
+    float BLOCK_SIZE = 45.0f;
+    float BLOCK_MAGNIFICATION = 3.0f;
+    for (int i = 0; i < imgidx_size; i++) {
         // position should change to correct position
-        m_PositionX.push_back(tmp_x[i] * 30);
-        m_PositionY.push_back(tmp_y[i] * 30 - 150.0f);
+        m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE - 380.0f);
+        m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE - 325.0f);
         m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
         m_Backgrounds[i]->ChangeImg(imageFiles[imgidx[i]]);
-        m_Backgrounds[i]->SetSize(2.0f,2.0f);
-        m_Backgrounds[i]->SetVisible(false);
-        is_visible.push_back(false);
+        m_Backgrounds[i]->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        m_Backgrounds[i]->SetPosition(m_PositionX[i],m_PositionY[i]);
     }
+
+    for (int i = 0; i < 224; i++) {
+        // correct x position or cut small floor to solve align and hole
+        // x: (i - imgidx_size) * BLOCK_SIZE + (22.0f * (i - imgidx_size) / 8)
+        m_PositionX.push_back(i * BLOCK_SIZE - 370.0f);
+        // correct y position subtract 25 more
+        m_PositionY.push_back(BLOCK_SIZE - 350.0f);
+        m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
+        m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Scenery/Overworld/floorbricks.png");
+        m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        m_Backgrounds.back()->SetPosition(m_PositionX.back(),m_PositionY.back());
+    }
+
+    // test map position(floor and block distance)
+
+    /**m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
+    m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
+    m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+    m_Backgrounds.back()->SetPosition(16 * BLOCK_SIZE - 380.0f,4 * BLOCK_SIZE - 325.0f);
+    m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
+    m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
+    m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+    m_Backgrounds.back()->SetPosition(16 * BLOCK_SIZE - 380.0f,3 * BLOCK_SIZE - 325.0f);
+    m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
+    m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
+    m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+    m_Backgrounds.back()->SetPosition(16 * BLOCK_SIZE - 380.0f,2 * BLOCK_SIZE - 325.0f);**/
+
+    /**for (int i = 0; i < 16; i++) {
+        m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
+        m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
+        m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        m_Backgrounds.back()->SetPosition(i * BLOCK_SIZE,0);
+    }**/
 
 }
 
-void BlockManger::block_visible(float camera_movement_dis) {
-    for (int i = 0; i < m_Backgrounds.size();i++) {
+/**int BlockManger::block_visible(float camera_movement_dis, int idx) {
+   for (int i = idx; i < imgidx.size(); i++) {
         std::shared_ptr<BackgroundImage> tmp = m_Backgrounds[i];
-        if (camera_movement_dis >= m_PositionX[i] and is_visible[i]== false) {
+        if (camera_movement_dis >= m_PositionX[i]) {
             tmp->SetVisible(true);
-            tmp->SetPosition(600.0f,m_PositionY[i]);
-            is_visible[i] = true;
+            tmp->SetPosition(620.0f,m_PositionY[i]);
+        }else {
+            return i;
         }
-        /**if (camera_movement_dis >= m_PositionX[i] + 600) {
-            tmp->SetVisible(false);
-        }**/
     }
-
-}
+}**/

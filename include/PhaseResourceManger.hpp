@@ -13,15 +13,15 @@ public:
 
     [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren() const {
         std::vector<std::shared_ptr<Util::GameObject>> all_obj = {m_MarioText, m_MoneyText, m_WorldText, m_TimeText, m_OtherText};
-        for (int i = 0; i < m_Background.size(); i++) {
-            all_obj.emplace_back(m_Background[i]);
+        for (const auto & i : m_Background) {
+            all_obj.emplace_back(i);
         }
         return all_obj;
     }
 
     void NextPhase();
-    void reset_position() const;
-    std::shared_ptr<BackgroundImage> get_Background(int idx);
+    void ResetPosition() const;
+    std::shared_ptr<BackgroundImage> GetBackground(int idx);
 
 private:
     std::shared_ptr<TaskText> m_MarioText;
