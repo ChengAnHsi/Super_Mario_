@@ -6,6 +6,7 @@
 #include "Character.hpp"
 #include "BackgroundImage.hpp"
 #include "Mario.hpp"
+#include <chrono>
 
 class PhaseResourceManger {
 public:
@@ -21,6 +22,9 @@ public:
 
     void NextPhase();
     void ResetPosition() const;
+    void DecreaseTime();
+    void SetTime(int time);
+    int GetTime();
     std::shared_ptr<BackgroundImage> GetBackground(int idx);
 
 private:
@@ -33,7 +37,8 @@ private:
     std::shared_ptr<Mario> m_Mario;
 
     int m_Phase = 1;
-    int time = 0;
+    int time = 400;
+    std::chrono::steady_clock::time_point last_update;
 };
 
 

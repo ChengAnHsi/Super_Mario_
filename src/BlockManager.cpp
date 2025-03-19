@@ -2,11 +2,10 @@
 // Created by 112590007 on 2025/3/14.
 //
 #include "BlockManager.hpp"
+#include "Global.hpp"
 
 BlockManger::BlockManger() {
     int imgidx_size = imgidx.size();
-    float BLOCK_SIZE = 45.0f;
-    float BLOCK_MAGNIFICATION = 3.0f;
     for (int i = 0; i < imgidx_size; i++) {
         // position should change to correct position
         m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE - 380.0f);
@@ -43,14 +42,6 @@ BlockManger::BlockManger() {
     m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
     m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
     m_Backgrounds.back()->SetPosition(16 * BLOCK_SIZE - 380.0f,2 * BLOCK_SIZE - 325.0f);**/
-
-    /**for (int i = 0; i < 16; i++) {
-        m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
-        m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
-        m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        m_Backgrounds.back()->SetPosition(i * BLOCK_SIZE,0);
-    }**/
-
 }
 
 /**int BlockManger::block_visible(float camera_movement_dis, int idx) {

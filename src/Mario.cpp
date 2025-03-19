@@ -184,8 +184,7 @@ float Mario::move() {
     if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
         on_jump();
     }
-    if (Util::Input::IsKeyPressed(Util::Keycode::SPACE))
-    {
+    if (Util::Input::IsKeyPressed(Util::Keycode::SPACE)) {
         on_smalljump();
     }
     /**if (is_on_floor()) {
@@ -210,10 +209,13 @@ int Mario::Get_Coin() const {
 
 void Mario::Set_Live(const int live) {
     this->live = live;
+    if (live == 0) {
+        SetImages(AnimationDead);
+    }
 }
 
 int Mario::Get_Live() const {
-    return coin;
+    return live;
 }
 
 void Mario::Increase_Score(const int score) {
@@ -221,5 +223,5 @@ void Mario::Increase_Score(const int score) {
 }
 
 int Mario::Get_Score() const {
-    return coin;
+    return score;
 }

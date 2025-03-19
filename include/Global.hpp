@@ -9,7 +9,13 @@
 
 #pragma once
 
-constexpr float BRICK_PARTICLE_SPEED = 4;
+constexpr float BLOCK_SIZE = 45.0f;
+constexpr float BLOCK_MAGNIFICATION = 3.0f;
+constexpr int WINDOW_WIDTH = 720;
+constexpr int WINDOW_HEIGHT = 720;
+const std::vector<int> LEVEL_TIME = {400, 400, 300};
+
+/**constexpr float BRICK_PARTICLE_SPEED = 4;
 //A coin jumping out of the question block.
 constexpr float COIN_JUMP_SPEED = -6;
 constexpr float GOOMBA_SPEED = 1;
@@ -82,7 +88,7 @@ struct Object
 	}
 };
 
-typedef std::vector<std::array<Cell, SCREEN_HEIGHT / CELL_SIZE>> Map;
+typedef std::vector<std::array<Cell, SCREEN_HEIGHT / CELL_SIZE>> Map;**/
 
 
 

@@ -3,20 +3,22 @@
 #include "Util/Logger.hpp"
 
 PhaseResourceManger::PhaseResourceManger() {
+    last_update = std::chrono::steady_clock::now();
+
     m_MarioText = std::make_shared<TaskText>();
-    m_MarioText->SetPosition(-400, 300);
+    m_MarioText->SetPosition(-250, 300);
     m_MarioText->SetTxtIdx(1, 0);
 
     m_MoneyText = std::make_shared<TaskText>();
-    m_MoneyText->SetPosition(-130, 285);
+    m_MoneyText->SetPosition(-70, 285);
     m_MoneyText->SetTxtIdx(2, 0);
 
     m_WorldText = std::make_shared<TaskText>();
-    m_WorldText->SetPosition(200, 300);
+    m_WorldText->SetPosition(100, 300);
     m_WorldText->SetTxtIdx(3, 1);
 
     m_TimeText = std::make_shared<TaskText>();
-    m_TimeText->SetPosition(400, 300);
+    m_TimeText->SetPosition(300, 300);
     m_TimeText->SetTxtIdx(4, 400);
 
     m_OtherText = std::make_shared<TaskText>();
@@ -45,11 +47,11 @@ PhaseResourceManger::PhaseResourceManger() {
     // start mountain
     m_Background.push_back(std::make_shared<BackgroundImage>());
     m_Background.back()->ChangeImg(imageFiles[5]);
-    m_Background.back()->SetPosition(-640, -280);
+    m_Background.back()->SetPosition(-360, -280);
     // start bush
     m_Background.push_back(std::make_shared<BackgroundImage>());
     m_Background.back()->ChangeImg(imageFiles[4]);
-    m_Background.back()->SetPosition(-640, 3 * 45);
+    m_Background.back()->SetPosition(-360, 3 * 45);
 }
 
 void PhaseResourceManger::NextPhase() {
@@ -66,12 +68,33 @@ void PhaseResourceManger::NextPhase() {
 }
 
 void PhaseResourceManger::ResetPosition() const {
-    m_MarioText->SetPosition(-400, 300);
-    m_MoneyText->SetPosition(-130, 285);
-    m_WorldText->SetPosition(200, 300);
-    m_TimeText->SetPosition(400, 300);
+    m_MarioText->SetPosition(-250, 300);
+    m_MoneyText->SetPosition(-70, 285);
+    m_WorldText->SetPosition(100, 300);
+    m_TimeText->SetPosition(300, 300);
 }
 
 std::shared_ptr<BackgroundImage> PhaseResourceManger::GetBackground(int idx) {
     return m_Background[idx];
+}
+
+void PhaseResourceManger::DecreaseTime() {
+    auto now = std::chrono::steady_clock::now();
+    std::chrono::duration<float> elapsed = now - last_update;
+
+    if (elapsed.count() >= 1.0f) { // 每秒執行一次
+        last_update = now;
+        time -= 1;
+
+        if (time < 0) time = 0;
+        m_TimeText->SetTxtIdx(4, time);
+    }
+}
+
+void PhaseResourceManger::SetTime(int time) {
+    this->time = time;
+}
+
+int PhaseResourceManger::GetTime() {
+    return time;
 }
