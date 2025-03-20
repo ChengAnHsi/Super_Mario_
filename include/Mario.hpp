@@ -29,6 +29,7 @@ public:
     [[nodiscard]] int Get_Live() const;
     void Increase_Score(int score);
     [[nodiscard]] int Get_Score() const;
+    bool is_on_floor() const;
     bool has_block_underneath() const;
     void calculate_falling_speed();
     void on_smalljump();
@@ -47,10 +48,14 @@ private:
     float run_velocity = 5.0f;
     float jump_velocity = 12.7f;
     float velocityY = 0.0f;      // 角色在 Y 軸的速度
-    float GRAVITY = -11.6f;  // 重力加速度
-    float JUMP_STRENGTH = 100.0f;  // 跳躍的初速度
-    float MAX_JUMP_VELOCITY = 60.0f; // 最高跳躍值
+    float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
+    float JUMP_VELOCITY = 350.0f; // 跳躍初速度
+    float SMALL_JUMP_VELOCITY = 250.0f; // 小跳躍初速度
+    float MAX_JUMP_VELOCITY = 50.0f; // 最高跳躍值
     float additional_jump_forc0 = 0.1f; // 玩家按下按鍵時間，跳躍提升值
+    const float FIXED_TIME_STEP = 1.0f / 60.0f;  // 固定更新步長，假設 60 FPS
+    const float FIXED_JUMP_SPEED = 8.0f;  // Mario 每幀上升的固定速度
+    const float FIXED_GRAVITY = -0.9f;  // Mario 每幀下降的固定速度
 
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/mario0.png",RESOURCE_DIR"/Entities/mario1.png",RESOURCE_DIR"/Entities/mario2.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/marioDead.png"};
