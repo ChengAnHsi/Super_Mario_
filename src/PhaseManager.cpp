@@ -1,6 +1,7 @@
 #include "PhaseResourceManger.hpp"
 
 #include "Util/Logger.hpp"
+#include "Global.hpp"
 
 PhaseResourceManger::PhaseResourceManger() {
     last_update = std::chrono::steady_clock::now();
@@ -32,35 +33,73 @@ PhaseResourceManger::PhaseResourceManger() {
         RESOURCE_DIR"/Scenery/Overworld/cloud2.png",
         RESOURCE_DIR"/Scenery/Overworld/mountain1.png",
         RESOURCE_DIR"/Scenery/Overworld/mountain2.png",
-        RESOURCE_DIR"/Scenery/Overworld/castle.png",
-        RESOURCE_DIR"/Scenery/Overworld/flag-mast.png"
+        RESOURCE_DIR"/Scenery/castle.png",
+        RESOURCE_DIR"/Scenery/flag-mast.png"
     };
 
     // background image(logo or sky)
     // start set
-    // [0]: logo and map
+    // [0]: logo
     m_Background.push_back(std::make_shared<BackgroundImage>());
     m_Background.back()->SetPosition(0, 0);
     m_Background.back()->SetSize(3.0f,3.0f);
     // The background z-index is placed at the bottom
     m_Background.back()->SetZIndex(-50);
-    // start mountain
+    // [1]: start mountain(left)
     m_Background.push_back(std::make_shared<BackgroundImage>());
     m_Background.back()->ChangeImg(imageFiles[5]);
-    m_Background.back()->SetPosition(-360, -280);
-    // start bush
+    m_Background.back()->SetPosition(-240.0f, 2.5 * BLOCK_SIZE - 325.0f);
+    m_Background.back()->SetSize(1.5f,1.5f);
+    // [2]: start bush(right)
     m_Background.push_back(std::make_shared<BackgroundImage>());
-    m_Background.back()->ChangeImg(imageFiles[4]);
-    m_Background.back()->SetPosition(-360, 3 * 45);
+    m_Background.back()->ChangeImg(imageFiles[0]);
+    m_Background.back()->SetPosition(11 * BLOCK_SIZE - 360.0f, 1.5 * BLOCK_SIZE- 325.0f);
+    m_Background.back()->SetSize(1.3f,1.3f);
+
+    // tube init(map 1-1)
+    m_Tube.push_back(std::make_shared<BackgroundImage>());
+    m_Tube.back()->ChangeImg(RESOURCE_DIR"/Scenery/vertical-small-tube.png");
+    m_Tube.back()->SetPosition(28 * BLOCK_SIZE - 365.0f, 3 * BLOCK_SIZE  - 355.0f);
+    m_Tube.back()->SetSize(2.5f, 2.5f);
+    m_Tube.push_back(std::make_shared<BackgroundImage>());
+    m_Tube.back()->ChangeImg(RESOURCE_DIR"/Scenery/vertical-medium-tube.png");
+    m_Tube.back()->SetPosition(38 * BLOCK_SIZE - 365.0f, 4 * BLOCK_SIZE  - 380.0f);
+    m_Tube.back()->SetSize(2.5f, 2.5f);
+    m_Tube.push_back(std::make_shared<BackgroundImage>());
+    m_Tube.back()->ChangeImg(RESOURCE_DIR"/Scenery/vertical-large-tube.png");
+    m_Tube.back()->SetPosition(46 * BLOCK_SIZE - 365.0f, 5 * BLOCK_SIZE  - 405.0f);
+    m_Tube.back()->SetSize(2.5f, 2.5f);
+    m_Tube.push_back(std::make_shared<BackgroundImage>());
+    m_Tube.back()->ChangeImg(RESOURCE_DIR"/Scenery/vertical-large-tube.png");
+    m_Tube.back()->SetPosition(57 * BLOCK_SIZE - 365.0f, 5 * BLOCK_SIZE  - 405.0f);
+    m_Tube.back()->SetSize(2.5f, 2.5f);
+    m_Tube.push_back(std::make_shared<BackgroundImage>());
+    m_Tube.back()->ChangeImg(RESOURCE_DIR"/Scenery/vertical-small-tube.png");
+    m_Tube.back()->SetPosition(163 * BLOCK_SIZE - 365.0f, 3 * BLOCK_SIZE  - 355.0f);
+    m_Tube.back()->SetSize(2.5f, 2.5f);
+    m_Tube.push_back(std::make_shared<BackgroundImage>());
+    m_Tube.back()->ChangeImg(RESOURCE_DIR"/Scenery/vertical-small-tube.png");
+    m_Tube.back()->SetPosition(179 * BLOCK_SIZE - 365.0f, 3 * BLOCK_SIZE  - 355.0f);
+    m_Tube.back()->SetSize(2.5f, 2.5f);
 }
 
 void PhaseResourceManger::NextPhase() {
     if (m_Phase == 3) return;
     LOG_DEBUG("Passed! Next phase: {}", m_Phase);
     m_Background[0]->NextPhase(m_Phase);
-    m_Background[0]->SetSize(1.8f,1.8f);
+    m_Background[0]->SetSize(2.1f,2.1f);
     m_Background[0]->SetZIndex(-50);
-    for(int i = 1; i < m_Background.size(); i++) {
+    // [1]: castle is visible
+    // map 1-1 castle
+    m_Background[1]->ChangeImg(RESOURCE_DIR"/Scenery/castle.png");
+    m_Background[1]->SetPosition(202 * BLOCK_SIZE - 365.0f, 4 * BLOCK_SIZE - 325.0f);
+    m_Background[1]->SetSize(3.0f, 3.0f);
+    // [2]: flag set
+    m_Background[2]->ChangeImg(RESOURCE_DIR"/Scenery/flag-mast.png");
+    m_Background[2]->SetPosition(198 * BLOCK_SIZE - 365.0f, 8 * BLOCK_SIZE - 365.0f);
+    m_Background[2]->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+    // else set invisible
+    for(int i = 3; i < m_Background.size(); i++) {
         m_Background[i]->SetVisible(false);
     }
     m_WorldText->SetTxtIdx(3, m_Phase++);
@@ -91,10 +130,10 @@ void PhaseResourceManger::DecreaseTime() {
     }
 }
 
-void PhaseResourceManger::SetTime(int time) {
+void PhaseResourceManger::SetTime(const int time) {
     this->time = time;
 }
 
-int PhaseResourceManger::GetTime() {
+int PhaseResourceManger::GetTime() const {
     return time;
 }

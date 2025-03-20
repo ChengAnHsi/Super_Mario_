@@ -10,7 +10,7 @@ void App::Start() {
     LOG_TRACE("Start");
     std::vector<std::string> marioImages = {RESOURCE_DIR"/Entities/mario_stand.png"};
     m_Mario = std::make_shared<Mario>(0,3,0,marioImages);
-    m_Mario->SetPosition({-360.0f + 2.5f * BLOCK_SIZE, -270.0f});
+    m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -270.0f});
     m_Mario->SetZIndex(50);
     m_Mario->SetPlaying(true);
     m_Mario->SetLooping(true);
@@ -59,7 +59,7 @@ void App::Update() {
         if (m_Mario->Get_Live() == 0) {
             // dead situation
         }else {
-            m_Mario->SetPosition({-360.0f + 2.5f * BLOCK_SIZE, -270.0f});
+            m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -270.0f});
             m_PRM->SetTime(LEVEL_TIME[int(m_Phase) - 1]);
         }
     }

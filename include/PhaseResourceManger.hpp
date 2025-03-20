@@ -14,8 +14,11 @@ public:
 
     [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren() const {
         std::vector<std::shared_ptr<Util::GameObject>> all_obj = {m_MarioText, m_MoneyText, m_WorldText, m_TimeText, m_OtherText};
-        for (const auto & i : m_Background) {
-            all_obj.emplace_back(i);
+        for (const auto & img : m_Background) {
+            all_obj.emplace_back(img);
+        }
+        for (const auto & img : m_Tube) {
+            all_obj.emplace_back(img);
         }
         return all_obj;
     }
@@ -24,7 +27,7 @@ public:
     void ResetPosition() const;
     void DecreaseTime();
     void SetTime(int time);
-    int GetTime();
+    int GetTime() const;
     std::shared_ptr<BackgroundImage> GetBackground(int idx);
 
 private:
@@ -34,6 +37,7 @@ private:
     std::shared_ptr<TaskText> m_TimeText;
     std::shared_ptr<TaskText> m_OtherText;
     std::vector<std::shared_ptr<BackgroundImage>> m_Background;
+    std::vector<std::shared_ptr<BackgroundImage>> m_Tube;
     std::shared_ptr<Mario> m_Mario;
 
     int m_Phase = 1;

@@ -11,15 +11,16 @@ BlockManger::BlockManger() {
         m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE - 380.0f);
         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE - 325.0f);
         m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
-        m_Backgrounds[i]->ChangeImg(imageFiles[imgidx[i]]);
-        m_Backgrounds[i]->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        m_Backgrounds[i]->SetPosition(m_PositionX[i],m_PositionY[i]);
+        m_Backgrounds.back()->ChangeImg(imageFiles[imgidx[i]]);
+        m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        m_Backgrounds.back()->SetPosition(m_PositionX[i],m_PositionY[i]);
     }
 
-    for (int i = 0; i < 224; i++) {
+    for (int i = 0; i < 224; i+=8) {
         // correct x position or cut small floor to solve align and hole
-        // x: (i - imgidx_size) * BLOCK_SIZE + (22.0f * (i - imgidx_size) / 8)
-        m_PositionX.push_back(i * BLOCK_SIZE - 370.0f);
+        // x: i * BLOCK_SIZE + (22.0f * i / 8)
+        // or: i * BLOCK_SIZE - 380.0f
+        m_PositionX.push_back(i * BLOCK_SIZE + (22.0f * i / 8) - 370.0f);
         // correct y position subtract 25 more
         m_PositionY.push_back(BLOCK_SIZE - 350.0f);
         m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
@@ -37,11 +38,12 @@ BlockManger::BlockManger() {
     m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
     m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
     m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-    m_Backgrounds.back()->SetPosition(16 * BLOCK_SIZE - 380.0f,3 * BLOCK_SIZE - 325.0f);
-    m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
+    m_Backgrounds.back()->SetPosition(16 * BLOCK_SIZE - 380.0f,3 * BLOCK_SIZE - 325.0f);**/
+
+    /**m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
     m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
     m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-    m_Backgrounds.back()->SetPosition(16 * BLOCK_SIZE - 380.0f,2 * BLOCK_SIZE - 325.0f);**/
+    m_Backgrounds.back()->SetPosition(4 * BLOCK_SIZE - 335.0f + BLOCK_SIZE/2,2 * BLOCK_SIZE - 325.0f - BLOCK_SIZE/2);**/
 }
 
 /**int BlockManger::block_visible(float camera_movement_dis, int idx) {

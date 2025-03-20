@@ -25,13 +25,16 @@
 - 其餘素材來源：https://github.com/Gold872/Super-Mario-Bros/tree/master
 - 遊玩網站：https://supermarioplay.com/
 - 製作參考：https://www.youtube.com/watch?v=7D4uoSoQsjw&t=60s
-- 製作參考：https://github.com/MitchellSternke/Mario/blob/master/source/Camera.cpp
+- 製作參考(camera)：https://github.com/MitchellSternke/Mario/blob/master/source/Camera.cpp
 - 移動參考：https://www.youtube.com/watch?v=dMbP4nvwONc
+- 移動參考(github)：https://github.com/Cakez77/CelesteClone/blob/master/src/game.cpp
 - 重力參考(js)：https://www.youtube.com/watch?v=RFPn9r9mKe0&t=70s
 - 重力參考(python)：https://pastebin.com/eJEjjQwv
 - 重力參考(C++)：https://www.youtube.com/watch?v=V0cGs2ZENSY&ab_channel=Voidmatrix
 - 跳躍參考(C++)：https://www.youtube.com/watch?v=JwRYJLI3P0Q&ab_channel=Voidmatrix
+- 碰撞參考(C++)：https://www.youtube.com/watch?v=eAjl4V61svE&ab_channel=Voidmatrix
 - 碰撞參考(C++)：https://www.youtube.com/watch?v=IaUcAt0jDqs
+- 移動平台參考(C++)：https://www.youtube.com/watch?v=X33Oj1jc9vc&ab_channel=Cakez
 
 # Development timeline
 
@@ -43,27 +46,27 @@
 - Week 3：實作地圖關卡
     - [x] 地圖背景
     - [x] 地板
-    - [ ] 碰撞箱
+    - [x] 碰撞箱
 - Week 4：實作地圖關卡
     - [x] 地圖背景
     - [x] 地板
-    - [ ] 碰撞箱
+    - [x] 碰撞箱
 
 - Week 5：人物移動邏輯
     - [x] 角色左右移動邏輯
     - [ ] 角色跳躍及碰撞箱邏輯
     - [ ] 碰撞音效
-    - [ ] 動畫
+    - [x] 動畫
 - Week 6：人物移動邏輯
     - [x] 角色左右移動邏輯
     - [ ] 角色跳躍及碰撞箱邏輯
     - [ ] 碰撞音效
-    - [ ] 動畫
+    - [x] 動畫
 - Week 7：人物移動邏輯
     - [x] 角色左右移動邏輯
     - [ ] 角色跳躍及碰撞箱邏輯
     - [ ] 碰撞音效
-    - [ ] 動畫
+    - [x] 動畫
 
 - Week 8：製作道具機制
     - [ ] 道具功能
