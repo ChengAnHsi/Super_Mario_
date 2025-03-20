@@ -10,7 +10,11 @@
 
 #include "AnimatedCharacter.hpp"
 #include "Util/Animation.hpp"
-
+enum class MarioState {
+    Stand,
+    Run,
+    Jump
+};
 class Mario : public AnimatedCharacter {
 public:
     Mario(int coin, int live, int score, const std::vector<std::string>& AnimationPaths): AnimatedCharacter(AnimationPaths){
@@ -29,6 +33,7 @@ public:
     [[nodiscard]] int Get_Live() const;
     void Increase_Score(int score);
     [[nodiscard]] int Get_Score() const;
+    void update_animation();
     bool is_on_floor() const;
     bool has_block_underneath() const;
     void calculate_falling_speed();
@@ -40,6 +45,8 @@ private:
     bool is_left_key_down = false;
     bool is_right_key_down = false;
     bool is_facing_right = true;
+
+    MarioState state = MarioState::Stand;
 
     bool isJumping = false;
     bool isRunning = false;
@@ -56,6 +63,7 @@ private:
     const float FIXED_TIME_STEP = 1.0f / 60.0f;  // 固定更新步長，假設 60 FPS
     const float FIXED_JUMP_SPEED = 8.0f;  // Mario 每幀上升的固定速度
     const float FIXED_GRAVITY = -0.9f;  // Mario 每幀下降的固定速度
+
 
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/mario0.png",RESOURCE_DIR"/Entities/mario1.png",RESOURCE_DIR"/Entities/mario2.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/marioDead.png"};
@@ -74,3 +82,4 @@ private:
     bool is_dead = false;
 };
 #endif //MARIO_HPP
+
