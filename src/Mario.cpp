@@ -3,6 +3,9 @@
 //
 
 #include "Mario.hpp"
+
+#include "BlockManager.hpp"
+#include "Global.hpp"
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
 
@@ -15,7 +18,6 @@ void Mario::on_jump() {
         this->SetImages(AnimationJump);
     }
 }
-
 
 void Mario::on_smalljump() {
     if (is_on_floor()) {
@@ -41,7 +43,7 @@ void Mario::move_and_collision(int delta) {
     mario_y += velocityY * (delta / 60.0f);
 
     // 計算地面高度
-    float ground_level = (mario_x >= -150 && mario_x <= -50) ? -240.0f : -270.0f;
+    float ground_level = -270.0f;
 
     if (mario_y <= ground_level) {
         mario_y = ground_level;
@@ -54,7 +56,7 @@ bool Mario::is_on_floor() const {
     // 檢查 Mario 是否在對應區間的地面上
     float mario_x = this->GetPosition().x;
     float mario_y = this->GetPosition().y;
-    float ground_level = (mario_x >= -150 && mario_x <= -50) ? -240.0f : -270.0f;
+    float ground_level = -270.0f;
     return mario_y <= ground_level;
 }
 void Mario::update_animation() {
@@ -231,4 +233,51 @@ void Mario::Increase_Score(const int score) {
 
 int Mario::Get_Score() const {
     return score;
+}
+
+/**void Mario::RefixOffset(float width, float height) {
+    float mario_x =  this->GetPosition().x;
+    float mario_y =  this->GetPosition().y;
+    this->SetPosition({mario_x - width, mario_y - height});
+}**/
+
+bool Mario::IfCollides(glm::vec2 po_other) {
+    /**auto posA = this->GetPosition();
+    auto posB = glm::vec2{width, height};
+    return (posA.x < posB.x + width &&
+        posA.x + width > posB.x &&
+        posA.y < posB.y + height &&
+        posA.y + height > posB.y);**/
+    //std::cout << this->GetPosition().x << std::endl;
+    //std::cout << this->GetPosition().y << std::endl;
+    auto po1 = this->GetPosition();
+    auto po2 = this->GetPosition();
+    auto po3 = this->GetPosition();
+    auto po4 = this->GetPosition();
+    po2.x += BLOCK_SIZE;
+    po3.y += BLOCK_SIZE;
+    po4.x += BLOCK_SIZE;
+    po4.y += BLOCK_SIZE;
+    if(po1.x >= po_other.x and po1.x <= po_other.x + BLOCK_SIZE) {
+        if(po1.y >= po_other.y and po1.y <= po_other.y + BLOCK_SIZE) {
+
+            return true;
+        }
+    }
+    if(po2.x >= po_other.x and po2.x <= po_other.x + BLOCK_SIZE) {
+        if(po2.y >= po_other.y and po2.y <= po_other.y + BLOCK_SIZE) {
+            return true;
+        }
+    }
+    if(po3.x >= po_other.x and po3.x <= po_other.x + BLOCK_SIZE) {
+        if(po3.y >= po_other.y and po3.y <= po_other.y + BLOCK_SIZE) {
+            return true;
+        }
+    }
+    if(po4.x >= po_other.x and po4.x <= po_other.x + BLOCK_SIZE) {
+        if(po4.y >= po_other.y and po4.y <= po_other.y + BLOCK_SIZE) {
+            return true;
+        }
+    }
+    return false;
 }
