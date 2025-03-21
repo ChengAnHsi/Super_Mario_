@@ -16,22 +16,24 @@ void App::ValidTask() {
         case Phase::Start:
             LOG_DEBUG("Welcome to Super Mario!");
             m_Phase = Phase::Level1_1;
-            m_PRM->NextPhase();
+            m_PRM->NextPhase(m_BM, m_Root);
+            m_Root.AddChildren(m_BM->GetChildren());
             break;
         case Phase::Level1_1:
             LOG_DEBUG("Congratulations! You have completed Level1-1!");
-            m_CurrentState = State::END;
-            /**m_Phase = Phase::Level1_2;
-            m_PRM->NextPhase();**/
+            m_Phase = Phase::Level1_2;
+            m_PRM->NextPhase(m_BM, m_Root);
+            m_Root.AddChildren(m_BM->GetChildren());
             break;
         default:
             break;
-        /**case Phase::Level1_2:
+        case Phase::Level1_2:
             LOG_DEBUG("Congratulations! You have completed Level1-2!");
-            m_Phase = Phase::Level1_3;
-            m_PRM->NextPhase();
+            m_CurrentState = State::END;
+            /**m_Phase = Phase::Level1_3;
+            m_PRM->NextPhase();**/
             break;
-        case Phase::Level1_3:
+        /**case Phase::Level1_3:
             LOG_DEBUG("Congratulations! You have completed Super Mario!");
             m_CurrentState = State::END;
             break;**/

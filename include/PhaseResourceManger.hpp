@@ -4,6 +4,7 @@
 #include "Util/GameObject.hpp"
 #include "TaskText.hpp"
 #include "Character.hpp"
+#include "BlockManager.hpp"
 #include "BackgroundImage.hpp"
 #include "Mario.hpp"
 #include <chrono>
@@ -23,7 +24,7 @@ public:
         return all_obj;
     }
 
-    void NextPhase();
+    void NextPhase(std::shared_ptr<BlockManger> BM, Util::Renderer m_Root);
     void ResetPosition() const;
     void DecreaseTime();
     void SetTime(int time);

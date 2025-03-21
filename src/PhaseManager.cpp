@@ -1,3 +1,4 @@
+#include "BlockManager.hpp"
 #include "PhaseResourceManger.hpp"
 
 #include "Util/Logger.hpp"
@@ -83,25 +84,47 @@ PhaseResourceManger::PhaseResourceManger() {
     m_Tube.back()->SetSize(2.5f, 2.5f);
 }
 
-void PhaseResourceManger::NextPhase() {
+void PhaseResourceManger::NextPhase(std::shared_ptr<BlockManger> BM, Util::Renderer m_Root) {
     if (m_Phase == 3) return;
     LOG_DEBUG("Passed! Next phase: {}", m_Phase);
     m_Background[0]->NextPhase(m_Phase);
-    m_Background[0]->SetSize(2.1f,2.1f);
+    m_Background[0]->SetSize(80.f,7.1f);
     m_Background[0]->SetZIndex(-50);
-    // [1]: castle is visible
-    // map 1-1 castle
-    m_Background[1]->ChangeImg(RESOURCE_DIR"/Scenery/castle.png");
-    m_Background[1]->SetPosition(202 * BLOCK_SIZE - 365.0f, 4 * BLOCK_SIZE - 325.0f);
-    m_Background[1]->SetSize(3.0f, 3.0f);
-    // [2]: flag set
-    m_Background[2]->ChangeImg(RESOURCE_DIR"/Scenery/flag-mast.png");
-    m_Background[2]->SetPosition(198 * BLOCK_SIZE - 365.0f, 8 * BLOCK_SIZE - 365.0f);
-    m_Background[2]->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-    // else set invisible
-    for(int i = 3; i < m_Background.size(); i++) {
-        m_Background[i]->SetVisible(false);
+
+    std::vector tmpx = BM->GetX(m_Phase);
+    std::vector tmpy = BM->GetY(m_Phase);
+    std::vector tmpidx = BM->Getidx(m_Phase);
+    std::vector<std::shared_ptr<BackgroundImage>> backgrounds;
+    int imgidx_size = tmpidx.size();
+    for (int i = 0; i < imgidx_size; i++) {
+        // position should change to correct position
+        backgrounds.push_back(std::make_shared<BackgroundImage>());
+        backgrounds.back()->ChangeImg(BM->imageFiles[tmpidx[i]]);
+        backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        backgrounds.back()->SetPosition(tmpx[i] * BLOCK_SIZE - 380.0f,tmpy[i] * BLOCK_SIZE - 325.0f);
     }
+
+    if (m_Phase == 1){
+        // set block
+        BM->SetBackground(backgrounds);
+        // [1]: castle is visible
+        // map 1-1 castle
+        m_Background[1]->ChangeImg(RESOURCE_DIR"/Scenery/castle.png");
+        m_Background[1]->SetPosition(202 * BLOCK_SIZE - 365.0f, 4 * BLOCK_SIZE - 325.0f);
+        m_Background[1]->SetSize(3.0f, 3.0f);
+        // [2]: flag set
+        m_Background[2]->ChangeImg(RESOURCE_DIR"/Scenery/flag-mast.png");
+        m_Background[2]->SetPosition(198 * BLOCK_SIZE - 365.0f, 8 * BLOCK_SIZE - 365.0f);
+        m_Background[2]->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        // else set invisible
+        for(int i = 3; i < m_Background.size(); i++) {
+            m_Background[i]->SetVisible(false);
+        }
+    }else{
+        // remove last level and set next level block
+        BM->SetBackground(backgrounds, m_Root);
+    }
+
     m_WorldText->SetTxtIdx(3, m_Phase++);
     m_OtherText->SetTxtIdx(5, 0);
 }

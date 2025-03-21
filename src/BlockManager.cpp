@@ -3,6 +3,7 @@
 //
 #include "BlockManager.hpp"
 #include "Global.hpp"
+#include <iostream>
 
 BlockManger::BlockManger() {
     int imgidx_size = imgidx.size();
@@ -17,6 +18,9 @@ BlockManger::BlockManger() {
     }
 
     for (int i = 0; i < 224; i++) {
+        if ( i == 69 || i == 70 || (i <= 88 && i >= 86) || i == 153 || i == 154){
+            continue;
+        }
         // correct x position or cut small floor to solve align and hole
         // x: i * BLOCK_SIZE + (22.0f * i / 8)
         // or: i * BLOCK_SIZE - 380.0f
@@ -54,6 +58,63 @@ BlockManger::BlockManger() {
     m_Backgrounds.back()->SetPosition(4 * BLOCK_SIZE - 335.0f + BLOCK_SIZE/2,2 * BLOCK_SIZE - 325.0f - BLOCK_SIZE/2);**/
 }
 
+std::vector<int> BlockManger::GetX(int phase){
+    std::cout << phase;
+    switch (phase)
+    {
+    case 1:
+        return tmp_x;
+    case 2:
+        return tmp_x2;
+    default:
+        return tmp_x;
+    }
+}
+
+std::vector<int> BlockManger::GetY(int phase){
+    switch (phase)
+    {
+    case 1:
+        return tmp_y;
+    case 2:
+        return tmp_y2;
+    default:
+        return tmp_y;
+    }
+}
+
+std::vector<int> BlockManger::Getidx(int phase){
+    switch (phase)
+    {
+    case 1:
+        return imgidx;
+    case 2:
+        return imgidx2;
+    default:
+        return imgidx;
+    }
+}
+
+void BlockManger::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds){
+    /**for (int i = 0; i < m_Backgrounds.size(); i++){
+        m_Backgrounds[i]->SetPosition(0, 0);
+        m_Backgrounds[i]->SetVisible(false);
+    }**/
+    this->m_Backgrounds = backgrounds;
+}
+
+void BlockManger::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds, Util::Renderer m_Root){
+    std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
+    for (const auto & img : m_Backgrounds) {
+        all_obj.emplace_back(img);
+        m_Root.RemoveChild(all_obj.back());
+    }
+    /**for (int i = 0; i < m_Backgrounds.size(); i++){
+        m_Backgrounds[i]->SetPosition(0, 0);
+        m_Backgrounds[i]->SetVisible(false);
+    }**/
+    this->m_Backgrounds = backgrounds;
+}
 /**int BlockManger::block_visible(float camera_movement_dis, int idx) {
    for (int i = idx; i < imgidx.size(); i++) {
         std::shared_ptr<BackgroundImage> tmp = m_Backgrounds[i];

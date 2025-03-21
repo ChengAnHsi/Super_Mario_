@@ -12,7 +12,12 @@ public:
 
     void NextPhase(const int phase) {
         auto temp = std::dynamic_pointer_cast<Util::Image>(m_Drawable);
-        temp->SetImage(RESOURCE_DIR"/Scenery/Overworld/sky.png");
+        if (phase != 2){
+            temp->SetImage(RESOURCE_DIR"/Scenery/Overworld/sky.png");
+        }else{
+            // black image
+            temp->SetImage(RESOURCE_DIR"/Scenery/Overworld/sky.png");
+        }
     }
 
     void ChangeImg(std::string path) {
