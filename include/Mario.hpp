@@ -38,6 +38,8 @@ public:
     bool has_block_underneath() const;
     void calculate_falling_speed();
     void on_smalljump();
+    void RefixOffset(float width, float height);
+    bool IfCollides(glm::vec2 po_other);
 private:
     int coin = 0;
     int live = 3;

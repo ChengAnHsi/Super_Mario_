@@ -87,7 +87,7 @@ void PhaseResourceManger::NextPhase() {
     if (m_Phase == 3) return;
     LOG_DEBUG("Passed! Next phase: {}", m_Phase);
     m_Background[0]->NextPhase(m_Phase);
-    m_Background[0]->SetSize(2.1f,2.1f);
+    m_Background[0]->SetSize(80.0f,7.0f);
     m_Background[0]->SetZIndex(-50);
     // [1]: castle is visible
     // map 1-1 castle

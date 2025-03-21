@@ -27,14 +27,6 @@ public:
     void SetSize(float width, float height) {
         m_Transform.scale = {width, height};
     }
-
-private:
-    /**inline std::string ImagePath(const int phase) {
-        // return RESOURCE_DIR"/Scenery/World1_Area" + std::to_string(phase) + ".png";
-        //return RESOURCE_DIR"/Temp/Image/1-" + std::to_string(phase) + "_Grid.png";
-        // return RESOURCE_DIR"/Scenery/1_1MAP.png";
-        return RESOURCE_DIR"/Scenery/Overworld/sky.png";
-    }**/
 };
 
 #endif //BACKGROUND_IMAGE_HPP
