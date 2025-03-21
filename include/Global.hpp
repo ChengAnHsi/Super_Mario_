@@ -9,7 +9,7 @@
 
 #pragma once
 
-constexpr float BLOCK_SIZE = 45.0f;
+constexpr float BLOCK_SIZE = 48.0f;
 constexpr float BLOCK_MAGNIFICATION = 3.0f;
 constexpr int WINDOW_WIDTH = 720;
 constexpr int WINDOW_HEIGHT = 720;

@@ -59,6 +59,26 @@ bool Mario::is_on_floor() const {
 }
 void Mario::update_animation() {
     // 如果不在地面上，狀態必定為 Jump
+    int direction = is_right_key_down - is_left_key_down;
+    if ((is_facing_right && direction == -1) || (!is_facing_right && direction == 1)) {
+        // facing left
+        m_Transform.scale = glm::vec2{-2, 2};
+    }else if ((is_facing_right && direction == 1) || (is_facing_right && direction == 1)) {
+        // facing right
+        m_Transform.scale = glm::vec2{2, 2};
+    }
+
+    if (direction != 0) {
+        is_facing_right = direction;
+    }else {
+        // animation(stand) update
+        isRunning = false;
+        if (is_facing_right) {
+            this->SetImages(this->AnimationStand);
+        }else {
+            this->SetImages(this->AnimationStand);
+        }
+    }
     if (!is_on_floor()) {
         state = MarioState::Jump;
         this->SetImages(AnimationJump);
@@ -131,7 +151,7 @@ float Mario::move() {
 
     if (is_on_floor()) {
         velocityY = 0;
-        this->SetImages(this->AnimationStand);
+        this->SetImages(this- q>AnimationStand);
         isJumping = false;
     }
     mario_y += velocityY * delta_time;**/

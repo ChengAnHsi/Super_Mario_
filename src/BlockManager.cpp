@@ -16,13 +16,21 @@ BlockManger::BlockManger() {
         m_Backgrounds.back()->SetPosition(m_PositionX[i],m_PositionY[i]);
     }
 
-    for (int i = 0; i < 224; i+=8) {
+    for (int i = 0; i < 224; i++) {
         // correct x position or cut small floor to solve align and hole
         // x: i * BLOCK_SIZE + (22.0f * i / 8)
         // or: i * BLOCK_SIZE - 380.0f
-        m_PositionX.push_back(i * BLOCK_SIZE + (22.0f * i / 8) - 370.0f);
+        m_PositionX.push_back(i * BLOCK_SIZE - 380.0f);
         // correct y position subtract 25 more
-        m_PositionY.push_back(BLOCK_SIZE - 350.0f);
+        m_PositionY.push_back(BLOCK_SIZE - 325.0f);
+        m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
+        m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Scenery/Overworld/floorbricks.png");
+        m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        m_Backgrounds.back()->SetPosition(m_PositionX.back(),m_PositionY.back());
+
+        m_PositionX.push_back(i * BLOCK_SIZE - 380.0f);
+        // correct y position subtract 25 more
+        m_PositionY.push_back( - 325.0f);
         m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
         m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Scenery/Overworld/floorbricks.png");
         m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
