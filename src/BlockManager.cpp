@@ -106,7 +106,7 @@ void BlockManger::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> ba
         m_Backgrounds[i]->SetPosition(0, 0);
         m_Backgrounds[i]->SetVisible(false);
     }**/
-    this->m_Backgrounds = backgrounds;
+    this->m_Backgrounds = backgrounds;//fck
 }
 
 void BlockManger::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds, Util::Renderer m_Root){
