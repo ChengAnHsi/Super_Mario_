@@ -9,7 +9,7 @@ BlockManger::BlockManger() {
     int imgidx_size = imgidx.size();
     for (int i = 0; i < imgidx_size; i++) {
         // position should change to correct position
-        m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE - 380.0f);
+        m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE - 335.0f);
         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE - 325.0f);
         m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
         m_Backgrounds.back()->ChangeImg(imageFiles[imgidx[i]]);
@@ -25,7 +25,7 @@ BlockManger::BlockManger() {
         // x: i * BLOCK_SIZE + (22.0f * i / 8)
         // or: i * BLOCK_SIZE - 380.0f
         // first floor
-        m_PositionX.push_back(i * BLOCK_SIZE - 380.0f);
+        m_PositionX.push_back(i * BLOCK_SIZE - 335.0f);
         m_PositionY.push_back(BLOCK_SIZE - 325.0f);
         m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
         m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Scenery/Overworld/floorbricks.png");
@@ -33,7 +33,7 @@ BlockManger::BlockManger() {
         m_Backgrounds.back()->SetPosition(m_PositionX.back(),m_PositionY.back());
 
         // second floor
-        m_PositionX.push_back(i * BLOCK_SIZE - 380.0f);
+        m_PositionX.push_back(i * BLOCK_SIZE - 335.0f);
         m_PositionY.push_back( - 325.0f);
         m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
         m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Scenery/Overworld/floorbricks.png");
@@ -104,11 +104,10 @@ void BlockManger::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> ba
 }
 
 void BlockManger::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds, Util::Renderer m_Root){
-    /**std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
     for (const auto & img : m_Backgrounds) {
-        all_obj.emplace_back(img);
-        m_Root.RemoveChild(all_obj.back());
-    }**/
+        std::shared_ptr<Util::GameObject> tmp = img;
+        m_Root.RemoveChild(img);
+    }
     /**for (int i = 0; i < m_Backgrounds.size(); i++){
         m_Backgrounds[i]->SetPosition(0, 0);
         m_Backgrounds[i]->SetVisible(false);

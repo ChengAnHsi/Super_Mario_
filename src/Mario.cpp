@@ -27,14 +27,14 @@ void Mario::OnSmallJump() {
     }
 }
 
-void Mario::OnRun(float distance) {
+void Mario::OnRun(const float distance) {
     float mario_x =  this->GetPosition().x;
     float mario_y =  this->GetPosition().y;
     mario_x += distance;
     this->SetPosition({mario_x, mario_y});
 }
 
-void Mario::MoveAndCollision(int delta) {
+void Mario::MoveAndCollision(const float delta) {
     float mario_x = this->GetPosition().x;
     float mario_y = this->GetPosition().y;
 
@@ -55,9 +55,9 @@ void Mario::MoveAndCollision(int delta) {
 
 bool Mario::IsOnFloor() const {
     // 檢查 Mario 是否在對應區間的地面上
-    float mario_x = this->GetPosition().x;
-    float mario_y = this->GetPosition().y;
-    float ground_level = -240.0f;
+    const float mario_x = this->GetPosition().x;
+    const float mario_y = this->GetPosition().y;
+    constexpr float ground_level = -240.0f;
     return mario_y <= ground_level;
 }
 
@@ -99,13 +99,13 @@ void Mario::UpdateAnimation() {
     }
 }
 
-float Mario::OnUpdate(int delta) {
+float Mario::OnUpdate(const float delta) {
     // update moving
-    int direction = is_right_key_down - is_left_key_down;
-    float distance = direction * run_velocity * delta;
+    const int direction = is_right_key_down - is_left_key_down;
+    const float distance = direction * run_velocity * delta;
     OnRun(distance);
 
-    MoveAndCollision(3*delta);
+    MoveAndCollision(3 * delta);
 
     // 每幀更新動畫圖片狀態
     UpdateAnimation();
@@ -201,15 +201,18 @@ int Mario::GetScore() const {
     return score;
 }
 
-bool PointInRect(glm::vec2 point, glm::vec2 rect) {
+bool PointInRect(const glm::vec2 point, const glm::vec2 rect) {
     return (point.x >= rect.x && point.x <= rect.x + BLOCK_SIZE &&
         point.y >= rect.y && point.y <= rect.y + BLOCK_SIZE);
 }
 
-bool Mario::AABBCollides(glm::vec2 b) {
-    auto a = this->GetPosition();
-    glm::vec2 mario_size = {this->GetTransform().translation.x, this->GetTransform().translation.y};
-    return (a.x < b.x + BLOCK_SIZE && a.x + mario_size.x > b.x && a.y < b.y + BLOCK_SIZE && a.y + mario_size.y > b.y);
+bool Mario::AABBCollides(const glm::vec2 b) const {
+    const auto a = this->GetPosition();
+    const glm::vec2 mario_size = {this->GetTransform().translation.x, this->GetTransform().translation.y};
+    return (a.x < b.x + BLOCK_SIZE && // Collision on Left of a and Right of b
+        a.x + mario_size.x > b.x && // Collision on Right of a and Left of b
+        a.y < b.y + BLOCK_SIZE && // Collision on Bottom of a and Top of b
+        a.y + mario_size.y > b.y); //  Collision on Top of a and Bottom of b
 }
 
 /**void Mario::RefixOffset(float width, float height) {

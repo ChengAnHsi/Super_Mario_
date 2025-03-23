@@ -66,18 +66,14 @@ void App::Update() {
 
     // Calculate how far the camera should move to the right
     float dis = 0.0f;
-    if(m_Phase != Phase::Start) {
-        dis = m_Mario->Move();
-    }
+    if(m_Phase != Phase::Start) dis = m_Mario->Move();
 
     // Camera cannot move left
     if (dis < 0.0f) {
         dis = 0.0f;
     }
     // If Mario's position is less than -112.5, the camera does not need to move to the right
-    if(m_Mario->GetPosition().x <= -112.5f) {
-        dis = 0.0f;
-    }
+    if(m_Mario->GetPosition().x <= -112.5f) dis = 0.0f;
 
     // to solve mario left margin
     if(m_Mario->GetPosition().x < -360) {

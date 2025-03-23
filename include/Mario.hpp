@@ -24,8 +24,8 @@ public:
     };
     void OnJump();
     void OnRun(float distance);
-    void MoveAndCollision(int delta);
-    float OnUpdate(int delta);
+    void MoveAndCollision(float delta);
+    float OnUpdate(float delta);
     float Move();
     void IncreaseCoin(int coin);
     [[nodiscard]] int GetCoin() const;
@@ -36,10 +36,9 @@ public:
     void UpdateAnimation();
     bool IsOnFloor() const;
     bool HasBlockUnderneath() const;
-    void CalculateFallingSpeed();
     void OnSmallJump();
-    void RefixOffset(float width, float height);
-    bool AABBCollides(glm::vec2 b);
+    // void RefixOffset(float width, float height);
+    bool AABBCollides(glm::vec2 b) const;
 private:
     int coin = 0;
     int live = 3;
@@ -52,7 +51,7 @@ private:
 
     bool isJumping = false;
     bool isRunning = false;
-    float temp= 0.0f;      //暫存
+    float temp = 0.0f;      //暫存
     float delta_time = 1.0f;
     float run_velocity = 5.0f;
     float jump_velocity = 12.7f;
