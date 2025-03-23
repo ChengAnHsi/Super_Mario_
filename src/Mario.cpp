@@ -9,9 +9,9 @@
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
 
-void Mario::on_jump() {
+void Mario::OnJump() {
     // 只有在真正落地時才能跳躍
-    if (is_on_floor()) {
+    if (IsOnFloor()) {
         velocityY = JUMP_VELOCITY;
         state = MarioState::Jump;
         // 立刻更新為跳躍圖片
@@ -19,22 +19,22 @@ void Mario::on_jump() {
     }
 }
 
-void Mario::on_smalljump() {
-    if (is_on_floor()) {
+void Mario::OnSmallJump() {
+    if (IsOnFloor()) {
         velocityY = SMALL_JUMP_VELOCITY;
         state = MarioState::Jump;
         this->SetImages(AnimationJump);
     }
 }
 
-void Mario::on_run(float distance) {
+void Mario::OnRun(float distance) {
     float mario_x =  this->GetPosition().x;
     float mario_y =  this->GetPosition().y;
     mario_x += distance;
     this->SetPosition({mario_x, mario_y});
 }
 
-void Mario::move_and_collision(int delta) {
+void Mario::MoveAndCollision(int delta) {
     float mario_x = this->GetPosition().x;
     float mario_y = this->GetPosition().y;
 
@@ -43,7 +43,7 @@ void Mario::move_and_collision(int delta) {
     mario_y += velocityY * (delta / 60.0f);
 
     // 計算地面高度
-    float ground_level = -270.0f;
+    float ground_level = -240.0f;
 
     if (mario_y <= ground_level) {
         mario_y = ground_level;
@@ -52,14 +52,16 @@ void Mario::move_and_collision(int delta) {
 
     this->SetPosition({mario_x, mario_y});
 }
-bool Mario::is_on_floor() const {
+
+bool Mario::IsOnFloor() const {
     // 檢查 Mario 是否在對應區間的地面上
     float mario_x = this->GetPosition().x;
     float mario_y = this->GetPosition().y;
-    float ground_level = -270.0f;
+    float ground_level = -240.0f;
     return mario_y <= ground_level;
 }
-void Mario::update_animation() {
+
+void Mario::UpdateAnimation() {
     // 如果不在地面上，狀態必定為 Jump
     int direction = is_right_key_down - is_left_key_down;
     if ((is_facing_right && direction == -1) || (!is_facing_right && direction == 1)) {
@@ -81,7 +83,7 @@ void Mario::update_animation() {
             this->SetImages(this->AnimationStand);
         }
     }
-    if (!is_on_floor()) {
+    if (!IsOnFloor()) {
         state = MarioState::Jump;
         this->SetImages(AnimationJump);
     } else {
@@ -97,21 +99,21 @@ void Mario::update_animation() {
     }
 }
 
-float Mario::on_update(int delta) {
-    // 更新移動
+float Mario::OnUpdate(int delta) {
+    // update moving
     int direction = is_right_key_down - is_left_key_down;
     float distance = direction * run_velocity * delta;
-    on_run(distance);  // 移動的程式碼
+    OnRun(distance);
 
-    move_and_collision(3*delta);
+    MoveAndCollision(3*delta);
 
     // 每幀更新動畫圖片狀態
-    update_animation();
+    UpdateAnimation();
 
     return distance;
 }
 // 檢查是否有區塊在 Mario 下方
-bool Mario::has_block_underneath() const {
+bool Mario::HasBlockUnderneath() const {
     float mario_x = this->GetPosition().x;
     float mario_y = this->GetPosition().y;
 
@@ -122,41 +124,11 @@ bool Mario::has_block_underneath() const {
 
 }
 
-
-float Mario::move() {
+float Mario::Move() {
     if (is_dead) {
         this->SetImages(this->AnimationDead);
         return 0.0f;
     }
-    /**float mario_x =  this->GetPosition().x;
-    float mario_y =  this->GetPosition().y;
-
-    if (Util::Input::IsKeyPressed(Util::Keycode::UP) and is_on_floor()) {
-        // setting jump base speed
-        velocityY = JUMP_STRENGTH;
-        this->SetImages(this->AnimationJump);
-        isJumping = true;
-
-        velocityY += GRAVITY * delta_time;
-        mario_y += velocityY * delta_time;
-    }
-
-    if (velocityY > 0) {
-        if (velocityY >= MAX_JUMP_VELOCITY) {
-            velocityY = 0;
-        }else {
-            if (Util::Input::IsKeyPressed(Util::Keycode::UP) and velocityY < MAX_JUMP_VELOCITY) {
-                velocityY += additional_jump_force;
-            }
-        }
-    }
-
-    if (is_on_floor()) {
-        velocityY = 0;
-        this->SetImages(this- q>AnimationStand);
-        isJumping = false;
-    }
-    mario_y += velocityY * delta_time;**/
 
     // XX test grow animation XX
     /**if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
@@ -190,49 +162,54 @@ float Mario::move() {
         }
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
-        on_jump();
+        OnJump();
     }
-
     if (Util::Input::IsKeyPressed(Util::Keycode::SPACE)) {
-        on_smalljump();
+        OnSmallJump();
     }
-    /**if (is_on_floor()) {
-        this->SetImages(this->AnimationStand);
-    }**/
     if (Util::Input::IsKeyUp(Util::Keycode::LEFT)) {
         is_left_key_down = false;
     }
     if (Util::Input::IsKeyUp(Util::Keycode::RIGHT)) {
         is_right_key_down = false;
     }
-    return on_update(1);
+    return OnUpdate(1);
 }
 
-void Mario::Increase_Coin(const int coin) {
+void Mario::IncreaseCoin(const int coin) {
     this->coin += coin;
 }
 
-int Mario::Get_Coin() const {
+int Mario::GetCoin() const {
     return coin;
 }
 
-void Mario::Set_Live(const int live) {
+void Mario::SetLive(const int live) {
     this->live = live;
-    if (live == 0) {
-        SetImages(AnimationDead);
-    }
+    if (live == 0) SetImages(AnimationDead);
 }
 
-int Mario::Get_Live() const {
+int Mario::GetLive() const {
     return live;
 }
 
-void Mario::Increase_Score(const int score) {
+void Mario::IncreaseScore(const int score) {
     this->score += score;
 }
 
-int Mario::Get_Score() const {
+int Mario::GetScore() const {
     return score;
+}
+
+bool PointInRect(glm::vec2 point, glm::vec2 rect) {
+    return (point.x >= rect.x && point.x <= rect.x + BLOCK_SIZE &&
+        point.y >= rect.y && point.y <= rect.y + BLOCK_SIZE);
+}
+
+bool Mario::AABBCollides(glm::vec2 b) {
+    auto a = this->GetPosition();
+    glm::vec2 mario_size = {this->GetTransform().translation.x, this->GetTransform().translation.y};
+    return (a.x < b.x + BLOCK_SIZE && a.x + mario_size.x > b.x && a.y < b.y + BLOCK_SIZE && a.y + mario_size.y > b.y);
 }
 
 /**void Mario::RefixOffset(float width, float height) {
@@ -240,44 +217,3 @@ int Mario::Get_Score() const {
     float mario_y =  this->GetPosition().y;
     this->SetPosition({mario_x - width, mario_y - height});
 }**/
-
-bool Mario::IfCollides(glm::vec2 po_other) {
-    /**auto posA = this->GetPosition();
-    auto posB = glm::vec2{width, height};
-    return (posA.x < posB.x + width &&
-        posA.x + width > posB.x &&
-        posA.y < posB.y + height &&
-        posA.y + height > posB.y);**/
-    //std::cout << this->GetPosition().x << std::endl;
-    //std::cout << this->GetPosition().y << std::endl;
-    auto po1 = this->GetPosition();
-    auto po2 = this->GetPosition();
-    auto po3 = this->GetPosition();
-    auto po4 = this->GetPosition();
-    po2.x += BLOCK_SIZE;
-    po3.y += BLOCK_SIZE;
-    po4.x += BLOCK_SIZE;
-    po4.y += BLOCK_SIZE;
-    if(po1.x >= po_other.x and po1.x <= po_other.x + BLOCK_SIZE) {
-        if(po1.y >= po_other.y and po1.y <= po_other.y + BLOCK_SIZE) {
-
-            return true;
-        }
-    }
-    if(po2.x >= po_other.x and po2.x <= po_other.x + BLOCK_SIZE) {
-        if(po2.y >= po_other.y and po2.y <= po_other.y + BLOCK_SIZE) {
-            return true;
-        }
-    }
-    if(po3.x >= po_other.x and po3.x <= po_other.x + BLOCK_SIZE) {
-        if(po3.y >= po_other.y and po3.y <= po_other.y + BLOCK_SIZE) {
-            return true;
-        }
-    }
-    if(po4.x >= po_other.x and po4.x <= po_other.x + BLOCK_SIZE) {
-        if(po4.y >= po_other.y and po4.y <= po_other.y + BLOCK_SIZE) {
-            return true;
-        }
-    }
-    return false;
-}

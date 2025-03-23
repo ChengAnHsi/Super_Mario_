@@ -50,18 +50,6 @@ void App::ValidTask() {
             }
             break;
 
-        case Phase::ABLE_TO_MOVE:
-            if (isInsideTheSquare(*m_Giraffe)) {
-                m_Phase = Phase::COLLIDE_DETECTION;
-                m_Giraffe->SetPosition({-112.5f, -140.5f});
-                m_Chest->SetVisible(true);
-
-                m_PRM->NextPhase();
-            } else {
-                LOG_DEBUG("The giraffe is not inside the square");
-            }
-            break;
-
         case Phase::BEE_ANIMATION:
             isBeeLooping = m_Bee->IsLooping();
             isBeePlaying = m_Bee->IsPlaying();

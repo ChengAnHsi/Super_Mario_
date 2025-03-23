@@ -46,7 +46,7 @@ private:
     Util::Renderer m_Root;
 
     std::shared_ptr<Mario> m_Mario;
-    std::shared_ptr<Camera> m_Camera;
+    //std::shared_ptr<Camera> m_Camera;
 
     std::shared_ptr<AnimatedCharacter> m_Coin;
     std::shared_ptr<PhaseResourceManger> m_PRM;

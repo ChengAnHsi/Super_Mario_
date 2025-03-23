@@ -88,11 +88,7 @@ void PhaseResourceManger::NextPhase(std::shared_ptr<BlockManger> BM, Util::Rende
     if (m_Phase == 3) return;
     LOG_DEBUG("Passed! Next phase: {}", m_Phase);
     m_Background[0]->NextPhase(m_Phase);
-<<<<<<< HEAD
-    m_Background[0]->SetSize(80.f,7.1f);
-=======
     m_Background[0]->SetSize(80.0f,7.0f);
->>>>>>> 4fb2e60b855d2a979359575c0f6edb317a56864d
     m_Background[0]->SetZIndex(-50);
 
     std::vector tmpx = BM->GetX(m_Phase);

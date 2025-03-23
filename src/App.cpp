@@ -17,7 +17,7 @@ void App::Start() {
     m_Mario->m_Transform.scale = glm::vec2(2.0f, 2.0f);
 
     m_Root.AddChild(m_Mario);
-    m_Camera = std::make_shared<Camera>();
+    //m_Camera = std::make_shared<Camera>();
 
     std::vector<std::string> coinImages;
     coinImages.reserve(3);
@@ -55,8 +55,8 @@ void App::Update() {
     }
 
     if(m_PRM->GetTime() == 0) {
-        m_Mario->Set_Live(m_Mario->Get_Live() - 1);
-        if (m_Mario->Get_Live() == 0) {
+        m_Mario->SetLive(m_Mario->GetLive() - 1);
+        if (m_Mario->GetLive() == 0) {
             // dead situation
         }else {
             m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -270.0f});
@@ -67,7 +67,7 @@ void App::Update() {
     // Calculate how far the camera should move to the right
     float dis = 0.0f;
     if(m_Phase != Phase::Start) {
-        dis = m_Mario->move();
+        dis = m_Mario->Move();
     }
 
     // Camera cannot move left

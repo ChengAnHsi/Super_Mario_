@@ -7,7 +7,7 @@
 
 #pragma once
 
-class MapManager
+/**class MapManager
 {
     std::vector<Object> brick_particles;
     std::vector<Object> question_block_coins;
@@ -41,5 +41,5 @@ public:
     std::vector<unsigned char> map_collision(const std::vector<Cell>& i_check_cells, std::vector<sf::Vector2i>& i_collision_cells, const sf::FloatRect& i_hitbox) const;
 
     sf::Color get_map_sketch_pixel(const unsigned short i_x, const unsigned short i_y) const;
-};
+};**/
 #endif //MAPMANAGER_HPP
