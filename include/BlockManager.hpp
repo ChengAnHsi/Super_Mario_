@@ -37,7 +37,7 @@ public:
     std::vector<int> GetY(int phase);
     std::vector<int> Getidx(int phase);
     void SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds);
-    void SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds, Util::Renderer m_Root);
+    std::vector<std::shared_ptr<BackgroundImage>> GetBackground();
     //int block_visible(float camera_movement_dis, int idx);
 private:
     // 0-1: block 2-3: floor 4-5: immovable block 6-11: mistery block

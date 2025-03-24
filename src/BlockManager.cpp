@@ -3,6 +3,7 @@
 //
 #include "BlockManager.hpp"
 #include "Global.hpp"
+#include "App.hpp"
 #include <iostream>
 
 BlockManger::BlockManger() {
@@ -100,19 +101,11 @@ void BlockManger::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> ba
         m_Backgrounds[i]->SetPosition(0, 0);
         m_Backgrounds[i]->SetVisible(false);
     }**/
-    this->m_Backgrounds = backgrounds;//fck
+    this->m_Backgrounds = backgrounds;
 }
 
-void BlockManger::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds, Util::Renderer m_Root){
-    for (const auto & img : m_Backgrounds) {
-        std::shared_ptr<Util::GameObject> tmp = img;
-        m_Root.RemoveChild(img);
-    }
-    /**for (int i = 0; i < m_Backgrounds.size(); i++){
-        m_Backgrounds[i]->SetPosition(0, 0);
-        m_Backgrounds[i]->SetVisible(false);
-    }**/
-    this->m_Backgrounds = backgrounds;
+std::vector<std::shared_ptr<BackgroundImage>> BlockManger::GetBackground(){
+    return m_Backgrounds;
 }
 /**int BlockManger::block_visible(float camera_movement_dis, int idx) {
    for (int i = idx; i < imgidx.size(); i++) {

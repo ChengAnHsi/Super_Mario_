@@ -1,8 +1,8 @@
 #include "BlockManager.hpp"
 #include "PhaseResourceManger.hpp"
-
-#include "Util/Logger.hpp"
+#include "App.hpp"
 #include "Global.hpp"
+#include "Util/Logger.hpp"
 
 PhaseResourceManger::PhaseResourceManger() {
     last_update = std::chrono::steady_clock::now();
@@ -54,7 +54,7 @@ PhaseResourceManger::PhaseResourceManger() {
     // [2]: start bush(right)
     m_Background.push_back(std::make_shared<BackgroundImage>());
     m_Background.back()->ChangeImg(imageFiles[0]);
-    m_Background.back()->SetPosition(11 * BLOCK_SIZE - 360.0f, 1.5 * BLOCK_SIZE- 315.0f);
+    m_Background.back()->SetPosition(11 * BLOCK_SIZE - 360.0f, 2 * BLOCK_SIZE- 325.0f);
     m_Background.back()->SetSize(1.3f,1.3f);
 
     // tube init(map 1-1)
@@ -84,29 +84,15 @@ PhaseResourceManger::PhaseResourceManger() {
     m_Tube.back()->SetSize(2.5f, 2.5f);
 }
 
-void PhaseResourceManger::NextPhase(std::shared_ptr<BlockManger> BM, Util::Renderer m_Root) {
+void PhaseResourceManger::NextPhase(int m_Phase) {
     if (m_Phase == 3) return;
     LOG_DEBUG("Passed! Next phase: {}", m_Phase);
-    m_Background[0]->NextPhase(m_Phase);
-    m_Background[0]->SetSize(80.0f,7.0f);
-    m_Background[0]->SetZIndex(-50);
-
-    std::vector tmpx = BM->GetX(m_Phase);
-    std::vector tmpy = BM->GetY(m_Phase);
-    std::vector tmpidx = BM->Getidx(m_Phase);
-    std::vector<std::shared_ptr<BackgroundImage>> backgrounds;
-    int imgidx_size = tmpidx.size();
-    for (int i = 0; i < imgidx_size; i++) {
-        // position should change to correct position
-        backgrounds.push_back(std::make_shared<BackgroundImage>());
-        backgrounds.back()->ChangeImg(BM->imageFiles[tmpidx[i]]);
-        backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        backgrounds.back()->SetPosition(tmpx[i] * BLOCK_SIZE - 335.0f,tmpy[i] * BLOCK_SIZE - 325.0f);
-    }
 
     if (m_Phase == 1){
-        // set block
-        BM->SetBackground(backgrounds);
+        // [0]: blue or black background image
+        m_Background[0]->NextPhase(m_Phase);
+        m_Background[0]->SetSize(80.0f,7.0f);
+        m_Background[0]->SetZIndex(-50);
         // [1]: castle is visible
         // map 1-1 castle
         m_Background[1]->ChangeImg(RESOURCE_DIR"/Scenery/castle.png");
@@ -116,13 +102,17 @@ void PhaseResourceManger::NextPhase(std::shared_ptr<BlockManger> BM, Util::Rende
         m_Background[2]->ChangeImg(RESOURCE_DIR"/Scenery/flag-mast.png");
         m_Background[2]->SetPosition(198 * BLOCK_SIZE - 320.0f, 8 * BLOCK_SIZE - 390.0f);
         m_Background[2]->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        // else set invisible
-        for(int i = 3; i < m_Background.size(); i++) {
-            m_Background[i]->SetVisible(false);
-        }
+        // [3]> mountain, cloud... set invisible use app->nextphase
     }else{
-        // remove last level and set next level block
-        BM->SetBackground(backgrounds, m_Root);
+        m_Background.clear();
+        m_Tube.clear();
+        // other level tube and its position
+
+        // test successful
+        m_Tube.push_back(std::make_shared<BackgroundImage>());
+        m_Tube.back()->ChangeImg(RESOURCE_DIR"/Scenery/vertical-small-tube.png");
+        m_Tube.back()->SetPosition(28 * BLOCK_SIZE - 320.0f, 3 * BLOCK_SIZE  - 357.0f);
+        m_Tube.back()->SetSize(2.5f, 2.5f);
     }
 
     SetTime(LEVEL_TIME[m_Phase]);
@@ -137,8 +127,12 @@ void PhaseResourceManger::ResetPosition() const {
     m_TimeText->SetPosition(300, 300);
 }
 
-std::shared_ptr<BackgroundImage> PhaseResourceManger::GetBackground(int idx) {
-    return m_Background[idx];
+std::vector<std::shared_ptr<BackgroundImage> > PhaseResourceManger::GetTube() {
+    return m_Tube;
+}
+
+std::vector<std::shared_ptr<BackgroundImage> > PhaseResourceManger::GetBackground() {
+    return m_Background;
 }
 
 void PhaseResourceManger::DecreaseTime() {

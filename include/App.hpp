@@ -31,6 +31,7 @@ public:
 
 private:
     void ValidTask();
+    void NextPhase();
 
     enum class Phase {
         Start,
@@ -38,7 +39,6 @@ private:
         Level1_2,
         Level1_3
     };
-
 
     State m_CurrentState = State::START;
     Phase m_Phase = Phase::Start;

@@ -3,7 +3,6 @@
 
 #include "Util/GameObject.hpp"
 #include "TaskText.hpp"
-#include "Character.hpp"
 #include "BlockManager.hpp"
 #include "BackgroundImage.hpp"
 #include "Mario.hpp"
@@ -13,8 +12,11 @@ class PhaseResourceManger {
 public:
     PhaseResourceManger();
 
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren() const {
-        std::vector<std::shared_ptr<Util::GameObject>> all_obj = {m_MarioText, m_MoneyText, m_WorldText, m_TimeText, m_OtherText};
+    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren(bool is_init) const {
+        std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
+        if (is_init){
+            all_obj = {m_MarioText, m_MoneyText, m_WorldText, m_TimeText, m_OtherText};
+        }
         for (const auto & img : m_Background) {
             all_obj.emplace_back(img);
         }
@@ -24,12 +26,13 @@ public:
         return all_obj;
     }
 
-    void NextPhase(std::shared_ptr<BlockManger> BM, Util::Renderer m_Root);
+    void NextPhase(int m_phase); // Locating objects outside the block
     void ResetPosition() const;
     void DecreaseTime();
     void SetTime(int time);
     int GetTime() const;
-    std::shared_ptr<BackgroundImage> GetBackground(int idx);
+    std::vector<std::shared_ptr<BackgroundImage>> GetBackground();
+    std::vector<std::shared_ptr<BackgroundImage>> GetTube();
 
 private:
     std::shared_ptr<TaskText> m_MarioText;
@@ -41,7 +44,6 @@ private:
     std::vector<std::shared_ptr<BackgroundImage>> m_Tube;
     std::shared_ptr<Mario> m_Mario;
 
-    int m_Phase = 1;
     int time = 400;
     std::chrono::steady_clock::time_point last_update;
 };

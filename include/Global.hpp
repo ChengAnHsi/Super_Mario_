@@ -13,7 +13,8 @@ constexpr float BLOCK_SIZE = 48.0f;
 constexpr float BLOCK_MAGNIFICATION = 3.0f;
 constexpr int WINDOW_WIDTH = 720;
 constexpr int WINDOW_HEIGHT = 720;
-const std::vector<int> LEVEL_TIME = {400, 400, 300};
+// Start: 400, Level1_1: 400, ..., Level1_3: 300
+const std::vector<int> LEVEL_TIME = {400, 400, 400, 300};
 
 /**constexpr float BRICK_PARTICLE_SPEED = 4;
 //A coin jumping out of the question block.

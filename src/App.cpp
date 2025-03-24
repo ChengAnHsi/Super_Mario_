@@ -10,7 +10,7 @@ void App::Start() {
     LOG_TRACE("Start");
     std::vector<std::string> marioImages = {RESOURCE_DIR"/Entities/mario_stand.png"};
     m_Mario = std::make_shared<Mario>(0,3,0,marioImages);
-    m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -270.0f});
+    m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -240.0f});
     m_Mario->SetZIndex(50);
     m_Mario->SetPlaying(true);
     m_Mario->SetLooping(true);
@@ -32,7 +32,7 @@ void App::Start() {
 
     m_PRM = std::make_shared<PhaseResourceManger>();
 
-    m_Root.AddChildren(m_PRM->GetChildren());
+    m_Root.AddChildren(m_PRM->GetChildren(true));
 
     m_BGM = std::make_shared<Util::BGM>(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
     m_BGM->SetVolume(70);
