@@ -38,7 +38,7 @@ void App::Start() {
     m_BGM->SetVolume(70);
     m_BGM->Play();
 
-    m_BM = std::make_shared<BlockManger>();
+    m_BM = std::make_shared<BlockManager>();
     m_Root.AddChildren(m_BM->GetChildren());
     m_CurrentState = State::UPDATE;
 }
@@ -66,7 +66,7 @@ void App::Update() {
 
     // Calculate how far the camera should move to the right
     float dis = 0.0f;
-    if(m_Phase != Phase::Start) dis = m_Mario->Move();
+    if(m_Phase != Phase::Start) dis = m_Mario->Move(m_BM);
 
     // Camera cannot move left
     if (dis < 0.0f) {
@@ -81,6 +81,7 @@ void App::Update() {
         m_Mario->SetPosition({-360, m_Mario->GetPosition().y});
     }
     camera_movement_dis += dis;
+    m_Mario->SetCameradis(camera_movement_dis);
 
     m_Root.Update({dis,0.0f});
 

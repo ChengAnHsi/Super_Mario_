@@ -8,8 +8,10 @@
 #include <iostream>
 #include <string>
 
+#include "BlockManager.hpp"
 #include "AnimatedCharacter.hpp"
 #include "Util/Animation.hpp"
+
 enum class MarioState {
     Stand,
     Run,
@@ -22,23 +24,33 @@ public:
         this->live = live;
         this->score = score;
     };
+
+    // move function
     void OnJump();
-    void OnRun(float distance);
-    void MoveAndCollision(float delta);
-    float OnUpdate(float delta);
-    float Move();
+    void OnSmallJump();
+
+    bool PointInRect(const glm::vec2 point, const glm::vec2 rect);
+
+    void OnRun(float distance, std::shared_ptr<BlockManager> m_BM);
+    bool GravityAndCollision(float delta, std::shared_ptr<BlockManager> m_BM);
+    float OnUpdate(float delta, std::shared_ptr<BlockManager> m_BM);
+    float Move(std::shared_ptr<BlockManager> m_BM);
+
+    // collision function
+    bool AABBCollides(glm::vec2 b) const;
+    bool IsOnFloor() const;
+
+    void UpdateAnimation();
+
+    // getter and setter
     void IncreaseCoin(int coin);
     [[nodiscard]] int GetCoin() const;
     void SetLive(int live);
     [[nodiscard]] int GetLive() const;
     void IncreaseScore(int score);
     [[nodiscard]] int GetScore() const;
-    void UpdateAnimation();
-    bool IsOnFloor() const;
-    bool HasBlockUnderneath() const;
-    void OnSmallJump();
-    // void RefixOffset(float width, float height);
-    bool AABBCollides(glm::vec2 b) const;
+    void SetCameradis(float dis);
+
 private:
     int coin = 0;
     int live = 3;
@@ -46,6 +58,7 @@ private:
     bool is_left_key_down = false;
     bool is_right_key_down = false;
     bool is_facing_right = true;
+    float camera_movement_dis = 0.0f;
 
     MarioState state = MarioState::Stand;
 

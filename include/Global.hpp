@@ -11,8 +11,8 @@
 
 constexpr float BLOCK_SIZE = 48.0f;
 constexpr float BLOCK_MAGNIFICATION = 3.0f;
-constexpr int WINDOW_WIDTH = 720;
-constexpr int WINDOW_HEIGHT = 720;
+//constexpr int WINDOW_WIDTH = 720;
+//constexpr int WINDOW_HEIGHT = 720;
 // Start: 400, Level1_1: 400, ..., Level1_3: 300
 const std::vector<int> LEVEL_TIME = {400, 400, 400, 300};
 

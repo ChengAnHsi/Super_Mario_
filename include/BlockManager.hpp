@@ -8,9 +8,9 @@
 #include "BackgroundImage.hpp"
 #include "Util/Renderer.hpp"
 
-class BlockManger {
+class BlockManager {
 public:
-    BlockManger();
+    BlockManager();
 
     [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren() const {
         std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
@@ -38,7 +38,8 @@ public:
     std::vector<int> Getidx(int phase);
     void SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds);
     std::vector<std::shared_ptr<BackgroundImage>> GetBackground();
-    //int block_visible(float camera_movement_dis, int idx);
+    std::vector<float> GetPosX();
+
 private:
     // 0-1: block 2-3: floor 4-5: immovable block 6-11: mistery block
     // map 1-1

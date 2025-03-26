@@ -6,7 +6,7 @@
 #include "App.hpp"
 #include <iostream>
 
-BlockManger::BlockManger() {
+BlockManager::BlockManager() {
     int imgidx_size = imgidx.size();
     for (int i = 0; i < imgidx_size; i++) {
         // position should change to correct position
@@ -42,24 +42,39 @@ BlockManger::BlockManger() {
         m_Backgrounds.back()->SetPosition(m_PositionX.back(),m_PositionY.back());
     }
 
-    // test map position(floor and block distance)
+    // test block position
 
-    /**m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
-    m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
-    m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-    m_Backgrounds.back()->SetPosition(16 * BLOCK_SIZE - 380.0f,4 * BLOCK_SIZE - 325.0f);
     m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
     m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
     m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-    m_Backgrounds.back()->SetPosition(16 * BLOCK_SIZE - 380.0f,3 * BLOCK_SIZE - 325.0f);**/
-
+    m_PositionX.push_back(6 * BLOCK_SIZE - 335.0f);
+    m_PositionY.push_back( 2 * BLOCK_SIZE - 325.0f);
+    m_Backgrounds.back()->SetPosition(6 * BLOCK_SIZE - 335.0f,2 * BLOCK_SIZE - 325.0f);
+    m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
+    m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
+    m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+    m_Backgrounds.back()->SetPosition(5 * BLOCK_SIZE - 335.0f,2 * BLOCK_SIZE - 325.0f);
+    m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
+    m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
+    m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+    m_PositionX.push_back(6 * BLOCK_SIZE - 335.0f);
+    m_PositionY.push_back( 2 * BLOCK_SIZE - 325.0f);
+    m_Backgrounds.back()->SetPosition(8 * BLOCK_SIZE - 335.0f,2 * BLOCK_SIZE - 325.0f);
+    m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
+    m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
+    m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+    m_Backgrounds.back()->SetPosition(9 * BLOCK_SIZE - 335.0f,2 * BLOCK_SIZE - 325.0f);
     /**m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
     m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
     m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
     m_Backgrounds.back()->SetPosition(4 * BLOCK_SIZE - 335.0f + BLOCK_SIZE/2,2 * BLOCK_SIZE - 325.0f - BLOCK_SIZE/2);**/
 }
 
-std::vector<int> BlockManger::GetX(int phase){
+std::vector<float> BlockManager::GetPosX() {
+    return m_PositionX;
+}
+
+std::vector<int> BlockManager::GetX(int phase){
     std::cout << phase;
     switch (phase)
     {
@@ -72,7 +87,7 @@ std::vector<int> BlockManger::GetX(int phase){
     }
 }
 
-std::vector<int> BlockManger::GetY(int phase){
+std::vector<int> BlockManager::GetY(int phase){
     switch (phase)
     {
     case 1:
@@ -84,7 +99,7 @@ std::vector<int> BlockManger::GetY(int phase){
     }
 }
 
-std::vector<int> BlockManger::Getidx(int phase){
+std::vector<int> BlockManager::Getidx(int phase){
     switch (phase)
     {
     case 1:
@@ -96,7 +111,7 @@ std::vector<int> BlockManger::Getidx(int phase){
     }
 }
 
-void BlockManger::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds){
+void BlockManager::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds){
     /**for (int i = 0; i < m_Backgrounds.size(); i++){
         m_Backgrounds[i]->SetPosition(0, 0);
         m_Backgrounds[i]->SetVisible(false);
@@ -104,17 +119,6 @@ void BlockManger::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> ba
     this->m_Backgrounds = backgrounds;
 }
 
-std::vector<std::shared_ptr<BackgroundImage>> BlockManger::GetBackground(){
+std::vector<std::shared_ptr<BackgroundImage>> BlockManager::GetBackground(){
     return m_Backgrounds;
 }
-/**int BlockManger::block_visible(float camera_movement_dis, int idx) {
-   for (int i = idx; i < imgidx.size(); i++) {
-        std::shared_ptr<BackgroundImage> tmp = m_Backgrounds[i];
-        if (camera_movement_dis >= m_PositionX[i]) {
-            tmp->SetVisible(true);
-            tmp->SetPosition(620.0f,m_PositionY[i]);
-        }else {
-            return i;
-        }
-    }
-}**/
