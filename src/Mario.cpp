@@ -153,13 +153,14 @@ bool Mario::AABBCollides(const glm::vec2 b) const {
     //mario_size.x *= 1.2;
     //mario_size.y *= 1.2;
 
-    return (a.x < b.x + BLOCK_SIZE && // Collision on Left of a and Right of b
-        a.x + mario_size.x > b.x && // Collision on Right of a and Left of b
-        a.y < b.y + BLOCK_SIZE && // Collision on Bottom of a and Top of b
-        a.y + mario_size.y > b.y); //  Collision on Top of a and Bottom of b
+    return (a.x - mario_size.x / 2 < b.x + BLOCK_SIZE / 2 && // Collision on Left of a and Right of b
+        a.x + mario_size.x / 2 > b.x - BLOCK_SIZE / 2 && // Collision on Right of a and Left of b
+        a.y - mario_size.y / 2 < b.y + BLOCK_SIZE / 2 && // Collision on Bottom of a and Top of b
+        a.y + mario_size.y / 2 > b.y - BLOCK_SIZE / 2); //  Collision on Top of a and Bottom of b
 }
 
 bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager> m_BM) {
+    glm::vec2 mario_size = this->m_Drawable->GetSize();
     float mario_x = this->GetPosition().x;
     float mario_y = this->GetPosition().y;
     auto background = m_BM->GetBackground();
@@ -172,8 +173,8 @@ bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager>
     for (const auto& block : background) {
         if (AABBCollides(block->GetTransform().translation)) {
             collision = true;
-            if (mario_y > block->GetTransform().translation.y) {
-                mario_y = block->GetTransform().translation.y + BLOCK_SIZE;
+            if (mario_y - mario_size.y / 2 < block->GetTransform().translation.y + BLOCK_SIZE / 2) {
+                mario_y = block->GetTransform().translation.y + BLOCK_SIZE / 2 + mario_size.y / 2;
                 velocityY = 0;
                 this->SetPosition({ mario_x, mario_y });
                 return false;  // 碰撞到地面，不在滯空狀態
