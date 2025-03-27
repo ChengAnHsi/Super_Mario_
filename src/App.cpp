@@ -10,7 +10,7 @@ void App::Start() {
     LOG_TRACE("Start");
     std::vector<std::string> marioImages = {RESOURCE_DIR"/Entities/mario_stand.png"};
     m_Mario = std::make_shared<Mario>(0,3,0,marioImages);
-    m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -240.0f});
+    m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -200.0f});
     m_Mario->SetZIndex(50);
     m_Mario->SetPlaying(true);
     m_Mario->SetLooping(true);
@@ -81,7 +81,7 @@ void App::Update() {
         m_Mario->SetPosition({-360, m_Mario->GetPosition().y});
     }
     camera_movement_dis += dis;
-    m_Mario->SetCameradis(camera_movement_dis);
+    //m_Mario->SetCameradis(camera_movement_dis);
 
     m_Root.Update({dis,0.0f});
 
@@ -89,6 +89,10 @@ void App::Update() {
      * Do not touch the code below as they serve the purpose for
      * closing the window.
      */
+
+    if (Util::Input::IsKeyUp(Util::Keycode::A)) {
+        m_Mario->SetPosition({0, 0});
+    }
 
     if (Util::Input::IsKeyUp(Util::Keycode::ESCAPE) || Util::Input::IfExit()) {
         m_CurrentState = State::END;

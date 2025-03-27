@@ -127,11 +127,11 @@ void Mario::OnRun(const float distance, std::shared_ptr<BlockManager> m_BM) {
         this->SetPosition({ mario_x, mario_y });
 
         bool collision = false;
-        for (int i = background.size() - 4; i < background.size(); i++) {
-            int aabb_result = AABBCollides(background[i]->GetTransform().translation);
-            // left or right
-            if (aabb_result == 1 || aabb_result == 2) {
-                collision = true;
+        //for (int i = background.size() - 4; i < background.size(); i++) {
+        for (const auto& block : background) {
+            collision = AABBCollides(block->GetTransform().translation);
+            if (C_state == CollisionState::Left || C_state == CollisionState::Right) {
+                //collision = true;
                 break;
             }
         }
@@ -144,23 +144,17 @@ void Mario::OnRun(const float distance, std::shared_ptr<BlockManager> m_BM) {
     }
 }
 
-bool Mario::PointInRect(const glm::vec2 point, const glm::vec2 rect) {
-    return (point.x + 8 >= rect.x - BLOCK_SIZE / 2) && (point.x - 8 <= rect.x + BLOCK_SIZE / 2);
-    //&&        point.y + 8 >= rect.y - BLOCK_SIZE / 2 && point.y + 8 <= rect.y + BLOCK_SIZE / 2);
-}
-
-int Mario::AABBCollides(const glm::vec2 b) const {
+bool Mario::AABBCollides(const glm::vec2 b) {
     const auto a = this->GetPosition();
     glm::vec2 mario_size = this->m_Drawable->GetSize();
-    //mario_size.x *= 1.2;
-    //mario_size.y *= 1.2;
 
+    C_state = CollisionState::None;
     bool collisionX = a.x - mario_size.x / 2 < b.x + BLOCK_SIZE / 2 && a.x + mario_size.x / 2 > b.x - BLOCK_SIZE / 2;
     bool collisionY = a.y - mario_size.y / 2 < b.y + BLOCK_SIZE / 2 && a.y + mario_size.y / 2 > b.y - BLOCK_SIZE / 2;
 
     // no collision
     if (!(collisionX && collisionY)) {
-        return 0;
+        return false;
     }
 
     // calculate which collision direction is most
@@ -168,24 +162,26 @@ int Mario::AABBCollides(const glm::vec2 b) const {
     float ARBL_area = (b.x + BLOCK_SIZE / 2) - (a.x - mario_size.x / 2);
     float ATBB_area = (a.y + mario_size.y / 2) - (b.y - BLOCK_SIZE / 2);
     float ABBT_area = (b.y + BLOCK_SIZE / 2) - (a.y - mario_size.y / 2);
-    float max_area = std::max(std::max(std::max(ALBR_area, ARBL_area), ATBB_area), ABBT_area);
-    if (max_area == ALBR_area) {
+    float min_area = std::max(std::max(std::max(ALBR_area, ARBL_area), ATBB_area), ABBT_area);
+    //float max_area = std::min(ALBR_area, ARBL_area);
+    if (min_area == ALBR_area) {
         // Collision on Right of a and Left of b
-        return 1;
+        C_state = CollisionState::Right;
     }
-    if (max_area == ARBL_area) {
+    if (min_area == ARBL_area) {
         // Collision on Left of a and Right of b
-        return 2;
+        C_state = CollisionState::Left;
     }
-    if (max_area == ATBB_area) {
+    if (min_area == ATBB_area) {
         // Collision on Bottom of a and Top of b
-        return 3;
+        C_state = CollisionState::Bottom;
     }
-    if (max_area == ABBT_area) {
+    if (min_area == ABBT_area) {
         //  Collision on Top of a and Bottom of b
-        return 4;
+        C_state = CollisionState::Top;
     }
 
+    return C_state != CollisionState::None;
     /**return (a.x - mario_size.x / 2 < b.x + BLOCK_SIZE / 2 && // Collision on Left of a and Right of b
         a.x + mario_size.x / 2 > b.x - BLOCK_SIZE / 2 && // Collision on Right of a and Left of b
         a.y - mario_size.y / 2 < b.y + BLOCK_SIZE / 2 && // Collision on Bottom of a and Top of b
@@ -204,32 +200,32 @@ bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager>
 
     bool collision = false;
     for (const auto& block : background) {
-        int aabb_result = AABBCollides(block->GetTransform().translation);
-        if (aabb_result == 3) {
-            collision = true;
+        collision = AABBCollides(block->GetTransform().translation);
+        if (C_state == CollisionState::Bottom) {
+            // collision = true;
             // 防止陷下去
-            if (mario_y - mario_size.y / 2 < block->GetTransform().translation.y + BLOCK_SIZE / 2) {
+            if ((mario_y - mario_size.y / 2) < (block->GetTransform().translation.y + BLOCK_SIZE / 2)) {
                 mario_y = block->GetTransform().translation.y + BLOCK_SIZE / 2 + mario_size.y / 2;
                 velocityY = 0;
                 this->SetPosition({ mario_x, mario_y });
                 return false;  // 碰撞到地面，不在滯空狀態
             }
-            mario_y = block->GetTransform().translation.y - BLOCK_SIZE;
+            // mario_y = block->GetTransform().translation.y - BLOCK_SIZE;
             break;
         }
-        if(aabb_result == 4) {
-            collision = true;
-            mario_y -= velocityY * (delta / 60.0f);  // 回退
-            velocityY = 0;
-            this->SetPosition({ mario_x, mario_y });
-            return false;
-            //break;
+        if(C_state == CollisionState::Top) {
+            //collision = true;
+            //mario_y -= velocityY * (delta / 60.0f);  // 回退
+            //velocityY = 0;
+            //this->SetPosition({ mario_x, mario_y });
+            //return false;
+            break;
         }
     }
-    /**if (collision) {
+    if (C_state == CollisionState::Top) {
         mario_y -= velocityY * (delta / 60.0f);  // 回退
         velocityY = 0;
-    }**/
+    }
     this->SetPosition({ mario_x, mario_y });
 
     // 如果沒有碰撞，表示在滯空狀態
@@ -276,9 +272,7 @@ void Mario::UpdateAnimation() {
         m_Transform.scale = glm::vec2{2, 2};
     }
 
-    if (direction != 0) {
-        is_facing_right = direction;
-    }
+    if (direction != 0) is_facing_right = direction;
 
     if (isJumping) {
         state = MarioState::Jump;
@@ -320,20 +314,6 @@ float Mario::Move(std::shared_ptr<BlockManager> m_BM) {
         this->SetImages(this->AnimationDead);
         return 0.0f;
     }
-
-    // XX test grow animation XX
-    /**if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
-        if (!is_grow) {
-            this->SetLooping(false);
-            this->SetImages(this->AnimationGrow);
-            is_grow = true;
-        }
-    }
-    if (this->IfAnimationEnds() and is_grow) {
-        this->SetLooping(true);
-        this->SetImages(this->AnimationStandGrow);
-        is_grow = false;
-    }**/
 
     if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
         is_left_key_down = true;
@@ -390,8 +370,4 @@ void Mario::IncreaseScore(const int score) {
 
 int Mario::GetScore() const {
     return score;
-}
-
-void Mario::SetCameradis(float dis) {
-    camera_movement_dis = dis;
 }

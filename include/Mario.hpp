@@ -17,6 +17,15 @@ enum class MarioState {
     Run,
     Jump
 };
+
+enum class CollisionState {
+    Left,
+    Right,
+    Top,
+    Bottom,
+    None
+};
+
 class Mario : public AnimatedCharacter {
 public:
     Mario(int coin, int live, int score, const std::vector<std::string>& AnimationPaths): AnimatedCharacter(AnimationPaths){
@@ -28,16 +37,14 @@ public:
     // move function
     void OnJump();
     void OnSmallJump();
-
-    bool PointInRect(const glm::vec2 point, const glm::vec2 rect);
-
     void OnRun(float distance, std::shared_ptr<BlockManager> m_BM);
-    bool GravityAndCollision(float delta, std::shared_ptr<BlockManager> m_BM);
-    float OnUpdate(float delta, std::shared_ptr<BlockManager> m_BM);
     float Move(std::shared_ptr<BlockManager> m_BM);
 
+    bool GravityAndCollision(float delta, std::shared_ptr<BlockManager> m_BM);
+    float OnUpdate(float delta, std::shared_ptr<BlockManager> m_BM);
+
     // collision function
-    int AABBCollides(glm::vec2 b) const;
+    bool AABBCollides(glm::vec2 b);
     bool IsOnFloor() const;
 
     void UpdateAnimation();
@@ -49,7 +56,6 @@ public:
     [[nodiscard]] int GetLive() const;
     void IncreaseScore(int score);
     [[nodiscard]] int GetScore() const;
-    void SetCameradis(float dis);
 
 private:
     int coin = 0;
@@ -58,13 +64,13 @@ private:
     bool is_left_key_down = false;
     bool is_right_key_down = false;
     bool is_facing_right = true;
-    float camera_movement_dis = 0.0f;
 
     MarioState state = MarioState::Stand;
+    CollisionState C_state = CollisionState::None;
 
     bool isJumping = false;
     bool isRunning = false;
-    float temp = 0.0f;      //暫存
+    //float temp = 0.0f;      //暫存
     float delta_time = 1.0f;
     float run_velocity = 5.0f;
     float jump_velocity = 12.7f;
