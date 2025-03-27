@@ -128,7 +128,9 @@ void Mario::OnRun(const float distance, std::shared_ptr<BlockManager> m_BM) {
 
         bool collision = false;
         for (int i = background.size() - 4; i < background.size(); i++) {
-            if (AABBCollides(background[i]->GetTransform().translation)) {
+            int aabb_result = AABBCollides(background[i]->GetTransform().translation);
+            // left or right
+            if (aabb_result == 1 || aabb_result == 2) {
                 collision = true;
                 break;
             }
@@ -147,16 +149,47 @@ bool Mario::PointInRect(const glm::vec2 point, const glm::vec2 rect) {
     //&&        point.y + 8 >= rect.y - BLOCK_SIZE / 2 && point.y + 8 <= rect.y + BLOCK_SIZE / 2);
 }
 
-bool Mario::AABBCollides(const glm::vec2 b) const {
+int Mario::AABBCollides(const glm::vec2 b) const {
     const auto a = this->GetPosition();
     glm::vec2 mario_size = this->m_Drawable->GetSize();
     //mario_size.x *= 1.2;
     //mario_size.y *= 1.2;
 
-    return (a.x - mario_size.x / 2 < b.x + BLOCK_SIZE / 2 && // Collision on Left of a and Right of b
+    bool collisionX = a.x - mario_size.x / 2 < b.x + BLOCK_SIZE / 2 && a.x + mario_size.x / 2 > b.x - BLOCK_SIZE / 2;
+    bool collisionY = a.y - mario_size.y / 2 < b.y + BLOCK_SIZE / 2 && a.y + mario_size.y / 2 > b.y - BLOCK_SIZE / 2;
+
+    // no collision
+    if (!(collisionX && collisionY)) {
+        return 0;
+    }
+
+    // calculate which collision direction is most
+    float ALBR_area = (a.x + mario_size.x / 2) - (b.x - BLOCK_SIZE / 2);
+    float ARBL_area = (b.x + BLOCK_SIZE / 2) - (a.x - mario_size.x / 2);
+    float ATBB_area = (a.y + mario_size.y / 2) - (b.y - BLOCK_SIZE / 2);
+    float ABBT_area = (b.y + BLOCK_SIZE / 2) - (a.y - mario_size.y / 2);
+    float max_area = std::max(std::max(std::max(ALBR_area, ARBL_area), ATBB_area), ABBT_area);
+    if (max_area == ALBR_area) {
+        // Collision on Right of a and Left of b
+        return 1;
+    }
+    if (max_area == ARBL_area) {
+        // Collision on Left of a and Right of b
+        return 2;
+    }
+    if (max_area == ATBB_area) {
+        // Collision on Bottom of a and Top of b
+        return 3;
+    }
+    if (max_area == ABBT_area) {
+        //  Collision on Top of a and Bottom of b
+        return 4;
+    }
+
+    /**return (a.x - mario_size.x / 2 < b.x + BLOCK_SIZE / 2 && // Collision on Left of a and Right of b
         a.x + mario_size.x / 2 > b.x - BLOCK_SIZE / 2 && // Collision on Right of a and Left of b
         a.y - mario_size.y / 2 < b.y + BLOCK_SIZE / 2 && // Collision on Bottom of a and Top of b
-        a.y + mario_size.y / 2 > b.y - BLOCK_SIZE / 2); //  Collision on Top of a and Bottom of b
+        a.y + mario_size.y / 2 > b.y - BLOCK_SIZE / 2); //  Collision on Top of a and Bottom of b**/
 }
 
 bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager> m_BM) {
@@ -171,8 +204,10 @@ bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager>
 
     bool collision = false;
     for (const auto& block : background) {
-        if (AABBCollides(block->GetTransform().translation)) {
+        int aabb_result = AABBCollides(block->GetTransform().translation);
+        if (aabb_result == 3) {
             collision = true;
+            // 防止陷下去
             if (mario_y - mario_size.y / 2 < block->GetTransform().translation.y + BLOCK_SIZE / 2) {
                 mario_y = block->GetTransform().translation.y + BLOCK_SIZE / 2 + mario_size.y / 2;
                 velocityY = 0;
@@ -182,11 +217,19 @@ bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager>
             mario_y = block->GetTransform().translation.y - BLOCK_SIZE;
             break;
         }
+        if(aabb_result == 4) {
+            collision = true;
+            mario_y -= velocityY * (delta / 60.0f);  // 回退
+            velocityY = 0;
+            this->SetPosition({ mario_x, mario_y });
+            return false;
+            //break;
+        }
     }
-    if (collision) {
+    /**if (collision) {
         mario_y -= velocityY * (delta / 60.0f);  // 回退
         velocityY = 0;
-    }
+    }**/
     this->SetPosition({ mario_x, mario_y });
 
     // 如果沒有碰撞，表示在滯空狀態
@@ -225,10 +268,10 @@ bool Mario::IsOnFloor() const {
 void Mario::UpdateAnimation() {
     // 如果不在地面上，狀態必定為 Jump
     const int direction = is_right_key_down - is_left_key_down;
-    if ((is_facing_right && direction == -1) || (!is_facing_right && direction == 1)) {
+    if (direction == -1) {
         // facing left
         m_Transform.scale = glm::vec2{-2, 2};
-    }else if ((is_facing_right && direction == 1) || (is_facing_right && direction == 1)) {
+    }else if (direction == 1)  {
         // facing right
         m_Transform.scale = glm::vec2{2, 2};
     }

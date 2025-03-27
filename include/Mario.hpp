@@ -37,7 +37,7 @@ public:
     float Move(std::shared_ptr<BlockManager> m_BM);
 
     // collision function
-    bool AABBCollides(glm::vec2 b) const;
+    int AABBCollides(glm::vec2 b) const;
     bool IsOnFloor() const;
 
     void UpdateAnimation();
