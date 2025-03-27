@@ -35,7 +35,7 @@ void Mario::OnRun(const float distance, std::shared_ptr<BlockManager> m_BM) {
     glm::vec2 mario_size = this->m_Drawable->GetSize();
     auto background = m_BM->GetBackground();
 
-    const float step = BLOCK_SIZE / 2.0f;
+    const float step = BLOCK_SIZE / 4.0f;
     float remaining_distance = distance;
 
     while (std::abs(remaining_distance) > 0.0f) {
@@ -131,16 +131,15 @@ bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager>
         if(C_state == CollisionState::Top) {
             // 固定在方塊下方開始下墜
             mario_y = block->GetTransform().translation.y - block_size / 2 - mario_size.y / 2;
-            //mario_y -= velocityY * (delta / 60.0f);  // 回退
-            //velocityY = 0;
             this->SetPosition({ mario_x, mario_y });
-            //return false;
             break;
         }
     }
     if (C_state == CollisionState::Top) {
         mario_y -= velocityY * (delta / 60.0f);  // 回退
         velocityY = 0;
+        this->SetPosition({ mario_x, mario_y });
+        return true;
     }
     this->SetPosition({ mario_x, mario_y });
 
