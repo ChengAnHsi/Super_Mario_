@@ -39,13 +39,11 @@ public:
     void OnSmallJump();
     void OnRun(float distance, std::shared_ptr<BlockManager> m_BM);
     float Move(std::shared_ptr<BlockManager> m_BM);
-
-    bool GravityAndCollision(float delta, std::shared_ptr<BlockManager> m_BM);
     float OnUpdate(float delta, std::shared_ptr<BlockManager> m_BM);
 
     // collision function
-    bool AABBCollides(glm::vec2 b);
-    bool IsOnFloor() const;
+    bool AABBCollides(glm::vec2 a, glm::vec2 b);
+    bool GravityAndCollision(float delta, std::shared_ptr<BlockManager> m_BM);
 
     void UpdateAnimation();
 

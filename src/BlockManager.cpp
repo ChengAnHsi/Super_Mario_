@@ -29,7 +29,7 @@ BlockManager::BlockManager() {
         m_PositionX.push_back(i * BLOCK_SIZE - 335.0f);
         m_PositionY.push_back(BLOCK_SIZE - 325.0f);
         m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
-        m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Scenery/Overworld/floorbricks.png");
+        m_Backgrounds.back()->ChangeImg(imageFiles[0]);
         m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         m_Backgrounds.back()->SetPosition(m_PositionX.back(),m_PositionY.back());
 
@@ -37,7 +37,7 @@ BlockManager::BlockManager() {
         m_PositionX.push_back(i * BLOCK_SIZE - 335.0f);
         m_PositionY.push_back( - 325.0f);
         m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
-        m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Scenery/Overworld/floorbricks.png");
+        m_Backgrounds.back()->ChangeImg(imageFiles[0]);//RESOURCE_DIR"/Scenery/Overworld/floorbricks.png"
         m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         m_Backgrounds.back()->SetPosition(m_PositionX.back(),m_PositionY.back());
     }

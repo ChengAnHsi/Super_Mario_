@@ -80,8 +80,19 @@ void App::Update() {
         // Correct offset
         m_Mario->SetPosition({-360, m_Mario->GetPosition().y});
     }
+
+    // lower than ground
+    if(m_Mario->GetPosition().y < -360) {
+        m_Mario->SetLive(m_Mario->GetLive() - 1);
+        m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -200.0f});
+    }
+
     camera_movement_dis += dis;
     //m_Mario->SetCameradis(camera_movement_dis);
+
+    if (Util::Input::IsKeyDown(Util::Keycode::A)) {
+        m_Mario->SetPosition({-20.0f, 0.0f});
+    }
 
     m_Root.Update({dis,0.0f});
 
@@ -89,10 +100,6 @@ void App::Update() {
      * Do not touch the code below as they serve the purpose for
      * closing the window.
      */
-
-    if (Util::Input::IsKeyUp(Util::Keycode::A)) {
-        m_Mario->SetPosition({0, 0});
-    }
 
     if (Util::Input::IsKeyUp(Util::Keycode::ESCAPE) || Util::Input::IfExit()) {
         m_CurrentState = State::END;
