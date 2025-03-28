@@ -17,7 +17,7 @@ BlockManager::BlockManager() {
         m_Backgrounds.back()->SetPosition(m_PositionX[i],m_PositionY[i]);
     }
 
-    for (int i = 0; i < 224; i++) {
+    /**for (int i = 0; i < 224; i++) {
         if ( i == 69 || i == 70 || (i <= 88 && i >= 86) || i == 153 || i == 154){
             continue;
         }
@@ -36,7 +36,7 @@ BlockManager::BlockManager() {
         m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Scenery/Overworld/floorbricks.png");
         m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         m_Backgrounds.back()->SetPosition(m_PositionX.back(),m_PositionY.back());
-    }
+    }**/
 
     // test block position
     m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
