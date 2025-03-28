@@ -9,7 +9,7 @@
 #include "BlockManager.hpp"
 #include "AnimatedCharacter.hpp"
 #include "Mario.hpp"
-
+#include "EnemyManager.hpp"
 class App {
 public:
     enum class State {
@@ -47,6 +47,7 @@ private:
     std::shared_ptr<AnimatedCharacter> m_Coin;
     std::shared_ptr<PhaseResourceManger> m_PRM;
     std::shared_ptr<BlockManager> m_BM;
+    std::shared_ptr<EnemyManager> m_EM;
     std::shared_ptr<Util::BGM> m_BGM;
 
     float camera_movement_dis = 0;//-380.0f + 2.5f * BLOCK_SIZE;

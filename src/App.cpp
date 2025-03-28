@@ -5,6 +5,7 @@
 #include "Util/Keycode.hpp"
 #include "Util/Logger.hpp"
 #include "Global.hpp"
+#include "EnemyManager.hpp"
 
 void App::Start() {
     LOG_TRACE("Start");
@@ -39,6 +40,9 @@ void App::Start() {
 
     m_BM = std::make_shared<BlockManager>();
     m_Root.AddChildren(m_BM->GetChildren());
+    m_EM = std::make_shared<EnemyManager>();
+    m_Root.AddChildren(m_BM->GetChildren());
+
     m_CurrentState = State::UPDATE;
 }
 

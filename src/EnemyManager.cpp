@@ -1,12 +1,12 @@
 //
 // Created by 112590007 on 2025/3/14.
 //
-#include "BlockManager.hpp"
+#include "EnemyManager.hpp"
 #include "Global.hpp"
 #include "App.hpp"
 #include <iostream>
 
-BlockManager::BlockManager() {
+EnemyManager::EnemyManager() {
     int imgidx_size = imgidx.size();
     for (int i = 0; i < imgidx_size; i++) {
         m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE - 335.0f);
@@ -42,11 +42,11 @@ BlockManager::BlockManager() {
     */
 }
 
-std::vector<float> BlockManager::GetPosX() {
+std::vector<float> EnemyManager::GetPosX() {
     return m_PositionX;
 }
 
-std::vector<int> BlockManager::GetX(int phase){
+std::vector<int> EnemyManager::GetX(int phase){
     std::cout << phase;
     switch (phase)
     {
@@ -61,7 +61,7 @@ std::vector<int> BlockManager::GetX(int phase){
     }
 }
 
-std::vector<int> BlockManager::GetY(int phase){
+std::vector<int> EnemyManager::GetY(int phase){
     switch (phase)
     {
     case 1:
@@ -75,7 +75,7 @@ std::vector<int> BlockManager::GetY(int phase){
     }
 }
 
-std::vector<int> BlockManager::Getidx(int phase){
+std::vector<int> EnemyManager::Getidx(int phase){
     switch (phase)
     {
     case 1:
@@ -89,10 +89,10 @@ std::vector<int> BlockManager::Getidx(int phase){
     }
 }
 
-void BlockManager::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds){
+void EnemyManager::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds){
     this->m_Backgrounds = backgrounds;
 }
 
-std::vector<std::shared_ptr<BackgroundImage>> BlockManager::GetBackground(){
+std::vector<std::shared_ptr<BackgroundImage>> EnemyManager::GetBackground(){
     return m_Backgrounds;
 }
