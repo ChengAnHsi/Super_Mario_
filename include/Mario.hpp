@@ -5,12 +5,9 @@
 #ifndef MARIO_HPP
 #define MARIO_HPP
 #include "AnimatedCharacter.hpp"
+#include "BlockManager.hpp"
 #include <iostream>
 #include <string>
-
-#include "BlockManager.hpp"
-#include "AnimatedCharacter.hpp"
-#include "Util/Animation.hpp"
 
 enum class MarioState {
     Stand,
@@ -70,7 +67,6 @@ private:
 
     bool isJumping = false;
     bool isRunning = false;
-    //float temp = 0.0f;      //暫存
     float delta_time = 1.0f;
     float run_velocity = 5.0f;
     float jump_velocity = 12.7f;
@@ -79,11 +75,6 @@ private:
     float JUMP_VELOCITY = 360.0f; // 跳躍初速度
     float SMALL_JUMP_VELOCITY = 250.0f; // 小跳躍初速度
     float MAX_JUMP_VELOCITY = 55.0f; // 最高跳躍值
-    //float additional_jump_forc0 = 0.1f; // 玩家按下按鍵時間，跳躍提升值
-    //const float FIXED_TIME_STEP = 1.0f / 60.0f;  // 固定更新步長，假設 60 FPS
-    //const float FIXED_JUMP_SPEED = 8.0f;  // Mario 每幀上升的固定速度
-    //const float FIXED_GRAVITY = -0.9f;  // Mario 每幀下降的固定速度
-
 
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/mario0.png",RESOURCE_DIR"/Entities/mario1.png",RESOURCE_DIR"/Entities/mario2.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/marioDead.png"};

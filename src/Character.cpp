@@ -1,7 +1,6 @@
 #include "Character.hpp"
 #include "Util/Image.hpp"
 
-
 Character::Character(const std::string& ImagePath) {
     SetImage(ImagePath);
 

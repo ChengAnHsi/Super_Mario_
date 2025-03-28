@@ -4,15 +4,11 @@
 #include "pch.hpp" // IWYU pragma: export
 
 #include "Renderer.hpp"
-#include "Character.hpp"
-#include "Util/Text.hpp"
 #include "Util/BGM.hpp"
 #include "PhaseResourceManger.hpp"
 #include "BlockManager.hpp"
 #include "AnimatedCharacter.hpp"
-#include "Camera.hpp"
 #include "Mario.hpp"
-#include "Global.hpp"
 
 class App {
 public:
@@ -47,7 +43,6 @@ private:
     Renderer m_Root;
 
     std::shared_ptr<Mario> m_Mario;
-    //std::shared_ptr<Camera> m_Camera;
 
     std::shared_ptr<AnimatedCharacter> m_Coin;
     std::shared_ptr<PhaseResourceManger> m_PRM;

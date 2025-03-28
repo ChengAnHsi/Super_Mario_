@@ -3,12 +3,6 @@
 #include "Global.hpp"
 #include "Util/Logger.hpp"
 
-/**
- * @brief The function to validate the tasks.
- * @warning Do not modify this function.
- * @note See README.md for the task details.
- */
-
 // update all game object for next level
 void App::NextPhase() {
     // update next level block
@@ -26,7 +20,6 @@ void App::NextPhase() {
     std::vector<std::shared_ptr<BackgroundImage>> backgrounds;
     int imgidx_size = tmpidx.size();
     for (int i = 0; i < imgidx_size; i++) {
-        // position should change to correct position
         backgrounds.push_back(std::make_shared<BackgroundImage>());
         backgrounds.back()->ChangeImg(m_BM->imageFiles[tmpidx[i]]);
         backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
@@ -36,7 +29,7 @@ void App::NextPhase() {
     m_Root.AddChildren(m_BM->GetChildren());
 
     // remove tube and other things
-    // The castle and flag are removed and use the updated new locations.
+    // The castle and flag are removed and use the updated new locations
     tmp = m_PRM->GetBackground();
     for (const auto & img : tmp) {
         std::shared_ptr<Util::GameObject> tmp2 = img;
@@ -78,46 +71,9 @@ void App::ValidTask() {
             m_CurrentState = State::END;
             break;**/
 
-        /**case Phase::CHANGE_CHARACTER_IMAGE:
-            if (m_Giraffe->GetImagePath() == GA_RESOURCE_DIR"/Image/Character/giraffe.png") {
-                m_Phase = Phase::ABLE_TO_MOVE;
-                m_Giraffe->SetPosition({-112.5f, -140.5f});
-
-                m_PRM->NextPhase();
-            } else {
-                LOG_DEBUG("The image is not correct");
-                LOG_DEBUG("The image path is {} instead.", m_Giraffe->GetImagePath());
-            }
-            break;
-
-        case Phase::BEE_ANIMATION:
-            isBeeLooping = m_Bee->IsLooping();
-            isBeePlaying = m_Bee->IsPlaying();
-
-            if (isBeeLooping && isBeePlaying) {
-                m_Phase = Phase::OPEN_THE_DOORS;
-                m_Giraffe->SetPosition({-112.5f, -140.5f});
-                m_Giraffe->SetVisible(true);
-                m_Bee->SetVisible(false);
-                std::for_each(m_Doors.begin(), m_Doors.end(), [](const auto& door) { door->SetVisible(true); });
-
-                m_PRM->NextPhase();
-            } else {
-                LOG_DEBUG("The bee animation is {} but not {}", isBeeLooping ? "looping" : "playing",
-                          isBeeLooping ? "playing" : "looping");
-            }
-            break;
-
-        case Phase::OPEN_THE_DOORS:
-            if (AreAllDoorsOpen(m_Doors)) {
-                m_Phase = Phase::COUNTDOWN;
-                std::for_each(m_Doors.begin(), m_Doors.end(), [](const auto& door) { door->SetVisible(false); });
-                m_Giraffe->SetVisible(false);
-
-                m_PRM->NextPhase();
-            } else {
-                LOG_DEBUG("At least one door is not open");
-            }
-            break;**/
+        /**
+            if (m_Giraffe->GetImagePath() == GA_RESOURCE_DIR"/Image/Character/giraffe.png")
+            std::for_each(m_Doors.begin(), m_Doors.end(), [](const auto& door) { door->SetVisible(true); });
+            std::for_each(m_Doors.begin(), m_Doors.end(), [](const auto& door) { door->SetVisible(false); });**/
     }
 }

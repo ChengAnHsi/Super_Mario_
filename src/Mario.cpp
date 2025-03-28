@@ -36,7 +36,7 @@ void Mario::OnRun(const float distance, std::shared_ptr<BlockManager> m_BM) {
     mario_size *= 2;
     auto background = m_BM->GetBackground();
 
-    const float step = (BLOCK_SIZE + 0) / 4.0f;
+    const float step = (BLOCK_SIZE + 2) / 4.0f;
     float remaining_distance = distance;
 
     while (std::abs(remaining_distance) > 0.0f) {
@@ -75,10 +75,9 @@ void Mario::OnRun(const float distance, std::shared_ptr<BlockManager> m_BM) {
 }
 
 bool Mario::AABBCollides(glm::vec2 a, glm::vec2 b) {
-//    const auto a = this->GetPosition();
     glm::vec2 mario_size = this->m_Drawable->GetSize();
     mario_size *= 2;
-    float block_size = BLOCK_SIZE;
+    float block_size = BLOCK_SIZE + 2;
 
     X_state = CollisionState::None;
     float aleft = a.x - mario_size.x / 2;
@@ -110,10 +109,9 @@ bool Mario::AABBCollides(glm::vec2 a, glm::vec2 b) {
 }
 
 bool Mario::CCDDCollides(glm::vec2 a, glm::vec2 b) {
-    //    const auto a = this->GetPosition();
     glm::vec2 mario_size = this->m_Drawable->GetSize();
     mario_size *= 2;
-    float block_size = BLOCK_SIZE + 0;
+    float block_size = BLOCK_SIZE + 2;
 
     Y_state = CollisionState::None;
     float aleft = a.x - mario_size.x / 2;
@@ -147,7 +145,7 @@ bool Mario::CCDDCollides(glm::vec2 a, glm::vec2 b) {
 bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager> m_BM) {
     glm::vec2 mario_size = this->m_Drawable->GetSize();
     mario_size *= 2;
-    float block_size = BLOCK_SIZE + 0;
+    float block_size = BLOCK_SIZE + 2;
     float mario_x = this->GetPosition().x;
     float mario_y = this->GetPosition().y;
     auto background = m_BM->GetBackground();

@@ -58,6 +58,5 @@ public:
 private:
     std::vector<std::shared_ptr<Util::GameObject>> m_Children;
 };
-// namespace Util
 
 #endif

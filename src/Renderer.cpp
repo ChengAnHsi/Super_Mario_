@@ -60,5 +60,4 @@ void Renderer::Update(const glm::vec2 &offset) {
         curr.m_GameObject->m_Transform.translation -= offset;
         curr.m_GameObject->Draw();
     }
-
-} // namespace Util
+}

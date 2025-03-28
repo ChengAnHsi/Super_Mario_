@@ -17,7 +17,6 @@ void App::Start() {
     m_Mario->m_Transform.scale = glm::vec2(2.0f, 2.0f);
 
     m_Root.AddChild(m_Mario);
-    //m_Camera = std::make_shared<Camera>();
 
     std::vector<std::string> coinImages;
     coinImages.reserve(3);
@@ -88,7 +87,6 @@ void App::Update() {
     }
 
     camera_movement_dis += dis;
-    //m_Mario->SetCameradis(camera_movement_dis);
 
     if (Util::Input::IsKeyDown(Util::Keycode::A)) {
         m_Mario->SetPosition({-20.0f, 0.0f});
