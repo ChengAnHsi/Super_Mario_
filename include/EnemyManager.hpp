@@ -57,9 +57,9 @@ public:
 private:
     // 0-1: block 2-3: floor 4-5: immovable block 6-11: mistery block
     // map 1-1
-    std::vector<float> tmp_x = {22,40,51,52.5,80,82};
-    std::vector<float> tmp_y = {2,2,2,2,10,10};
-    std::vector<int> imgidx = {3,3,3,3,3,3};
+    std::vector<float> tmp_x = {22,40,51,52.5,80,82,97,98.5,107,114,115.5,124,125.5,128,129.5};
+    std::vector<float> tmp_y = {2,2,2,2,10,10,2,2,2.2,2,2,2,2};
+    std::vector<int> imgidx = {3,3,3,3,3,3,3,3,17,3,3,3,3};
     //map 1-2
     std::vector<float> tmp_x2 = {};
     std::vector<float> tmp_y2 = {};
