@@ -23,7 +23,7 @@ void Renderer::AddChildren(
     m_Children.insert(m_Children.end(), children.begin(), children.end());
 }
 
-void Renderer::Update(const glm::vec2 &offset) {
+void Renderer::Update() {
     struct StackInfo {
         std::shared_ptr<GameObject> m_GameObject;
         Transform m_ParentTransform;
@@ -57,7 +57,7 @@ void Renderer::Update(const glm::vec2 &offset) {
     while (!renderQueue.empty()) {
         auto curr = renderQueue.top();
         renderQueue.pop();
-        curr.m_GameObject->m_Transform.translation -= offset;
+
         curr.m_GameObject->Draw();
     }
 }
