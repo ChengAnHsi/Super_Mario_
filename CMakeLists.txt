@@ -37,6 +37,8 @@ add_executable(${PROJECT_NAME}
     ${HEADER_FILES}
         include/BlockManager.hpp
         src/BlockManager.cpp
+        src/Renderer.cpp
+        include/Renderer.hpp
 )
 
 if(MSVC)

@@ -3,7 +3,7 @@
 
 #include "pch.hpp" // IWYU pragma: export
 
-#include "Util/Renderer.hpp"
+#include "Renderer.hpp"
 #include "Character.hpp"
 #include "Util/Text.hpp"
 #include "Util/BGM.hpp"
@@ -44,7 +44,7 @@ private:
     State m_CurrentState = State::START;
     Phase m_Phase = Phase::Start;
 
-    Util::Renderer m_Root;
+    Renderer m_Root;
 
     std::shared_ptr<Mario> m_Mario;
     //std::shared_ptr<Camera> m_Camera;
