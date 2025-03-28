@@ -90,6 +90,7 @@ std::vector<int> BlockManager::Getidx(int phase){
 }
 
 void BlockManager::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds){
+    this->m_Backgrounds.clear();
     this->m_Backgrounds = backgrounds;
 }
 

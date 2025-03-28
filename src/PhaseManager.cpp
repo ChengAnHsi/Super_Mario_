@@ -85,7 +85,6 @@ PhaseResourceManger::PhaseResourceManger() {
 }
 
 void PhaseResourceManger::NextPhase(int m_Phase) {
-    if (m_Phase == 3) return;
     LOG_DEBUG("Passed! Next phase: {}", m_Phase);
 
     if (m_Phase == 1){
@@ -103,20 +102,25 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background[2]->SetPosition(198 * BLOCK_SIZE - 320.0f, 8 * BLOCK_SIZE - 390.0f);
         m_Background[2]->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         // [3]> mountain, cloud... set invisible use app->nextphase
-    }else{
+    }
+    if (m_Phase == 2){
         m_Background.clear();
         m_Tube.clear();
         // other level tube and its position
 
         // test successful
-        m_Tube.push_back(std::make_shared<BackgroundImage>());
+        /**m_Tube.push_back(std::make_shared<BackgroundImage>());
         m_Tube.back()->ChangeImg(RESOURCE_DIR"/Scenery/vertical-small-tube.png");
         m_Tube.back()->SetPosition(28 * BLOCK_SIZE - 320.0f, 3 * BLOCK_SIZE  - 357.0f);
-        m_Tube.back()->SetSize(2.5f, 2.5f);
+        m_Tube.back()->SetSize(2.5f, 2.5f);**/
+    }
+    if (m_Phase == 3) {
+        m_Background.clear();
+        m_Tube.clear();
     }
 
     SetTime(LEVEL_TIME[m_Phase]);
-    m_WorldText->SetTxtIdx(3, m_Phase++);
+    m_WorldText->SetTxtIdx(3, m_Phase);
     m_OtherText->SetTxtIdx(5, 0);
 }
 

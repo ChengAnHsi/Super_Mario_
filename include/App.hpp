@@ -31,7 +31,7 @@ private:
     void NextPhase();
 
     enum class Phase {
-        Start,
+        Start = 0,
         Level1_1,
         Level1_2,
         Level1_3

@@ -68,8 +68,8 @@ void App::ValidTask() {
         case Phase::Start:
             LOG_DEBUG("Welcome to Super Mario!");
             m_Phase = Phase::Level1_1;
-            m_PRM->NextPhase(static_cast<int>(m_Phase));
             // init is Level1_1 don't need to call NextPhase
+            m_PRM->NextPhase(static_cast<int>(m_Phase));
             break;
         case Phase::Level1_1:
             LOG_DEBUG("Congratulations! You have completed Level1-1!");
@@ -80,17 +80,17 @@ void App::ValidTask() {
             break;
         case Phase::Level1_2:
             LOG_DEBUG("Congratulations! You have completed Level1-2!");
+            m_Phase = Phase::Level1_3;
+            NextPhase();
+            m_PRM->NextPhase(static_cast<int>(m_Phase));
+            m_Root.AddChildren(m_PRM->GetChildren(false));
+            break;
+        case Phase::Level1_3:
+            LOG_DEBUG("Congratulations! You have completed Super Mario!");
             m_CurrentState = State::END;
-            //m_Phase = Phase::Level1_3;
-            //m_PRM->NextPhase();
             break;
         default:
             break;
-        /**case Phase::Level1_3:
-            LOG_DEBUG("Congratulations! You have completed Super Mario!");
-            m_CurrentState = State::END;
-            break;**/
-
         /**
             if (m_Giraffe->GetImagePath() == GA_RESOURCE_DIR"/Image/Character/giraffe.png")
             std::for_each(m_Doors.begin(), m_Doors.end(), [](const auto& door) { door->SetVisible(true); });
