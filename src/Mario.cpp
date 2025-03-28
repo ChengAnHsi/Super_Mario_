@@ -165,8 +165,8 @@ bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager>
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
-            // 固定在方塊下方開始下墜
-            mario_y = block->GetTransform().translation.y - block_size / 2 - mario_size.y / 2;
+            // 固定在方塊下方開始下墜，velocityY * (delta / 60.0f): 修正方塊底下位置
+            mario_y = block->GetTransform().translation.y - block_size / 2 - mario_size.y / 2 + velocityY * (delta / 60.0f);
             this->SetPosition({ mario_x, mario_y });
             break;
         }

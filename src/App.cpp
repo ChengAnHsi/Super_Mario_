@@ -83,7 +83,7 @@ void App::Update() {
     // lower than ground
     if(m_Mario->GetPosition().y < -360) {
         m_Mario->SetLive(m_Mario->GetLive() - 1);
-        m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -240.0f});
+        m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -200.0f});
     }
 
     camera_movement_dis += dis;
