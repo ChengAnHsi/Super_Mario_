@@ -82,8 +82,8 @@ std::vector<int> BlockManager::GetX(int phase){
         return tmp_x;
     case 2:
         return tmp_x2;
-    default:
-        return tmp_x;
+    case 3:
+        return tmp_x3;
     }
 }
 
@@ -94,8 +94,8 @@ std::vector<int> BlockManager::GetY(int phase){
         return tmp_y;
     case 2:
         return tmp_y2;
-    default:
-        return tmp_y;
+    case 3:
+        return tmp_y3;
     }
 }
 
@@ -106,8 +106,8 @@ std::vector<int> BlockManager::Getidx(int phase){
         return imgidx;
     case 2:
         return imgidx2;
-    default:
-        return imgidx;
+    case 3:
+        return imgidx3;
     }
 }
 

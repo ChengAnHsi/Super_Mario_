@@ -43,6 +43,7 @@ public:
 
     // collision function
     bool AABBCollides(glm::vec2 a, glm::vec2 b);
+    bool CCDDCollides(glm::vec2 a, glm::vec2 b);
     bool GravityAndCollision(float delta, std::shared_ptr<BlockManager> m_BM);
 
     void UpdateAnimation();
@@ -64,7 +65,8 @@ private:
     bool is_facing_right = true;
 
     MarioState state = MarioState::Stand;
-    CollisionState C_state = CollisionState::None;
+    CollisionState X_state = CollisionState::None;
+    CollisionState Y_state = CollisionState::None;
 
     bool isJumping = false;
     bool isRunning = false;
