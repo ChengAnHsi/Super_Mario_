@@ -18,7 +18,7 @@ BlockManager::BlockManager() {
     }
 
     // test block position
-    /*
+
     m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
     m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
     m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
@@ -39,7 +39,7 @@ BlockManager::BlockManager() {
     m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/block.png");
     m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
     m_Backgrounds.back()->SetPosition(9 * BLOCK_SIZE - 335.0f,2 * BLOCK_SIZE - 325.0f);
-    */
+
 }
 
 std::vector<float> BlockManager::GetPosX() {

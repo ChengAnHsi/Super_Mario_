@@ -47,8 +47,8 @@ public:
         RESOURCE_DIR"/Entities/unfly_koopa_shell1.png",
 
     };
-    std::vector<int> GetX(int phase);
-    std::vector<int> GetY(int phase);
+    std::vector<float> GetX(int phase);
+    std::vector<float> GetY(int phase);
     std::vector<int> Getidx(int phase);
     void SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds);
     std::vector<std::shared_ptr<BackgroundImage>> GetBackground();
@@ -57,16 +57,16 @@ public:
 private:
     // 0-1: block 2-3: floor 4-5: immovable block 6-11: mistery block
     // map 1-1
-    std::vector<int> tmp_x = {22,40,51,52,80,82};
-    std::vector<int> tmp_y = {2,2,2,2,10,10};
+    std::vector<float> tmp_x = {22,40,51,52.5,80,82};
+    std::vector<float> tmp_y = {2,2,2,2,10,10};
     std::vector<int> imgidx = {3,3,3,3,3,3};
     //map 1-2
-    std::vector<int> tmp_x2 = {};
-    std::vector<int> tmp_y2 = {};
+    std::vector<float> tmp_x2 = {};
+    std::vector<float> tmp_y2 = {};
     std::vector<int> imgidx2 = {};
     //map 1-3
-    std::vector<int> tmp_x3 = {};
-    std::vector<int> tmp_y3 = {};
+    std::vector<float> tmp_x3 = {};
+    std::vector<float> tmp_y3 = {};
     std::vector<int> imgidx3 = {};
 
     std::vector<std::shared_ptr<BackgroundImage>> m_Backgrounds;

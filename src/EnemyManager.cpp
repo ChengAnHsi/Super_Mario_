@@ -42,11 +42,11 @@ EnemyManager::EnemyManager() {
     */
 }
 
-std::vector<float> EnemyManager::GetPosX() {
+std::vector<int> EnemyManager::GetPosX() {
     return m_PositionX;
 }
 
-std::vector<int> EnemyManager::GetX(int phase){
+std::vector<float> EnemyManager::GetX(int phase){
     std::cout << phase;
     switch (phase)
     {
@@ -61,7 +61,7 @@ std::vector<int> EnemyManager::GetX(int phase){
     }
 }
 
-std::vector<int> EnemyManager::GetY(int phase){
+std::vector<float> EnemyManager::GetY(int phase){
     switch (phase)
     {
     case 1:
