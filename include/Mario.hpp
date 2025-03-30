@@ -59,7 +59,6 @@ private:
     int score = 0;
     bool is_left_key_down = false;
     bool is_right_key_down = false;
-    bool is_facing_right = true;
 
     MarioState state = MarioState::Stand;
     CollisionState X_state = CollisionState::None;

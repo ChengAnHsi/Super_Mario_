@@ -14,7 +14,6 @@ void Mario::OnJump() {
     if (!isJumping) {
         velocityY = JUMP_VELOCITY;
         state = MarioState::Jump;
-        // 立刻更新為跳躍圖片
         this->SetImages(AnimationJump);
     }
 }
@@ -47,25 +46,16 @@ void Mario::OnRun(const float distance, std::shared_ptr<BlockManager> m_BM) {
         bool collision = false;
         for (const auto& block : background) {
             AABBCollides({next_x, mario_y}, block->m_Transform.translation);
-            /**if(C_state == CollisionState::Right) {
+            // check next step will collision or not
+            if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
                 collision = true;
-                this->SetPosition({ block->m_Transform.translation.x / 2 - BLOCK_SIZE / 2 - mario_size.x / 2, mario_y });
-                break;
-            }
-            if(C_state == CollisionState::Left) {
-                collision = true;
-                this->SetPosition({ block->m_Transform.translation.x / 2 + BLOCK_SIZE / 2 + mario_size.x / 2, mario_y });
-                break;
-            }**/
-            if (X_state == CollisionState::Left || X_state == CollisionState::Right) { // check next step will collision or not
-                collision = true;
-                //this->SetPosition({ block->m_Transform.translation.x / 2 + BLOCK_SIZE / 2 + mario_size.x / 2, mario_y });
                 break;
             }
         }
 
+        // if next step will collision, then do not move
         if (collision) {
-            break; // if next step will collision, then do not move
+            break;
         }
 
         mario_x = next_x;
@@ -165,16 +155,14 @@ bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager>
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
-            // 固定在方塊下方開始下墜，velocityY * (delta / 60.0f): 修正方塊底下位置
-            mario_y = block->GetTransform().translation.y - block_size / 2 - mario_size.y / 2 + velocityY * (delta / 60.0f);
+            // 固定在方塊下方開始下墜
+            mario_y = block->GetTransform().translation.y - block_size / 2 - mario_size.y / 2;
             this->SetPosition({ mario_x, mario_y });
             break;
         }
     }
     if (Y_state == CollisionState::Top) {
-        mario_y -= velocityY * (delta / 60.0f);  // 回退
         velocityY = 0;
-        this->SetPosition({ mario_x, mario_y });
         return true;
     }
     this->SetPosition({ mario_x, mario_y });
@@ -184,31 +172,32 @@ bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager>
 }
 
 void Mario::UpdateAnimation() {
-    // 如果不在地面上，狀態必定為 Jump
     const int direction = is_right_key_down - is_left_key_down;
+    // facing left
     if (direction == -1) {
-        // facing left
         m_Transform.scale = glm::vec2{-2, 2};
-    }else if (direction == 1)  {
-        // facing right
+    }
+    // facing right
+    if (direction == 1)  {
         m_Transform.scale = glm::vec2{2, 2};
     }
 
-    if (direction != 0) is_facing_right = direction;
-
     if (isJumping) {
+        // 會影響到跳躍後站立的動畫，註解掉
+        // if(state != MarioState::Jump) {
+        //     this->SetImages(AnimationJump);
+        // }
         state = MarioState::Jump;
-        this->SetImages(AnimationJump);
     } else {
         // 在地面上根據是否有移動來決定站立或跑步
         if (direction != 0) {
-            if(isRunning == false) {
-                this->SetImages(AnimationRun);
+            if(state != MarioState::Run) {
+               this->SetImages(AnimationRun);
             }
             isRunning = true;
             state = MarioState::Run;
         } else {
-            if(isRunning || isJumping) {
+            if(state != MarioState::Stand) {
                 this->SetImages(AnimationStand);
             }
             isRunning = false;
@@ -233,26 +222,15 @@ float Mario::OnUpdate(const float delta, std::shared_ptr<BlockManager> m_BM) {
 
 float Mario::Move(std::shared_ptr<BlockManager> m_BM) {
     if (is_dead) {
-        this->SetImages(this->AnimationDead);
+        //this->SetImages(this->AnimationDead);
         return 0.0f;
     }
 
     if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
         is_left_key_down = true;
-        if (!isRunning) {
-            this->SetImages(this->AnimationRun);
-            this->SetPlaying(true);
-            this->SetLooping(true);
-            isRunning = true;
-        }
-    }else if (Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
+    }
+    if (Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
         is_right_key_down = true;
-        if (!isRunning) {
-            this->SetImages(this->AnimationRun);
-            this->SetPlaying(true);
-            this->SetLooping(true);
-            isRunning = true;
-        }
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
         OnJump();
