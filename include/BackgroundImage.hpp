@@ -32,6 +32,10 @@ public:
     void SetSize(float width, float height) {
         m_Transform.scale = {width, height};
     }
+
+    glm::vec2 GetSize() {
+        return m_Drawable->GetSize();
+    }
 };
 
 #endif //BACKGROUND_IMAGE_HPP

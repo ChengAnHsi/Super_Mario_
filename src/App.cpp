@@ -27,7 +27,7 @@ void App::Start() {
     m_Coin = std::make_shared<AnimatedCharacter>(coinImages);
     m_Coin->SetPosition({-135.f, 285.f});
     m_Coin->SetZIndex(5);
-    m_Coin->m_Transform.scale = glm::vec2(2.0f, 2.0f);
+    m_Coin->m_Transform.scale = glm::vec2(MARIO_MAGNIFICATION, MARIO_MAGNIFICATION);
     m_Root.AddChild(m_Coin);
 
     m_PRM = std::make_shared<PhaseResourceManger>();
@@ -40,6 +40,9 @@ void App::Start() {
 
     m_BM = std::make_shared<BlockManager>();
     m_Root.AddChildren(m_BM->GetChildren());
+
+    m_Mario->SetCollision(m_BM);
+
     m_EM = std::make_shared<EnemyManager>();
     m_Root.AddChildren(m_EM->GetChildren());
 
@@ -69,7 +72,7 @@ void App::Update() {
 
     // Calculate how far the camera should move to the right
     float dis = 0.0f;
-    if(m_Phase != Phase::Start) dis = m_Mario->Move(m_BM);
+    if(m_Phase != Phase::Start) dis = m_Mario->Move();
 
     // Camera cannot move left
     if (dis < 0.0f) {

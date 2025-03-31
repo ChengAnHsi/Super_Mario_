@@ -6,7 +6,6 @@
 #define MARIO_HPP
 #include "AnimatedCharacter.hpp"
 #include "BlockManager.hpp"
-#include <iostream>
 #include <string>
 
 enum class MarioState {
@@ -34,14 +33,14 @@ public:
     // move function
     void OnJump();
     void OnSmallJump();
-    void OnRun(float distance, std::shared_ptr<BlockManager> m_BM);
-    float Move(std::shared_ptr<BlockManager> m_BM);
-    float OnUpdate(float delta, std::shared_ptr<BlockManager> m_BM);
+    void OnRun(float distance);
+    float Move();
+    float OnUpdate(float delta);
 
     // collision function
     bool AABBCollides(glm::vec2 a, glm::vec2 b);
     bool CCDDCollides(glm::vec2 a, glm::vec2 b);
-    bool GravityAndCollision(float delta, std::shared_ptr<BlockManager> m_BM);
+    bool GravityAndCollision(float delta);
 
     void UpdateAnimation();
 
@@ -52,6 +51,7 @@ public:
     [[nodiscard]] int GetLive() const;
     void IncreaseScore(int score);
     [[nodiscard]] int GetScore() const;
+    void SetCollision(std::shared_ptr<BlockManager> BM);
 
 private:
     int coin = 0;
@@ -59,6 +59,8 @@ private:
     int score = 0;
     bool is_left_key_down = false;
     bool is_right_key_down = false;
+
+    std::shared_ptr<BlockManager> m_BM;
 
     MarioState state = MarioState::Stand;
     CollisionState X_state = CollisionState::None;

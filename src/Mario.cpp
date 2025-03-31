@@ -26,16 +26,16 @@ void Mario::OnSmallJump() {
     }
 }
 
-void Mario::OnRun(const float distance, std::shared_ptr<BlockManager> m_BM) {
+void Mario::OnRun(const float distance) {
     if (distance == 0) return;
 
     float mario_x = GetPosition().x;
     float mario_y = GetPosition().y;
     glm::vec2 mario_size = this->m_Drawable->GetSize();
-    mario_size *= 2;
+    mario_size *= MARIO_MAGNIFICATION;
     auto background = m_BM->GetBackground();
 
-    const float step = (BLOCK_SIZE + 2) / 4.0f;
+    const float step = COLLISION_BLOCK_SIZE / 4.0f;
     float remaining_distance = distance;
 
     while (std::abs(remaining_distance) > 0.0f) {
@@ -66,8 +66,7 @@ void Mario::OnRun(const float distance, std::shared_ptr<BlockManager> m_BM) {
 
 bool Mario::AABBCollides(glm::vec2 a, glm::vec2 b) {
     glm::vec2 mario_size = this->m_Drawable->GetSize();
-    mario_size *= 2;
-    float block_size = BLOCK_SIZE + 2;
+    mario_size *= MARIO_MAGNIFICATION;
 
     X_state = CollisionState::None;
     float aleft = a.x - mario_size.x / 2;
@@ -75,10 +74,10 @@ bool Mario::AABBCollides(glm::vec2 a, glm::vec2 b) {
     float atop = a.y + mario_size.y / 2;
     float abottom = a.y - mario_size.y / 2;
 
-    float bleft = b.x - block_size / 2;
-    float bright = b.x + block_size / 2;
-    float btop = b.y + block_size / 2;
-    float bbottom = b.y - block_size / 2;
+    float bleft = b.x - COLLISION_BLOCK_SIZE / 2;
+    float bright = b.x + COLLISION_BLOCK_SIZE / 2;
+    float btop = b.y + COLLISION_BLOCK_SIZE / 2;
+    float bbottom = b.y - COLLISION_BLOCK_SIZE / 2;
 
     float EPSILON = 0.0f;  // 允許 x 像素誤差
 
@@ -95,13 +94,12 @@ bool Mario::AABBCollides(glm::vec2 a, glm::vec2 b) {
     if (minOverlap == bright - aleft) X_state = CollisionState::Left;
     else if (minOverlap == aright - bleft) X_state = CollisionState::Right;
 
-    return !(X_state == CollisionState::None);
+    return X_state != CollisionState::None;
 }
 
 bool Mario::CCDDCollides(glm::vec2 a, glm::vec2 b) {
     glm::vec2 mario_size = this->m_Drawable->GetSize();
-    mario_size *= 2;
-    float block_size = BLOCK_SIZE + 2;
+    mario_size *= MARIO_MAGNIFICATION;
 
     Y_state = CollisionState::None;
     float aleft = a.x - mario_size.x / 2;
@@ -109,10 +107,10 @@ bool Mario::CCDDCollides(glm::vec2 a, glm::vec2 b) {
     float atop = a.y + mario_size.y / 2;
     float abottom = a.y - mario_size.y / 2;
 
-    float bleft = b.x - block_size / 2;
-    float bright = b.x + block_size / 2;
-    float btop = b.y + block_size / 2;
-    float bbottom = b.y - block_size / 2;
+    float bleft = b.x - COLLISION_BLOCK_SIZE / 2;
+    float bright = b.x + COLLISION_BLOCK_SIZE / 2;
+    float btop = b.y + COLLISION_BLOCK_SIZE / 2;
+    float bbottom = b.y - COLLISION_BLOCK_SIZE / 2;
 
     float EPSILON = 0.0f;  // 允許 x 像素誤差
 
@@ -129,13 +127,12 @@ bool Mario::CCDDCollides(glm::vec2 a, glm::vec2 b) {
     if (minOverlap == atop - bbottom) Y_state = CollisionState::Top;
     else if (minOverlap == btop - abottom) Y_state = CollisionState::Bottom;
 
-    return !(Y_state == CollisionState::None);
+    return Y_state != CollisionState::None;
 }
 
-bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager> m_BM) {
+bool Mario::GravityAndCollision(const float delta) {
     glm::vec2 mario_size = this->m_Drawable->GetSize();
-    mario_size *= 2;
-    float block_size = BLOCK_SIZE + 2;
+    mario_size *= MARIO_MAGNIFICATION;
     float mario_x = this->GetPosition().x;
     float mario_y = this->GetPosition().y;
     auto background = m_BM->GetBackground();
@@ -149,14 +146,14 @@ bool Mario::GravityAndCollision(const float delta, std::shared_ptr<BlockManager>
         collision = CCDDCollides({mario_x, mario_y}, block->GetTransform().translation);
         if (Y_state == CollisionState::Bottom) {
             // 固定瑪利歐在地板位置
-            mario_y = block->GetTransform().translation.y + block_size / 2 + mario_size.y / 2;
+            mario_y = block->GetTransform().translation.y + COLLISION_BLOCK_SIZE / 2 + mario_size.y / 2;
             velocityY = 0;
             this->SetPosition({ mario_x, mario_y });
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
             // 固定在方塊下方開始下墜
-            mario_y = block->GetTransform().translation.y - block_size / 2 - mario_size.y / 2;
+            mario_y = block->GetTransform().translation.y - COLLISION_BLOCK_SIZE / 2 - mario_size.y / 2;
             this->SetPosition({ mario_x, mario_y });
             break;
         }
@@ -175,11 +172,11 @@ void Mario::UpdateAnimation() {
     const int direction = is_right_key_down - is_left_key_down;
     // facing left
     if (direction == -1) {
-        m_Transform.scale = glm::vec2{-2, 2};
+        m_Transform.scale = glm::vec2{-MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
     }
     // facing right
     if (direction == 1)  {
-        m_Transform.scale = glm::vec2{2, 2};
+        m_Transform.scale = glm::vec2{MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
     }
 
     if (isJumping) {
@@ -192,12 +189,16 @@ void Mario::UpdateAnimation() {
         // 在地面上根據是否有移動來決定站立或跑步
         if (direction != 0) {
             if(state != MarioState::Run) {
+                this->SetPlaying(true);
+                this->SetLooping(true);
                this->SetImages(AnimationRun);
             }
             isRunning = true;
             state = MarioState::Run;
         } else {
             if(state != MarioState::Stand) {
+                this->SetPlaying(true);
+                this->SetLooping(true);
                 this->SetImages(AnimationStand);
             }
             isRunning = false;
@@ -206,13 +207,13 @@ void Mario::UpdateAnimation() {
     }
 }
 
-float Mario::OnUpdate(const float delta, std::shared_ptr<BlockManager> m_BM) {
+float Mario::OnUpdate(const float delta) {
     // update moving
     const int direction = is_right_key_down - is_left_key_down;
     const float distance = direction * run_velocity * delta;
-    OnRun(distance, m_BM);
+    OnRun(distance);
 
-    isJumping = GravityAndCollision(3 * delta, m_BM);
+    isJumping = GravityAndCollision(3 * delta);
 
     // 每幀更新動畫圖片狀態
     UpdateAnimation();
@@ -220,7 +221,7 @@ float Mario::OnUpdate(const float delta, std::shared_ptr<BlockManager> m_BM) {
     return distance;
 }
 
-float Mario::Move(std::shared_ptr<BlockManager> m_BM) {
+float Mario::Move() {
     if (is_dead) {
         //this->SetImages(this->AnimationDead);
         return 0.0f;
@@ -244,7 +245,7 @@ float Mario::Move(std::shared_ptr<BlockManager> m_BM) {
     if (Util::Input::IsKeyUp(Util::Keycode::RIGHT)) {
         is_right_key_down = false;
     }
-    return OnUpdate(1, m_BM);
+    return OnUpdate(1);
 }
 
 void Mario::IncreaseCoin(const int coin) {
@@ -270,4 +271,8 @@ void Mario::IncreaseScore(const int score) {
 
 int Mario::GetScore() const {
     return score;
+}
+
+void Mario::SetCollision(std::shared_ptr<BlockManager> BM) {
+    this->m_BM = BM;
 }
