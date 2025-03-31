@@ -13,6 +13,8 @@ constexpr float BLOCK_SIZE = 48.0f;
 constexpr float COLLISION_BLOCK_SIZE = 48.0f;
 constexpr float BLOCK_MAGNIFICATION = 3.0f;
 constexpr float MARIO_MAGNIFICATION = 2.0f;
+constexpr float BACKGROUND_X_OFFSET = -335.0f;
+constexpr float BACKGROUND_Y_OFFSET = -325.0f;
 //constexpr int WINDOW_WIDTH = 720;
 //constexpr int WINDOW_HEIGHT = 720;
 // Start: 400, Level1_1: 400, ..., Level1_3: 300

@@ -13,17 +13,18 @@ void App::NextPhase() {
         m_Root.RemoveChild(tmp2);
     }
 
+    std::vector<std::shared_ptr<BackgroundImage>> backgrounds;
     // add new block to render
     std::vector tmpx = m_BM->GetX(static_cast<int>(m_Phase));
     std::vector tmpy = m_BM->GetY(static_cast<int>(m_Phase));
     std::vector tmpidx = m_BM->Getidx(static_cast<int>(m_Phase));
-    std::vector<std::shared_ptr<BackgroundImage>> backgrounds;
+
     int imgidx_size = tmpidx.size();
     for (int i = 0; i < imgidx_size; i++) {
         backgrounds.push_back(std::make_shared<BackgroundImage>());
         backgrounds.back()->ChangeImg(m_BM->imageFiles[tmpidx[i]]);
         backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        backgrounds.back()->SetPosition(tmpx[i] * BLOCK_SIZE - 335.0f,tmpy[i] * BLOCK_SIZE - 325.0f);
+        backgrounds.back()->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
     }
     m_BM->SetBackground(backgrounds);
     m_Root.AddChildren(m_BM->GetChildren());
@@ -33,7 +34,7 @@ void App::NextPhase() {
         m_Root.RemoveChild(ftmp2);
     }
 
-    // add new block to render
+    // add new enemy to render
     std::vector<float> ftmpx = m_EM->GetX(static_cast<int>(m_Phase));
     std::vector<float> ftmpy = m_EM->GetY(static_cast<int>(m_Phase));
     std::vector ftmpidx = m_EM->Getidx(static_cast<int>(m_Phase));
@@ -43,10 +44,11 @@ void App::NextPhase() {
         backgrounds.push_back(std::make_shared<BackgroundImage>());
         backgrounds.back()->ChangeImg(m_EM->imageFiles[ftmpidx[i]]);
         backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        backgrounds.back()->SetPosition(ftmpx[i] * BLOCK_SIZE - 335.0f,ftmpy[i] * BLOCK_SIZE - 325.0f);
+        backgrounds.back()->SetPosition(ftmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, ftmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
     }
     m_EM->SetBackground(backgrounds);
     m_Root.AddChildren(m_EM->GetChildren());
+
     // remove tube and other things
     // The castle and flag are removed and use the updated new locations
     tmp = m_PRM->GetBackground();

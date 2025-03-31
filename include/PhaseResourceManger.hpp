@@ -26,9 +26,12 @@ public:
         return all_obj;
     }
 
-    void NextPhase(int m_phase); // Locating objects outside the block
+    void NextPhase(int m_phase);
+    // fixed texts
     void ResetPosition() const;
     void DecreaseTime();
+
+    // setter and getter
     void SetTime(int time);
     int GetTime() const;
     std::vector<std::shared_ptr<BackgroundImage>> GetBackground();

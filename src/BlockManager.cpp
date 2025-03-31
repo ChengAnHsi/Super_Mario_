@@ -9,8 +9,8 @@
 BlockManager::BlockManager() {
     int imgidx_size = imgidx.size();
     for (int i = 0; i < imgidx_size; i++) {
-        m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE - 335.0f);
-        m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE - 325.0f);
+        m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET);
+        m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
         m_Backgrounds.back()->ChangeImg(imageFiles[imgidx[i]]);
         m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);

@@ -16,7 +16,7 @@ public:
             temp->SetImage(RESOURCE_DIR"/Scenery/Overworld/sky.png");
         }else{
             // black image
-            temp->SetImage(RESOURCE_DIR"/Scenery/Overworld/sky.png");
+            temp->SetImage(RESOURCE_DIR"/Scenery/Overworld/under_sky.png");
         }
     }
 

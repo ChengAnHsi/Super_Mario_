@@ -38,8 +38,7 @@ PhaseResourceManger::PhaseResourceManger() {
         RESOURCE_DIR"/Scenery/flag-mast.png"
     };
 
-    // background image(logo or sky)
-    // start set
+    // background image setting
     // [0]: logo
     m_Background.push_back(std::make_shared<BackgroundImage>());
     m_Background.back()->SetPosition(0, 0);
@@ -88,7 +87,7 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
     LOG_DEBUG("Passed! Next phase: {}", m_Phase);
 
     if (m_Phase == 1){
-        // [0]: blue or black background image
+        // [0]: blue background image
         m_Background[0]->NextPhase(m_Phase);
         m_Background[0]->SetSize(80.0f,7.0f);
         m_Background[0]->SetZIndex(-50);
@@ -105,6 +104,22 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
     }
     if (m_Phase == 2){
         m_Background.clear();
+        // [0]: black background image
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background[0]->NextPhase(m_Phase);
+        m_Background[0]->SetSize(80.0f,7.0f);
+        m_Background[0]->SetZIndex(-50);
+        // [1]: castle is visible
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background[1]->ChangeImg(RESOURCE_DIR"/Scenery/castle.png");
+        m_Background[1]->SetPosition(202 * BLOCK_SIZE - 320.0f, 4 * BLOCK_SIZE - 325.0f);
+        m_Background[1]->SetSize(3.0f, 3.0f);
+        // [2]: flag set
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background[2]->ChangeImg(RESOURCE_DIR"/Scenery/flag-mast.png");
+        m_Background[2]->SetPosition(198 * BLOCK_SIZE - 320.0f, 8 * BLOCK_SIZE - 390.0f);
+        m_Background[2]->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+
         m_Tube.clear();
         // other level tube and its position
 
@@ -116,6 +131,22 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
     }
     if (m_Phase == 3) {
         m_Background.clear();
+        // [0]: black background image
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background[0]->NextPhase(m_Phase);
+        m_Background[0]->SetSize(80.0f,7.0f);
+        m_Background[0]->SetZIndex(-50);
+        // [1]: castle is visible
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background[1]->ChangeImg(RESOURCE_DIR"/Scenery/castle.png");
+        m_Background[1]->SetPosition(202 * BLOCK_SIZE - 320.0f, 4 * BLOCK_SIZE - 325.0f);
+        m_Background[1]->SetSize(3.0f, 3.0f);
+        // [2]: flag set
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background[2]->ChangeImg(RESOURCE_DIR"/Scenery/flag-mast.png");
+        m_Background[2]->SetPosition(198 * BLOCK_SIZE - 320.0f, 8 * BLOCK_SIZE - 390.0f);
+        m_Background[2]->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+
         m_Tube.clear();
     }
 
@@ -129,14 +160,6 @@ void PhaseResourceManger::ResetPosition() const {
     m_MoneyText->SetPosition(-70, 285);
     m_WorldText->SetPosition(100, 300);
     m_TimeText->SetPosition(300, 300);
-}
-
-std::vector<std::shared_ptr<BackgroundImage> > PhaseResourceManger::GetTube() {
-    return m_Tube;
-}
-
-std::vector<std::shared_ptr<BackgroundImage> > PhaseResourceManger::GetBackground() {
-    return m_Background;
 }
 
 void PhaseResourceManger::DecreaseTime() {
@@ -158,4 +181,12 @@ void PhaseResourceManger::SetTime(const int time) {
 
 int PhaseResourceManger::GetTime() const {
     return time;
+}
+
+std::vector<std::shared_ptr<BackgroundImage> > PhaseResourceManger::GetTube() {
+    return m_Tube;
+}
+
+std::vector<std::shared_ptr<BackgroundImage> > PhaseResourceManger::GetBackground() {
+    return m_Background;
 }
