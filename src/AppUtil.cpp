@@ -5,7 +5,12 @@
 
 // update all game object for next level
 void App::NextPhase() {
+    if(m_Phase == Phase::Level1_2) {
+        m_Mario->SetPosition({-380.0f + 3.0f * BLOCK_SIZE, -240.0f + 9.5 * BLOCK_SIZE});
+    }
     // update next level block
+    m_Mario->ClearCollisionBox();
+
     // remove last level and set next level block
     std::vector<std::shared_ptr<BackgroundImage>> tmp = m_BM->GetBackground();
     for (const auto & img : tmp) {
@@ -13,8 +18,8 @@ void App::NextPhase() {
         m_Root.RemoveChild(tmp2);
     }
 
-    std::vector<std::shared_ptr<BackgroundImage>> backgrounds;
     // add new block to render
+    std::vector<std::shared_ptr<BackgroundImage>> backgrounds;
     std::vector tmpx = m_BM->GetX(static_cast<int>(m_Phase));
     std::vector tmpy = m_BM->GetY(static_cast<int>(m_Phase));
     std::vector tmpidx = m_BM->Getidx(static_cast<int>(m_Phase));
@@ -22,13 +27,16 @@ void App::NextPhase() {
     int imgidx_size = tmpidx.size();
     for (int i = 0; i < imgidx_size; i++) {
         backgrounds.push_back(std::make_shared<BackgroundImage>());
-        backgrounds.back()->ChangeImg(m_BM->imageFiles[tmpidx[i]]);
-        backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        backgrounds.back()->ChangeImg(m_BM->imagePaths[tmpidx[i]]);
+        backgrounds.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         backgrounds.back()->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
     }
     m_BM->SetBackground(backgrounds);
+    m_Mario->AddCollisionBox(backgrounds);
     m_Root.AddChildren(m_BM->GetChildren());
-     std::vector<std::shared_ptr<BackgroundImage>> ftmp = m_EM->GetBackground();
+
+    // remove old enemy
+    std::vector<std::shared_ptr<BackgroundImage>> ftmp = m_EM->GetBackground();
     for (const auto & img : ftmp) {
         std::shared_ptr<Util::GameObject> ftmp2 = img;
         m_Root.RemoveChild(ftmp2);
@@ -43,7 +51,7 @@ void App::NextPhase() {
     for (int i = 0; i < fimgidx_size; i++) {
         backgrounds.push_back(std::make_shared<BackgroundImage>());
         backgrounds.back()->ChangeImg(m_EM->imageFiles[ftmpidx[i]]);
-        backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        backgrounds.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         backgrounds.back()->SetPosition(ftmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, ftmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
     }
     m_EM->SetBackground(backgrounds);
@@ -61,7 +69,6 @@ void App::NextPhase() {
         std::shared_ptr<Util::GameObject> tmp2 = img;
         m_Root.RemoveChild(tmp2);
     }
-
 }
 
 void App::ValidTask() {
@@ -71,20 +78,23 @@ void App::ValidTask() {
             LOG_DEBUG("Welcome to Super Mario!");
             m_Phase = Phase::Level1_1;
             // init is Level1_1 don't need to call NextPhase
-            m_PRM->NextPhase(static_cast<int>(m_Phase));
+            m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
+            m_Mario->AddCollisionBox(m_PRM->GetTube());
             break;
         case Phase::Level1_1:
             LOG_DEBUG("Congratulations! You have completed Level1-1!");
             m_Phase = Phase::Level1_2;
             NextPhase();
-            m_PRM->NextPhase(static_cast<int>(m_Phase));
+            m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
+            m_Mario->AddCollisionBox(m_PRM->GetTube());
             m_Root.AddChildren(m_PRM->GetChildren(false));
             break;
         case Phase::Level1_2:
             LOG_DEBUG("Congratulations! You have completed Level1-2!");
             m_Phase = Phase::Level1_3;
             NextPhase();
-            m_PRM->NextPhase(static_cast<int>(m_Phase));
+            m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
+            m_Mario->AddCollisionBox(m_PRM->GetTube());
             m_Root.AddChildren(m_PRM->GetChildren(false));
             break;
         case Phase::Level1_3:

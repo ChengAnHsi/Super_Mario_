@@ -19,7 +19,7 @@ public:
         }
         return all_obj;
     }
-    std::vector<std::string> imageFiles = {
+    std::vector<std::string> imagePaths = {
         RESOURCE_DIR"/Blocks/Overworld/block.png",
         RESOURCE_DIR"/Blocks/Underworld/block2.png",
         RESOURCE_DIR"/Scenery/Overworld/floorbricks.png",

@@ -13,7 +13,7 @@ EnemyManager::EnemyManager() {
         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE - 325.0f);
         m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
         m_Backgrounds.back()->ChangeImg(imageFiles[imgidx[i]]);
-        m_Backgrounds.back()->SetSize(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        m_Backgrounds.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         m_Backgrounds.back()->SetPosition(m_PositionX[i],m_PositionY[i]);
     }
 

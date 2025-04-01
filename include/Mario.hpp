@@ -6,6 +6,8 @@
 #define MARIO_HPP
 #include "AnimatedCharacter.hpp"
 #include "BlockManager.hpp"
+#include "PhaseResourceManger.hpp"
+
 #include <string>
 
 enum class MarioState {
@@ -38,8 +40,8 @@ public:
     float OnUpdate(float delta);
 
     // collision function
-    bool AABBCollides(glm::vec2 a, glm::vec2 b);
-    bool CCDDCollides(glm::vec2 a, glm::vec2 b);
+    bool AABBCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> box);
+    bool CCDDCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> box);
     bool GravityAndCollision(float delta);
 
     void UpdateAnimation();
@@ -51,7 +53,8 @@ public:
     [[nodiscard]] int GetLive() const;
     void IncreaseScore(int score);
     [[nodiscard]] int GetScore() const;
-    void SetCollision(std::shared_ptr<BlockManager> BM);
+    void AddCollisionBox(std::vector<std::shared_ptr<BackgroundImage>> box);
+    void ClearCollisionBox();
 
 private:
     int coin = 0;
@@ -60,7 +63,7 @@ private:
     bool is_left_key_down = false;
     bool is_right_key_down = false;
 
-    std::shared_ptr<BlockManager> m_BM;
+    std::vector<std::shared_ptr<BackgroundImage>> collision_box;
 
     MarioState state = MarioState::Stand;
     CollisionState X_state = CollisionState::None;

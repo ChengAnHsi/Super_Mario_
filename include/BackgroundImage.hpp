@@ -29,8 +29,16 @@ public:
         m_Transform.translation = {x, y};
     }
 
-    void SetSize(float width, float height) {
+    glm::vec2 GetPosition() {
+        return m_Transform.translation;
+    }
+
+    void SetScale(float width, float height) {
         m_Transform.scale = {width, height};
+    }
+
+    glm::vec2 GetScale() {
+        return m_Transform.scale;
     }
 
     glm::vec2 GetSize() {

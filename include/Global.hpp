@@ -10,8 +10,16 @@
 #pragma once
 
 constexpr float BLOCK_SIZE = 48.0f;
-constexpr float COLLISION_BLOCK_SIZE = 48.0f;
 constexpr float BLOCK_MAGNIFICATION = 3.0f;
+constexpr float SMALL_TUBE_X_OFFSET = -310.0f;
+constexpr float MID_TUBE_X_OFFSET = -313.0f;
+constexpr float LARGE_TUBE_X_OFFSET = -313.0f;
+constexpr float SMALL_TUBE_Y_OFFSET = -350.0f;
+constexpr float MID_TUBE_Y_OFFSET = -375.0f;
+constexpr float LARGE_TUBE_Y_OFFSET = -400.0f;
+constexpr float SMALL_TUBE_MAGNIFICATION = 3.0f;
+constexpr float MID_TUBE_MAGNIFICATION = 3.0f;
+constexpr float LARGE_TUBE_MAGNIFICATION = 3.0f;
 constexpr float MARIO_MAGNIFICATION = 2.0f;
 constexpr float BACKGROUND_X_OFFSET = -335.0f;
 constexpr float BACKGROUND_Y_OFFSET = -325.0f;
