@@ -10,7 +10,6 @@
 #include "Util/Keycode.hpp"
 
 void Mario::OnJump() {
-    // 只有在真正落地時才能跳躍
     if (!isJumping) {
         velocityY = JUMP_VELOCITY;
         state = MarioState::Jump;
