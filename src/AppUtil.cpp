@@ -1,6 +1,7 @@
 #include "AppUtil.hpp"
 #include "App.hpp"
 #include "Global.hpp"
+#include "AnimatedImage.hpp"
 #include "Util/Logger.hpp"
 
 // update all game object for next level
@@ -26,8 +27,13 @@ void App::NextPhase() {
 
     int imgidx_size = tmpidx.size();
     for (int i = 0; i < imgidx_size; i++) {
-        backgrounds.push_back(std::make_shared<BackgroundImage>());
-        backgrounds.back()->ChangeImg(m_BM->imagePaths[tmpidx[i]]);
+        if(tmpidx[i] == 6 || tmpidx[i] == 9) {
+            backgrounds.push_back(std::make_shared<AnimatedImage>());
+            backgrounds.back()->SetImage({m_BM->imagePaths[tmpidx[i]],m_BM->imagePaths[tmpidx[i] + 1],m_BM->imagePaths[tmpidx[i] + 2]}, 1000, 0);
+        }else {
+            backgrounds.push_back(std::make_shared<BackgroundImage>());
+            backgrounds.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
+        }
         backgrounds.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         backgrounds.back()->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
     }
@@ -50,7 +56,7 @@ void App::NextPhase() {
     int fimgidx_size = ftmpidx.size();
     for (int i = 0; i < fimgidx_size; i++) {
         backgrounds.push_back(std::make_shared<BackgroundImage>());
-        backgrounds.back()->ChangeImg(m_EM->imageFiles[ftmpidx[i]]);
+        backgrounds.back()->SetImage(m_EM->imageFiles[ftmpidx[i]]);
         backgrounds.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         backgrounds.back()->SetPosition(ftmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, ftmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
     }

@@ -51,12 +51,14 @@ private:
     std::shared_ptr<TaskText> m_OtherText;
     std::vector<std::shared_ptr<BackgroundImage>> m_Background;
     std::vector<std::shared_ptr<BackgroundImage>> m_Tube;
+    std::vector<std::shared_ptr<BackgroundImage>> m_Collectibles_Coin;
     //std::shared_ptr<Mario> m_Mario;
 
     int time = 400;
     std::chrono::steady_clock::time_point last_update;
 
-    // 0: small tube 1: medium tube 2: large tube
+    // image index 0: small tube 1: medium tube 2: large tube
+    // tube position
     std::vector<float> x_offset = {-310, -313, -313};
     std::vector<float> y_offset = {-350, -375, -400};
     std::vector<float> tube_magnification = {3.0f, 3.0f, 3.0f};
@@ -68,6 +70,7 @@ private:
     std::vector<int> tmp_x2 = {103, 109, 115};
     std::vector<int> tmp_y2 = {4, 5, 3};
     std::vector<int> imgidx2 = {2, 2, 2};
+    // map 1-3 no tube there
 };
 
 

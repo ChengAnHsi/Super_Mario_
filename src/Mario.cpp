@@ -13,7 +13,11 @@ void Mario::OnJump() {
     if (!isJumping) {
         velocityY = JUMP_VELOCITY;
         state = MarioState::Jump;
-        this->SetImages(AnimationJump);
+        if(is_grow) {
+            this->SetImages(AnimationJumpGrow, 100, 0);
+        }else {
+            this->SetImages(AnimationJump, 100, 0);
+        }
     }
 }
 
@@ -21,7 +25,11 @@ void Mario::OnSmallJump() {
     if (!isJumping) {
         velocityY = SMALL_JUMP_VELOCITY;
         state = MarioState::Jump;
-        this->SetImages(AnimationJump);
+        if(is_grow) {
+            this->SetImages(AnimationJumpGrow, 100, 0);
+        }else {
+            this->SetImages(AnimationJump, 100, 0);
+        }
     }
 }
 
@@ -44,6 +52,10 @@ void Mario::OnRun(const float distance) {
 
         bool collision = false;
         for (const auto& box : collision_box) {
+            // box had already destroyed
+            if (box->GetVisible() == false) {
+                continue;
+            }
             AABBCollides({next_x, mario_y}, box);
             // check next step will collision or not
             if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
@@ -84,7 +96,7 @@ bool Mario::AABBCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> b
     float btop = b.y + b_size.y / 2;
     float bbottom = b.y - b_size.y / 2;
 
-    float EPSILON = 0.0f;  // 允許 x 像素誤差
+    float EPSILON = 0.0f;  // 允許 0.0 pixel 誤差
 
     bool collisionX = (aleft < bright - EPSILON) && (aright > bleft + EPSILON);
     bool collisionY = (abottom < btop - EPSILON) && (atop > bbottom + EPSILON);
@@ -93,7 +105,7 @@ bool Mario::AABBCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> b
         return false;
     }
 
-    // 計算最小重疊距離
+    // calculate minimum overlap area
     float minOverlap = std::min({bright - aleft, aright - bleft});
 
     if (minOverlap == bright - aleft) X_state = CollisionState::Left;
@@ -123,7 +135,7 @@ bool Mario::CCDDCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> b
     float btop = b.y + b_size.y / 2;
     float bbottom = b.y - b_size.y / 2;
 
-    float EPSILON = 0.0f;  // 允許 x 像素誤差
+    float EPSILON = 0.0f;  // 允許 0.0 pixel 誤差
 
     bool collisionX = (aleft < bright - EPSILON) && (aright > bleft + EPSILON);
     bool collisionY = (abottom < btop - EPSILON) && (atop > bbottom + EPSILON);
@@ -132,7 +144,7 @@ bool Mario::CCDDCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> b
         return false;
     }
 
-    // 計算最小重疊距離
+    // calculate minimum overlap area
     float minOverlap = std::min({atop - bbottom, btop - abottom});
 
     if (minOverlap == atop - bbottom) Y_state = CollisionState::Top;
@@ -153,6 +165,10 @@ bool Mario::GravityAndCollision(const float delta) {
 
     bool collision = false;
     for (const auto &box : collision_box) {
+        // box had already destroyed
+        if(box->GetVisible() == false) {
+            continue;
+        }
         glm::vec2 b_size = box->GetSize();
         b_size.x *= box->GetScale().x;
         b_size.y *= box->GetScale().y;
@@ -167,6 +183,14 @@ bool Mario::GravityAndCollision(const float delta) {
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
+            // TODO if block is question block -> get item
+
+            // TODO if mario is giant, block should be destroy
+            if(is_grow){
+                if (box->GetImagePath() == RESOURCE_DIR"/Blocks/Overworld/block.png" || box->GetImagePath() == RESOURCE_DIR"/Blocks/Underworld/block2.png") {
+                    box->SetVisible(false);
+                }
+            }
             // 固定在方塊下方開始下墜
             mario_y = box->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
             this->SetPosition({ mario_x, mario_y });
@@ -206,7 +230,11 @@ void Mario::UpdateAnimation() {
             if(state != MarioState::Run) {
                 this->SetPlaying(true);
                 this->SetLooping(true);
-               this->SetImages(AnimationRun);
+                if(is_grow) {
+                    this->SetImages(AnimationRunGrow, 100, 0);
+                }else {
+                    this->SetImages(AnimationRun, 100, 0);
+                }
             }
             isRunning = true;
             state = MarioState::Run;
@@ -214,7 +242,11 @@ void Mario::UpdateAnimation() {
             if(state != MarioState::Stand) {
                 this->SetPlaying(true);
                 this->SetLooping(true);
-                this->SetImages(AnimationStand);
+                if (is_grow) {
+                    this->SetImages(AnimationStandGrow, 100, 0);
+                }else {
+                    this->SetImages(AnimationStand, 100, 0);
+                }
             }
             isRunning = false;
             state = MarioState::Stand;
@@ -238,10 +270,15 @@ float Mario::OnUpdate(const float delta) {
 
 float Mario::Move() {
     if (is_dead) {
-        this->SetImages(this->AnimationDead);
+        this->SetImages(this->AnimationDead, 100, 0);
         return 0.0f;
     }
 
+    if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
+        is_grow = not is_grow;
+        // TODO fix animation not correct
+        this->SetImages(this->AnimationGrow, 1000, 0);
+    }
     if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
         is_left_key_down = true;
     }
@@ -273,7 +310,7 @@ int Mario::GetCoin() const {
 
 void Mario::SetLive(const int live) {
     this->live = live;
-    if (live == 0) SetImages(AnimationDead);
+    if (live == 0) SetImages(AnimationDead, 100, 0);
 }
 
 int Mario::GetLive() const {

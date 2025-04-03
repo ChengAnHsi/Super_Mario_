@@ -39,6 +39,8 @@ add_executable(${PROJECT_NAME}
         src/BlockManager.cpp
         src/Renderer.cpp
         include/Renderer.hpp
+        include/AnimatedImage.hpp
+        src/AnimatedImage.cpp
 )
 
 if(MSVC)

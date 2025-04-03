@@ -1,9 +1,12 @@
 //
 // Created by 112590007 on 2025/3/14.
 //
+
 #include "BlockManager.hpp"
 #include "Global.hpp"
+#include "AnimatedImage.hpp"
 #include "App.hpp"
+
 #include <iostream>
 
 BlockManager::BlockManager() {
@@ -11,8 +14,13 @@ BlockManager::BlockManager() {
     for (int i = 0; i < imgidx_size; i++) {
         m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET);
         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
-        m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
-        m_Backgrounds.back()->ChangeImg(imagePaths[imgidx[i]]);
+        if(imgidx[i] == 6 || imgidx[i] == 9) {
+            m_Backgrounds.push_back(std::make_shared<AnimatedImage>());
+            m_Backgrounds.back()->SetImage({imagePaths[imgidx[i]],imagePaths[imgidx[i] + 1],imagePaths[imgidx[i] + 2]}, 1000, 0);
+        }else {
+            m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
+            m_Backgrounds.back()->SetImage(imagePaths[imgidx[i]]);
+        }
         m_Backgrounds.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         m_Backgrounds.back()->SetPosition(m_PositionX[i],m_PositionY[i]);
     }

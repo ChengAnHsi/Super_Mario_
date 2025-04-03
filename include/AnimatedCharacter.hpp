@@ -21,17 +21,17 @@ public:
         return std::dynamic_pointer_cast<Util::Animation>(m_Drawable)->GetState() == Util::Animation::State::PLAY;
     }
 
-    void SetImages(const std::vector<std::string>& AnimationPaths) {
-        m_Drawable = std::make_shared<Util::Animation>(AnimationPaths, IsPlaying(), 500, IsLooping(), 0);
+    void SetImages(const std::vector<std::string>& AnimationPaths, int interval, int cooldown) {
+        m_Drawable = std::make_shared<Util::Animation>(AnimationPaths, IsPlaying(), interval, IsLooping(), cooldown);
     }
 
-    void SetLooping(bool looping) {
-        auto temp = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
+    void SetLooping(bool looping) const {
+        const auto temp = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
         temp->SetLooping(looping);
     }
 
-    void SetPlaying(bool playing) {
-        auto temp = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
+    void SetPlaying(bool playing) const {
+        const auto temp = std::dynamic_pointer_cast<Util::Animation>(m_Drawable);
         if(playing) {
             temp->Play();
         }else {
