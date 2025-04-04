@@ -10,7 +10,7 @@ void App::NextPhase() {
         m_Mario->SetPosition({-380.0f + 3.0f * BLOCK_SIZE, -240.0f + 9.5 * BLOCK_SIZE});
     }
     // update next level block
-    m_Mario->ClearCollisionBox();
+    m_Mario->ClearCollisionBoxes();
 
     // remove last level and set next level block
     std::vector<std::shared_ptr<BackgroundImage>> tmp = m_BM->GetBackground();
@@ -38,7 +38,7 @@ void App::NextPhase() {
         backgrounds.back()->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
     }
     m_BM->SetBackground(backgrounds);
-    m_Mario->AddCollisionBox(backgrounds);
+    m_Mario->AddCollisionBoxes(backgrounds);
     m_Root.AddChildren(m_BM->GetChildren());
 
     // remove old enemy
@@ -70,7 +70,7 @@ void App::NextPhase() {
         std::shared_ptr<Util::GameObject> tmp2 = img;
         m_Root.RemoveChild(tmp2);
     }
-    tmp = m_PRM->GetTube();
+    tmp = m_PRM->GetCollisionBoxes();
     for (const auto & img : tmp) {
         std::shared_ptr<Util::GameObject> tmp2 = img;
         m_Root.RemoveChild(tmp2);
@@ -85,14 +85,14 @@ void App::ValidTask() {
             m_Phase = Phase::Level1_1;
             // init is Level1_1 don't need to call NextPhase
             m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
-            m_Mario->AddCollisionBox(m_PRM->GetTube());
+            m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
             break;
         case Phase::Level1_1:
             LOG_DEBUG("Congratulations! You have completed Level1-1!");
             m_Phase = Phase::Level1_2;
             NextPhase();
             m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
-            m_Mario->AddCollisionBox(m_PRM->GetTube());
+            m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
             m_Root.AddChildren(m_PRM->GetChildren(false));
             break;
         case Phase::Level1_2:
@@ -100,7 +100,7 @@ void App::ValidTask() {
             m_Phase = Phase::Level1_3;
             NextPhase();
             m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
-            m_Mario->AddCollisionBox(m_PRM->GetTube());
+            m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
             m_Root.AddChildren(m_PRM->GetChildren(false));
             break;
         case Phase::Level1_3:

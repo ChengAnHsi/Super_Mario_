@@ -42,7 +42,7 @@ void App::Start() {
     m_BM = std::make_shared<BlockManager>();
     m_Root.AddChildren(m_BM->GetChildren());
 
-    m_Mario->AddCollisionBox(m_BM->GetBackground());
+    m_Mario->AddCollisionBoxes(m_BM->GetBackground());
     //m_Mario->AddCollisionBox(m_PRM->GetTube());
 
     m_EM = std::make_shared<EnemyManager>();

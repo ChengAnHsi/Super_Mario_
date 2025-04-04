@@ -60,11 +60,11 @@ PhaseResourceManger::PhaseResourceManger() {
     // m_Tube.back()->SetPosition(28 * BLOCK_SIZE + BACKGROUND_X_OFFSET + m_Tube.back()->GetSize().x / 2, 2.5 * BLOCK_SIZE + BACKGROUND_Y_OFFSET - m_Tube.back()->GetSize().y / 2);
 
     // tube init(map 1-1)
-    for (int i = 0; i < tmp_x.size(); i++) {
-        m_Tube.push_back(std::make_shared<BackgroundImage>());
-        m_Tube.back()->SetImage(imagePaths[imgidx[i]]);
-        m_Tube.back()->SetPosition(tmp_x[i] * BLOCK_SIZE + x_offset[imgidx[i]], tmp_y[i] * BLOCK_SIZE  + y_offset[imgidx[i]]);
-        m_Tube.back()->SetScale(tube_magnification[imgidx[i]], tube_magnification[imgidx[i]]);
+    for (int i = 0; i < collisionboxes_imgidx.size(); i++) {
+        m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
+        m_CollisionBoxes.back()->SetImage(imagePaths[collisionboxes_imgidx[i]]);
+        m_CollisionBoxes.back()->SetPosition(collisionboxes_x[i] * BLOCK_SIZE + tubex_offset[collisionboxes_imgidx[i]], collisionboxes_y[i] * BLOCK_SIZE  + tubey_offset[collisionboxes_imgidx[i]]);
+        m_CollisionBoxes.back()->SetScale(tube_magnification[collisionboxes_imgidx[i]], tube_magnification[collisionboxes_imgidx[i]]);
     }
 }
 
@@ -108,28 +108,28 @@ void PhaseResourceManger::NextPhase(int m_Phase, std::shared_ptr<Util::BGM> m_BG
         m_Background[2]->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
 
         // tube init(map 1-2)
-        m_Tube.clear();
-        for (int i = 0; i < tmp_x2.size(); i++) {
-            m_Tube.push_back(std::make_shared<BackgroundImage>());
-            m_Tube.back()->SetImage(imagePaths[imgidx2[i]]);
-            m_Tube.back()->SetPosition(tmp_x2[i] * BLOCK_SIZE + x_offset[imgidx2[i]], tmp_y2[i] * BLOCK_SIZE  + y_offset[imgidx2[i]]);
-            m_Tube.back()->SetScale(tube_magnification[imgidx[i]], tube_magnification[imgidx2[i]]);
+        m_CollisionBoxes.clear();
+        for (int i = 0; i < collisionboxes_x2.size(); i++) {
+            m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
+            m_CollisionBoxes.back()->SetImage(imagePaths[collisionboxes_imgidx2[i]]);
+            m_CollisionBoxes.back()->SetPosition(collisionboxes_x2[i] * BLOCK_SIZE + tubex_offset[collisionboxes_imgidx2[i]], collisionboxes_y2[i] * BLOCK_SIZE  + tubey_offset[collisionboxes_imgidx2[i]]);
+            m_CollisionBoxes.back()->SetScale(tube_magnification[collisionboxes_imgidx2[i]], tube_magnification[collisionboxes_imgidx2[i]]);
         }
         // top tube
-        m_Tube.push_back(std::make_shared<BackgroundImage>());
-        m_Tube.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-medium-tube.png");
-        m_Tube.back()->SetPosition(2 * BLOCK_SIZE + x_offset[1], 14 * BLOCK_SIZE + y_offset[1]);
-        m_Tube.back()->SetScale(tube_magnification[1], -tube_magnification[1]);
+        m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
+        m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-medium-tube.png");
+        m_CollisionBoxes.back()->SetPosition(2 * BLOCK_SIZE + tubex_offset[1], 14 * BLOCK_SIZE + tubey_offset[1]);
+        m_CollisionBoxes.back()->SetScale(tube_magnification[1], -tube_magnification[1]);
         // end horizontal tube
-        m_Tube.push_back(std::make_shared<BackgroundImage>());
-        m_Tube.back()->SetImage(RESOURCE_DIR"/Scenery/horizontal-final-tube.png");
-        m_Tube.back()->SetPosition(167 * BLOCK_SIZE + x_offset[1], 6 * BLOCK_SIZE + y_offset[0]);
-        m_Tube.back()->SetScale(tube_magnification[0], tube_magnification[0]);
+        m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
+        m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/horizontal-final-tube.png");
+        m_CollisionBoxes.back()->SetPosition(167 * BLOCK_SIZE + tubex_offset[1], 6 * BLOCK_SIZE + tubey_offset[0]);
+        m_CollisionBoxes.back()->SetScale(tube_magnification[0], tube_magnification[0]);
         // end vertical tube
-        m_Tube.push_back(std::make_shared<BackgroundImage>());
-        m_Tube.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-xlarge-tube.png");
-        m_Tube.back()->SetPosition(168 * BLOCK_SIZE + x_offset[0], 11 * BLOCK_SIZE + y_offset[2]);
-        m_Tube.back()->SetScale(tube_magnification[0], tube_magnification[0]);
+        m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
+        m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-xlarge-tube.png");
+        m_CollisionBoxes.back()->SetPosition(168 * BLOCK_SIZE + tubex_offset[0], 11 * BLOCK_SIZE + tubey_offset[2]);
+        m_CollisionBoxes.back()->SetScale(tube_magnification[0], tube_magnification[0]);
     }
     if (m_Phase == 3) {
         m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
@@ -150,9 +150,10 @@ void PhaseResourceManger::NextPhase(int m_Phase, std::shared_ptr<Util::BGM> m_BG
         m_Background[2]->SetImage(RESOURCE_DIR"/Scenery/flag-mast.png");
         m_Background[2]->SetPosition(198 * BLOCK_SIZE - 320.0f, 8 * BLOCK_SIZE - 390.0f);
         m_Background[2]->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        // TODO append platform to background
-        // TODO getter: platform, add them to mario's collision box
-        m_Tube.clear();
+        // TODO append lifting platform to background
+        // TODO getter: lifting platform, add them to mario's collision box
+        m_CollisionBoxes.clear();
+
     }
 
     SetTime(LEVEL_TIME[m_Phase]);
@@ -188,10 +189,14 @@ int PhaseResourceManger::GetTime() const {
     return time;
 }
 
-std::vector<std::shared_ptr<BackgroundImage> > PhaseResourceManger::GetTube() {
-    return m_Tube;
+std::vector<std::shared_ptr<BackgroundImage>> PhaseResourceManger::GetCollisionBoxes() {
+    return m_CollisionBoxes;
 }
 
-std::vector<std::shared_ptr<BackgroundImage> > PhaseResourceManger::GetBackground() {
+std::vector<std::shared_ptr<BackgroundImage>> PhaseResourceManger::GetBackground() {
     return m_Background;
+}
+
+std::vector<std::shared_ptr<BackgroundImage>> PhaseResourceManger::GetCollectibleCoins() {
+    return m_CollectibleCoins;
 }

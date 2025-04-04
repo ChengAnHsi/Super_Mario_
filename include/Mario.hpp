@@ -53,8 +53,10 @@ public:
     [[nodiscard]] int GetLive() const;
     void IncreaseScore(int score);
     [[nodiscard]] int GetScore() const;
-    void AddCollisionBox(std::vector<std::shared_ptr<BackgroundImage>> box);
-    void ClearCollisionBox();
+    void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
+    void AddCollectibles(std::vector<std::shared_ptr<BackgroundImage>> collectibles);
+    void ClearCollisionBoxes();
+    void ClearCollectibles();
 
 private:
     int coin = 0;
@@ -63,7 +65,8 @@ private:
     bool is_left_key_down = false;
     bool is_right_key_down = false;
 
-    std::vector<std::shared_ptr<BackgroundImage>> collision_box;
+    std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
+    std::vector<std::shared_ptr<BackgroundImage>> collision_collectibles;
 
     MarioState state = MarioState::Stand;
     CollisionState X_state = CollisionState::None;

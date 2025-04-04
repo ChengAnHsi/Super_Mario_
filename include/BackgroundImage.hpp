@@ -17,7 +17,7 @@ public:
             temp->SetImage(RESOURCE_DIR"/Scenery/Overworld/sky.png");
         }else{
             // black image
-            temp->SetImage(RESOURCE_DIR"/Scenery/Overworld/under_sky.png");
+            temp->SetImage(RESOURCE_DIR"/Scenery/Underworld/sky.png");
         }
     }
 
@@ -29,6 +29,7 @@ public:
 
     void SetImage(const std::vector<std::string>& AnimationPaths, int interval, int cooldown){
         m_Drawable = std::make_shared<Util::Animation>(AnimationPaths, true, interval, true, cooldown);
+        m_ImagePath = AnimationPaths[0];
     }
 
     void SetPosition(float x, float y) {

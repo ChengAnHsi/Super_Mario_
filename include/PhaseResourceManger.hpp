@@ -21,7 +21,7 @@ public:
         for (const auto & img : m_Background) {
             all_obj.emplace_back(img);
         }
-        for (const auto & img : m_Tube) {
+        for (const auto & img : m_CollisionBoxes) {
             all_obj.emplace_back(img);
         }
         return all_obj;
@@ -29,7 +29,14 @@ public:
     std::vector<std::string> imagePaths = {
         RESOURCE_DIR"/Scenery/vertical-small-tube.png",
         RESOURCE_DIR"/Scenery/vertical-medium-tube.png",
-        RESOURCE_DIR"/Scenery/vertical-large-tube.png"
+        RESOURCE_DIR"/Scenery/vertical-large-tube.png",
+        RESOURCE_DIR"/Collectibles/Overworld/coin0.png",
+        RESOURCE_DIR"/Collectibles/Overworld/coin1.png",
+        RESOURCE_DIR"/Collectibles/Overworld/coin2.png", // 5
+        RESOURCE_DIR"/Collectibles/Overworld/coin3.png",
+        RESOURCE_DIR"/Collectibles/Underworld/coin0.png",
+        RESOURCE_DIR"/Collectibles/Underworld/coin1.png",
+        RESOURCE_DIR"/Collectibles/Underworld/coin2.png"
     };
 
     void NextPhase(int m_phase, std::shared_ptr<Util::BGM> m_BGM);
@@ -41,7 +48,8 @@ public:
     void SetTime(int time);
     int GetTime() const;
     std::vector<std::shared_ptr<BackgroundImage>> GetBackground();
-    std::vector<std::shared_ptr<BackgroundImage>> GetTube();
+    std::vector<std::shared_ptr<BackgroundImage>> GetCollisionBoxes();
+    std::vector<std::shared_ptr<BackgroundImage>> GetCollectibleCoins();
 
 private:
     std::shared_ptr<TaskText> m_MarioText;
@@ -50,27 +58,48 @@ private:
     std::shared_ptr<TaskText> m_TimeText;
     std::shared_ptr<TaskText> m_OtherText;
     std::vector<std::shared_ptr<BackgroundImage>> m_Background;
-    std::vector<std::shared_ptr<BackgroundImage>> m_Tube;
-    std::vector<std::shared_ptr<BackgroundImage>> m_Collectibles_Coin;
+    std::vector<std::shared_ptr<BackgroundImage>> m_CollisionBoxes;
+    std::vector<std::shared_ptr<BackgroundImage>> m_CollectibleCoins;
     //std::shared_ptr<Mario> m_Mario;
 
     int time = 400;
     std::chrono::steady_clock::time_point last_update;
 
-    // image index 0: small tube 1: medium tube 2: large tube
-    // tube position
-    std::vector<float> x_offset = {-310, -313, -313};
-    std::vector<float> y_offset = {-350, -375, -400};
+    // image index 0-2: tube
+    // tube & platform position
+    std::vector<float> tubex_offset = {-310, -313, -313};
+    std::vector<float> tubey_offset = {-350, -375, -400};
     std::vector<float> tube_magnification = {3.0f, 3.0f, 3.0f};
-    // map 1-1
-    std::vector<int> tmp_x = {28, 38, 46, 57, 163, 179};
-    std::vector<int> tmp_y = {3, 4, 5, 5, 3, 3};
-    std::vector<int> imgidx = {0, 1, 2, 2, 0, 0};
-    // map 1-2
-    std::vector<int> tmp_x2 = {103, 109, 115};
-    std::vector<int> tmp_y2 = {4, 5, 3};
-    std::vector<int> imgidx2 = {2, 2, 2};
-    // map 1-3 no tube there
+    // map 1-1 tube
+    std::vector<int> collisionboxes_x = {28, 38, 46, 57, 163, 179};
+    std::vector<int> collisionboxes_y = {3, 4, 5, 5, 3, 3};
+    std::vector<int> collisionboxes_imgidx = {0, 1, 2, 2, 0, 0};
+
+    // map 1-2 tube
+    // TODO add Lifting platform
+    std::vector<int> collisionboxes_x2 = {103, 109, 115};
+    std::vector<int> collisionboxes_y2 = {4, 5, 3};
+    std::vector<int> collisionboxes_imgidx2 = {2, 2, 2};
+
+    // map 1-3 no tube here
+    // TODO add Lifting platform
+    // std::vector<int> collisionboxes_x3 = {};
+    // std::vector<int> collisionboxes_y3 = {};
+    // std::vector<int> collisionboxes_imgidx3 = {};
+
+    // image index coin(overworld): 3-6, coin(underworld): 7-9
+    // coin position
+    // std::vector<float> coinx_offset = {-310, -313, -313};
+    // std::vector<float> coiny_offset = {-350, -375, -400};
+    // std::vector<float> coin_magnification = {3.0f, 3.0f, 3.0f};
+    // // map 1-1
+    // std::vector<int> coin_x = {28, 38, 46, 57, 163, 179};
+    // std::vector<int> coin_y = {3, 4, 5, 5, 3, 3};
+    // std::vector<int> coin_imgidx = {0, 1, 2, 2, 0, 0};
+    // // map 1-2
+    // std::vector<int> coin_x2 = {103, 109, 115};
+    // std::vector<int> coin_y2 = {4, 5, 3};
+    // std::vector<int> coin_imgidx2 = {2, 2, 2};
 };
 
 
