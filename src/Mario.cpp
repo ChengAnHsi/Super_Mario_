@@ -69,6 +69,18 @@ void Mario::OnRun(const float distance) {
             break;
         }
 
+        // else do move and check collect collectible or not
+        for (const auto& collectible : collision_collectibles) {
+            // collectible had already been collected
+            if (collectible->GetVisible() == false) {
+                continue;
+            }
+            if (AABBCollides({next_x, mario_y}, collectible)) {
+                IncreaseCoin(1);
+                collectible->SetVisible(false);
+            }
+        }
+
         mario_x = next_x;
         this->SetPosition({ mario_x, mario_y });
         remaining_distance -= step_distance;
@@ -212,6 +224,18 @@ bool Mario::GravityAndCollision(const float delta) {
                 box->SetPosition(box->GetTransform().translation.x, box->GetTransform().translation.y - b_size.y / 2);
             }**/
             break;
+        }
+
+        // check collect collectible
+        for (const auto& collectible : collision_collectibles) {
+            // collectible had already been collected
+            if (collectible->GetVisible() == false) {
+                continue;
+            }
+            if (CCDDCollides({mario_x, mario_y}, collectible)) {
+                IncreaseCoin(1);
+                collectible->SetVisible(false);
+            }
         }
     }
     if (Y_state == CollisionState::Top) {

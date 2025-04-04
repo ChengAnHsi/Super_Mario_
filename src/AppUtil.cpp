@@ -67,12 +67,17 @@ void App::NextPhase() {
     // The castle and flag are removed and use the updated new locations
     tmp = m_PRM->GetBackground();
     for (const auto & img : tmp) {
-        std::shared_ptr<Util::GameObject> tmp2 = img;
+        const std::shared_ptr<Util::GameObject> tmp2 = img;
         m_Root.RemoveChild(tmp2);
     }
     tmp = m_PRM->GetCollisionBoxes();
     for (const auto & img : tmp) {
-        std::shared_ptr<Util::GameObject> tmp2 = img;
+        const std::shared_ptr<Util::GameObject> tmp2 = img;
+        m_Root.RemoveChild(tmp2);
+    }
+    tmp = m_PRM->GetCollectibleCoins();
+    for (const auto & img : tmp) {
+        const std::shared_ptr<Util::GameObject> tmp2 = img;
         m_Root.RemoveChild(tmp2);
     }
 }
@@ -86,6 +91,7 @@ void App::ValidTask() {
             // init is Level1_1 don't need to call NextPhase
             m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
             m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
+            m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
             break;
         case Phase::Level1_1:
             LOG_DEBUG("Congratulations! You have completed Level1-1!");
@@ -93,6 +99,7 @@ void App::ValidTask() {
             NextPhase();
             m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
             m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
+            m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
             m_Root.AddChildren(m_PRM->GetChildren(false));
             break;
         case Phase::Level1_2:
@@ -101,6 +108,7 @@ void App::ValidTask() {
             NextPhase();
             m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
             m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
+            m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
             m_Root.AddChildren(m_PRM->GetChildren(false));
             break;
         case Phase::Level1_3:

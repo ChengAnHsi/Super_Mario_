@@ -74,12 +74,17 @@ void App::Update() {
 
     // Calculate how far the camera should move to the right
     float dis = 0.0f;
-    if(m_Phase != Phase::Start) dis = m_Mario->Move();
+    if(m_Phase != Phase::Start) {
+        dis = m_Mario->Move();
+        // when mario move show coins he got
+        m_PRM->SetCoin(m_Mario->GetCoin());
+    }
 
     // Camera cannot move left
     if (dis < 0.0f) {
         dis = 0.0f;
     }
+
     // If Mario's position is less than this pos(<= -112.5), the camera does not need to move to the right
     if(m_Mario->GetPosition().x <= -112.5f) dis = 0.0f;
 

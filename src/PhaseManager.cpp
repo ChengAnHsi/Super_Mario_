@@ -1,3 +1,4 @@
+#include "AnimatedImage.hpp"
 #include "BlockManager.hpp"
 #include "PhaseResourceManger.hpp"
 #include "App.hpp"
@@ -93,21 +94,13 @@ void PhaseResourceManger::NextPhase(int m_Phase, std::shared_ptr<Util::BGM> m_BG
         m_Background.clear();
         // [0]: black background image
         m_Background.push_back(std::make_shared<BackgroundImage>());
-        m_Background[0]->NextPhase(m_Phase);
-        m_Background[0]->SetScale(80.0f,7.0f);
-        m_Background[0]->SetZIndex(-50);
-        // [1]: castle is visible
-        m_Background.push_back(std::make_shared<BackgroundImage>());
-        m_Background[1]->SetImage(RESOURCE_DIR"/Scenery/castle.png");
-        m_Background[1]->SetPosition(202 * BLOCK_SIZE - 320.0f, 4 * BLOCK_SIZE - 325.0f);
-        m_Background[1]->SetScale(3.0f, 3.0f);
-        // [2]: flag set
-        m_Background.push_back(std::make_shared<BackgroundImage>());
-        m_Background[2]->SetImage(RESOURCE_DIR"/Scenery/flag-mast.png");
-        m_Background[2]->SetPosition(198 * BLOCK_SIZE - 320.0f, 8 * BLOCK_SIZE - 390.0f);
-        m_Background[2]->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        m_Background.back()->NextPhase(m_Phase);
+        m_Background.back()->SetScale(80.0f,7.0f);
+        m_Background.back()->SetZIndex(-50);
+        // [1]: castle???
+        // [2]: flag set???
 
-        // tube init(map 1-2)
+        // tube & lifting platform init(map 1-2)
         m_CollisionBoxes.clear();
         for (int i = 0; i < collisionboxes_x2.size(); i++) {
             m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
@@ -130,6 +123,15 @@ void PhaseResourceManger::NextPhase(int m_Phase, std::shared_ptr<Util::BGM> m_BG
         m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-xlarge-tube.png");
         m_CollisionBoxes.back()->SetPosition(168 * BLOCK_SIZE + tubex_offset[0], 11 * BLOCK_SIZE + tubey_offset[2]);
         m_CollisionBoxes.back()->SetScale(tube_magnification[0], tube_magnification[0]);
+
+        // coin init(map 1-2)
+        m_CollectibleCoins.clear();
+        for (int i = 0; i < coin_imgidx2.size(); i++) {
+            m_CollectibleCoins.push_back(std::make_shared<AnimatedImage>());
+            m_CollectibleCoins.back()->SetImage({imagePaths[coin_imgidx2[i]],imagePaths[coin_imgidx2[i] + 1],imagePaths[coin_imgidx2[i] + 1]},1000,0);
+            m_CollectibleCoins.back()->SetPosition(coin_x2[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, coin_y2[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_CollectibleCoins.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        }
     }
     if (m_Phase == 3) {
         m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
@@ -137,9 +139,9 @@ void PhaseResourceManger::NextPhase(int m_Phase, std::shared_ptr<Util::BGM> m_BG
         m_Background.clear();
         // [0]: black background image
         m_Background.push_back(std::make_shared<BackgroundImage>());
-        m_Background[0]->NextPhase(m_Phase);
-        m_Background[0]->SetScale(80.0f,7.0f);
-        m_Background[0]->SetZIndex(-50);
+        m_Background.back()->NextPhase(m_Phase);
+        m_Background.back()->SetScale(80.0f,7.0f);
+        m_Background.back()->SetZIndex(-50);
         // [1]: castle is visible
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background[1]->SetImage(RESOURCE_DIR"/Scenery/castle.png");
@@ -154,6 +156,14 @@ void PhaseResourceManger::NextPhase(int m_Phase, std::shared_ptr<Util::BGM> m_BG
         // TODO getter: lifting platform, add them to mario's collision box
         m_CollisionBoxes.clear();
 
+        // coin init(map 1-3)
+        m_CollectibleCoins.clear();
+        for (int i = 0; i < coin_imgidx3.size(); i++) {
+            m_CollectibleCoins.push_back(std::make_shared<AnimatedImage>());
+            m_CollectibleCoins.back()->SetImage({imagePaths[coin_imgidx3[i]],imagePaths[coin_imgidx3[i] + 1],imagePaths[coin_imgidx3[i] + 1]},1000,0);
+            m_CollectibleCoins.back()->SetPosition(coin_x3[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, coin_y3[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_CollectibleCoins.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        }
     }
 
     SetTime(LEVEL_TIME[m_Phase]);
@@ -195,6 +205,10 @@ std::vector<std::shared_ptr<BackgroundImage>> PhaseResourceManger::GetCollisionB
 
 std::vector<std::shared_ptr<BackgroundImage>> PhaseResourceManger::GetBackground() {
     return m_Background;
+}
+
+void PhaseResourceManger::SetCoin(int coin) {
+    m_MoneyText->SetTxtIdx(2, coin);
 }
 
 std::vector<std::shared_ptr<BackgroundImage>> PhaseResourceManger::GetCollectibleCoins() {
