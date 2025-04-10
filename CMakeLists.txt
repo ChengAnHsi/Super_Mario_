@@ -41,6 +41,11 @@ add_executable(${PROJECT_NAME}
         include/Renderer.hpp
         include/AnimatedImage.hpp
         src/AnimatedImage.cpp
+        src/Block.cpp
+        src/PropsManager.cpp
+        src/Props.cpp
+        src/MisteryBlock.cpp
+        src/CommonBlock.cpp
 )
 
 if(MSVC)

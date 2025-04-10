@@ -34,7 +34,7 @@ void Goomba::OnRun(const float distance) {
             }
         }
         Goomba_x = next_x;
-        this->SetPosition({ Goomba_x, Goomba_y });
+        this->SetPosition(Goomba_x, Goomba_y);
         remaining_distance -= step_distance;
     }
 }
@@ -151,18 +151,13 @@ bool Goomba::GravityAndCollision(const float delta) {
         if (Y_state == CollisionState::Bottom) {
             goomba_y = box->GetTransform().translation.y + b_size.y / 2 + goomba_size.y / 2;
             velocityY = 0;
-            this->SetPosition({ goomba_x, goomba_y });
+            this->SetPosition(goomba_x, goomba_y);
             return false;  // 碰撞到地面，不在滯空狀態
         }
 
             // 固定在方塊下方開始下墜
             goomba_y = box->GetTransform().translation.y - b_size.y / 2 - goomba_size.y / 2;
-            this->SetPosition({ goomba_x, goomba_y });
-
-            // TODO block up and down animation
-            /**if(is_upbox) {
-                box->SetPosition(box->GetTransform().translation.x, box->GetTransform().translation.y - b_size.y / 2);
-            }**/
+            this->SetPosition(goomba_x, goomba_y);
             break;
         }
 
