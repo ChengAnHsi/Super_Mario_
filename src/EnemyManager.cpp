@@ -5,19 +5,50 @@
 #include "Global.hpp"
 #include "App.hpp"
 #include <iostream>
-
+#include "Goomba.hpp"
 EnemyManager::EnemyManager() {
-    int imgidx_size = imgidx.size();
-    for (int i = 0; i < imgidx_size; i++) {
-        m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE - 335.0f);
-        m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE - 325.0f);
-        m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
-        m_Backgrounds.back()->SetImage(imageFiles[imgidx[i]]);
-        m_Backgrounds.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        m_Backgrounds.back()->SetPosition(m_PositionX[i],m_PositionY[i]);
+    int count = tmp_x.size();
+    for (int i = 0; i < count; i++) {
+        float posX = tmp_x[i] * BLOCK_SIZE - 335.0f;
+        float posY = tmp_y[i] * BLOCK_SIZE - 325.0f;
+
+        std::vector<std::string> goombaAnimations = {
+            imageFiles[imgidx[i]]
+        };
+        auto enemy = std::make_shared<Goomba>(1, goombaAnimations);
+
+        enemy->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        enemy->SetPosition(posX, posY);
+
+        enemy->SetMoving(false);
+        m_Enemies.push_back(enemy);
     }
 }
-
+void EnemyManager::SetEnemyMoving() {
+    // 如果沒有敵人，則建立一個新的 Goomba 並啟動移動
+    if (m_Enemies.empty()) {
+        std::vector<std::string> goombaAnimations = {
+            imageFiles[2]  // 例如使用 goomba0.png
+        };
+        auto enemy = std::make_shared<Goomba>(1, goombaAnimations);
+        enemy->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        enemy->SetPosition(0, 0);  // 預設位置，可依需求調整
+        enemy->SetMoving(true);
+        m_Enemies.push_back(enemy);
+    } else {
+        // 遍歷所有現有敵人，更新 isMoving 狀態
+        for (auto &enemy : m_Enemies) {
+            if (enemy->GetPosition().x < 360.0f) {
+                enemy->SetMoving(true);
+            }
+        }
+    }
+}
+void EnemyManager::move(float delta) {
+    for (auto &enemy : m_Enemies) {
+        enemy->move();
+    }
+}
 std::vector<int> EnemyManager::GetPosX() {
     return m_PositionX;
 }
