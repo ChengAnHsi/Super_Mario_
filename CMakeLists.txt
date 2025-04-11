@@ -46,6 +46,7 @@ add_executable(${PROJECT_NAME}
         src/Props.cpp
         src/MisteryBlock.cpp
         src/CommonBlock.cpp
+        src/ImmovableBlock.cpp
 )
 
 if(MSVC)

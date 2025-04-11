@@ -6,6 +6,7 @@
 #include "Block.hpp"
 #include "MisteryBlock.hpp"
 #include "CommonBlock.hpp"
+#include "ImmovableBlock.hpp"
 #include "BackgroundImage.hpp"
 #include "Global.hpp"
 #include "App.hpp"
@@ -20,14 +21,11 @@ BlockManager::BlockManager() {
         if(imgidx[i] == 6 || imgidx[i] == 9) {
             m_Blocks.push_back(std::make_shared<MisteryBlock>());
             m_Blocks.back()->SetImage({imagePaths[imgidx[i]],imagePaths[imgidx[i] + 1],imagePaths[imgidx[i] + 2]}, 1000, 0);
-        }else if(imgidx[i] != 4 && imgidx[i] != 5) {
+        }else if(imgidx[i] == 0 || imgidx[i] == 1) {
             m_Blocks.push_back(std::make_shared<CommonBlock>());
             m_Blocks.back()->SetImage(imagePaths[imgidx[i]]);
         }else {
-            // immovable block
-            // TODO buggggg
-            //m_Blocks.push_back(std::make_shared<Block>());
-            m_Blocks.push_back(std::make_shared<CommonBlock>());
+            m_Blocks.push_back(std::make_shared<ImmovableBlock>());
             m_Blocks.back()->SetImage(imagePaths[imgidx[i]]);
         }
         m_Blocks.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);

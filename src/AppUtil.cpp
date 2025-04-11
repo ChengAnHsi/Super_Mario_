@@ -3,6 +3,7 @@
 #include "Global.hpp"
 #include "MisteryBlock.hpp"
 #include "CommonBlock.hpp"
+#include "ImmovableBlock.hpp"
 #include "spdlog/async_logger.h"
 #include "Util/Logger.hpp"
 
@@ -34,14 +35,11 @@ void App::NextPhase() {
         if(tmpidx[i] == 6 || tmpidx[i] == 9) {
             blocks.push_back(std::make_shared<MisteryBlock>());
             blocks.back()->SetImage({m_BM->imagePaths[tmpidx[i]],m_BM->imagePaths[tmpidx[i] + 1],m_BM->imagePaths[tmpidx[i] + 2]}, 1000, 0);
-        }else if(tmpidx[i] != 4 && tmpidx[i] != 5) {
+        }else if(tmpidx[i] == 0 || tmpidx[i] == 1) {
             blocks.push_back(std::make_shared<CommonBlock>());
             blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
         }else {
-            // immovable block
-            // TODO buggggg
-            //blocks.push_back(std::make_shared<Block>());
-            blocks.push_back(std::make_shared<CommonBlock>());
+            blocks.push_back(std::make_shared<ImmovableBlock>());
             blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
         }
         blocks.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);

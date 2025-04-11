@@ -11,8 +11,6 @@ public:
     CommonBlock() = default;
 
     void AfterCollisionEvents() override;
-private:
-    //bool isbreak = false;
 };
 
 #endif //COMMONBLOCK_HPP
