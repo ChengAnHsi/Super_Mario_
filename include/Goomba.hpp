@@ -28,10 +28,10 @@ public:
     // getter and setter
     void SetLive(int live);
     [[nodiscard]] int GetLive() const;
-    void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
-    void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
-    void ClearCollisionBoxes();
-    void ClearCollisionBlocks();
+    void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) override;
+    void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) override;
+    void ClearCollisionBoxes() override;
+    void ClearCollisionBlocks() override;
     // TODO 被擊倒動畫
 
 private:
@@ -45,7 +45,7 @@ private:
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
 
-    bool isFacingRight = true;
+    bool isFacingRight = false;
     float delta_time = 1.0f;
     float velocityY = 0.0f; // 角色在 Y 軸的速度
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位

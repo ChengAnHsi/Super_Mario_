@@ -4,13 +4,13 @@
 #ifndef FIREFLOWER_HPP
 #define FIREFLOWER_HPP
 
-/*#include "PropsManager.hpp"
+#include "PropsManager.hpp"
 
 class FireFlower : public Props {
 public:
     FireFlower() = default;
 
     void AfterCollisionEvents() override;
-};*/
+};
 
 #endif //FIREFLOWER_HPP

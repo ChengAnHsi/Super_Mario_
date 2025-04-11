@@ -234,6 +234,8 @@ void Goomba::OnUpdate(const float delta) {
         //m_Transform.scale = glm::vec2{GOOMBA_MAGNIFICATION, GOOMBA_MAGNIFICATION};
     }
 
+    GravityAndCollision(3 * delta);
+
     UpdateAnimation();
 
     Action(distance);
@@ -242,6 +244,7 @@ void Goomba::OnUpdate(const float delta) {
 void Goomba::Move(){
     if (!GetMoving()) return;
     OnUpdate(1);
+    SetImage(AnimationRun, 1000, 0);
 }
 
 void Goomba::SetLive(const int live) {

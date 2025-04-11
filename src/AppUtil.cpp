@@ -106,6 +106,8 @@ void App::ValidTask() {
             m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
             m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
             m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
+            m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
+            m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
             break;
         case Phase::Level1_1:
             LOG_DEBUG("Congratulations! You have completed Level1-1!");
@@ -115,6 +117,8 @@ void App::ValidTask() {
             m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
             m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
             m_Root.AddChildren(m_PRM->GetChildren(false));
+            m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
+            m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
             break;
         case Phase::Level1_2:
             LOG_DEBUG("Congratulations! You have completed Level1-2!");
@@ -124,6 +128,8 @@ void App::ValidTask() {
             m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
             m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
             m_Root.AddChildren(m_PRM->GetChildren(false));
+            m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
+            m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
             break;
         case Phase::Level1_3:
             LOG_DEBUG("Congratulations! You have completed Super Mario!");
