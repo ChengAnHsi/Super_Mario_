@@ -35,6 +35,10 @@ void App::Start() {
 
     m_Root.AddChildren(m_PRM->GetChildren(true));
 
+    m_SFX = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effect/coin.mp3");
+    m_SFX->SetVolume(70);
+    m_SFX->Play();
+
     m_BGM = std::make_shared<Util::BGM>(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
     m_BGM->SetVolume(70);
     m_BGM->Play();
