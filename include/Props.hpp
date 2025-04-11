@@ -2,7 +2,7 @@
 
 class Props : public BackgroundImage {
 public:
-    Props();
+    Props() = default;
 
     virtual void AfterCollisionEvents();
 private:
