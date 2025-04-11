@@ -92,6 +92,7 @@ void Mario::OnRun(const float distance) {
             }
             if (AABBCollides({next_x, mario_y}, collectible)) {
                 IncreaseCoin(1);
+
                 collectible->SetVisible(false);
             }
         }

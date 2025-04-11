@@ -4,6 +4,7 @@
 #include "pch.hpp" // IWYU pragma: export
 
 #include "Renderer.hpp"
+#include "Util/SFX.hpp"
 #include "Util/BGM.hpp"
 #include "PhaseResourceManger.hpp"
 #include "BlockManager.hpp"
@@ -49,6 +50,7 @@ private:
     std::shared_ptr<BlockManager> m_BM;
     std::shared_ptr<EnemyManager> m_EM;
     std::shared_ptr<Util::BGM> m_BGM;
+    std::shared_ptr<Util::SFX> m_SFX ;
 
     float camera_movement_dis = 0;//-380.0f + 2.5f * BLOCK_SIZE;
     bool m_EnterDown = false;
