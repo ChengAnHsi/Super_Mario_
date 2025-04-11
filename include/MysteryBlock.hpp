@@ -12,8 +12,9 @@ public:
     MysteryBlock() = default;
 
     void AfterCollisionEvents() override;
+    void SetProps();
 private:
-    Props inside_prop;
+    std::shared_ptr<Props> inside_prop;
 };
 
 #endif //MYSTERYBLOCK_HPP
