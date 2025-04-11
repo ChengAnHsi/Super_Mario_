@@ -47,6 +47,8 @@ void App::Start() {
     //m_Mario->AddCollisionBox(m_PRM->GetTube());
 
     m_EM = std::make_shared<EnemyManager>();
+    // m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
+    // m_EM->SetAllEnemyCollisionBoxs(m_BM->GetBackground());
     m_Root.AddChildren(m_EM->GetChildren());
 
     m_CurrentState = State::UPDATE;

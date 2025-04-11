@@ -83,8 +83,8 @@ void EnemyManager::SetEnemyMoving(){
         // map size divide by 2 = 360
         if (enemy->GetPosition().x < 360){
             enemy->SetMoving(true);
-            enemy->Move();
         }
+        enemy->Move();
     }
 }
 
@@ -95,4 +95,16 @@ void EnemyManager::SetEnemies(std::vector<std::shared_ptr<Enemy>> enemies){
 
 std::vector<std::shared_ptr<Enemy>> EnemyManager::GetEnemies(){
     return m_Enemies;
+}
+
+void EnemyManager::SetAllEnemyCollisionBoxs(std::vector<std::shared_ptr<BackgroundImage>> boxes) {
+    for (const auto& enemy : m_Enemies) {
+        enemy->AddCollisionBoxes(boxes);
+    }
+}
+
+void EnemyManager::SetAllEnemyCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks){
+    for (const auto& enemy : m_Enemies) {
+        enemy->AddCollisionBlocks(blocks);
+    }
 }
