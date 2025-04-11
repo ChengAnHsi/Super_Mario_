@@ -210,47 +210,21 @@ bool Mario::GravityAndCollision(const float delta) {
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
-            // TODO block up and down animation
-            /**bool is_upbox = false;
-            if(box->GetImagePath() != RESOURCE_DIR"/Blocks/Overworld/emptyBlock.png" && box->GetImagePath() != RESOURCE_DIR"/Blocks/Underworld/emptyBlock.png") {
-                box->SetPosition(box->GetTransform().translation.x, box->GetTransform().translation.y + b_size.y / 2);
-                is_upbox = true;
-            }**/
-
-            // TODO if block is question block -> get item
-            // if (box->GetImagePath() == RESOURCE_DIR"/Blocks/Overworld/misteryBlock0.png") {
-            //     box->SetImage({RESOURCE_DIR"/Blocks/Overworld/emptyBlock.png"}, 1000, 0);
-            // }
-            // if (box->GetImagePath() == RESOURCE_DIR"/Blocks/Underworld/misteryBlock0.png") {
-            //     box->SetImage({RESOURCE_DIR"/Blocks/Underworld/emptyBlock.png"}, 1000, 0);
-            // }
-            // TODO if mario is giant, block should be destroy
-            // if(is_grow){
-            //     if (box->GetImagePath() == RESOURCE_DIR"/Blocks/Overworld/block.png" || box->GetImagePath() == RESOURCE_DIR"/Blocks/Underworld/block2.png") {
-            //         box->SetVisible(false);
-            //     }
-            // }
             // 固定在方塊下方開始下墜
             mario_y = box->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
             this->SetPosition({ mario_x, mario_y });
-
-            // TODO block up and down animation
-            /**if(is_upbox) {
-                box->SetPosition(box->GetTransform().translation.x, box->GetTransform().translation.y - b_size.y / 2);
-            }**/
             break;
         }
-
-        // check collect collectible
-        for (const auto& collectible : collision_collectibles) {
-            // collectible had already been collected
-            if (collectible->GetVisible() == false) {
-                continue;
-            }
-            if (CCDDCollides({mario_x, mario_y}, collectible)) {
-                IncreaseCoin(1);
-                collectible->SetVisible(false);
-            }
+    }
+    // check collect collectible
+    for (const auto& collectible : collision_collectibles) {
+        // collectible had already been collected
+        if (collectible->GetVisible() == false) {
+            continue;
+        }
+        if (CCDDCollides({mario_x, mario_y}, collectible)) {
+            IncreaseCoin(1);
+            collectible->SetVisible(false);
         }
     }
     for (const auto &block : collision_blocks) {
@@ -272,21 +246,10 @@ bool Mario::GravityAndCollision(const float delta) {
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
-            // TODO block up and down animation
-            /**bool is_upbox = false;
-            if(box->GetImagePath() != RESOURCE_DIR"/Blocks/Overworld/emptyBlock.png" && box->GetImagePath() != RESOURCE_DIR"/Blocks/Underworld/emptyBlock.png") {
-                box->SetPosition(box->GetTransform().translation.x, box->GetTransform().translation.y + b_size.y / 2);
-                is_upbox = true;
-            }**/
             block->AfterCollisionEvents();
             // 固定在方塊下方開始下墜
             mario_y = block->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
             this->SetPosition({ mario_x, mario_y });
-
-            // TODO block up and down animation
-            /**if(is_upbox) {
-                box->SetPosition(box->GetTransform().translation.x, box->GetTransform().translation.y - b_size.y / 2);
-            }**/
             break;
         }
     }

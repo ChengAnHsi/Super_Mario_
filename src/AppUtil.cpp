@@ -46,7 +46,7 @@ void App::NextPhase() {
         }
         blocks.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         blocks.back()->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
-        backgrounds.emplace_back(blocks.back());
+        //backgrounds.emplace_back(blocks.back());
     }
     m_BM->SetBlocks(blocks);
 //    m_Mario->AddCollisionBoxes(backgrounds);

@@ -16,6 +16,7 @@ protected:
     bool isoverworld = true;
     bool isbreak = false;
 private:
+    // TODO block up and down animation
 };
 
 #endif //BLOCK_HPP
