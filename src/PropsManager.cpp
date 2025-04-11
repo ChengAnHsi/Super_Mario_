@@ -11,28 +11,36 @@
 #include "App.hpp"
 
 #include <iostream>
+
+#include "MysteryBlock.hpp"
+
 PropsManager::PropsManager() {
-
-     int imgidx_size = imgidx.size();
-     for (int i = 0; i < imgidx_size; i++) {
-         m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET);
-         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
-         if(imgidx[i] == 0) {
-             m_props.push_back(std::make_shared<OneUpMushroom>());
-             m_props.back()->SetImage(imagePaths[imgidx[i]]);
-
-         } else if(imgidx[i] == 1) {
-             m_props.push_back(std::make_shared<MagicMushroom>());
-             m_props.back()->SetImage(imagePaths[imgidx[i]]);
-         }else if(imgidx[i] == 3) {
-        m_props.push_back(std::make_shared<Starman>());
-        m_props.back()->SetImage({imagePaths[imgidx[i]],imagePaths[imgidx[i]+1],imagePaths[imgidx[i]+2],imagePaths[imgidx[i]+3],imagePaths[imgidx[i]+4]},50,0);
-    }else if(imgidx[i] == 8 || imgidx[i] == 12) {
-        m_props.push_back(std::make_shared<FireFlower>());
-        m_props.back()->SetImage({imagePaths[imgidx[i]],imagePaths[imgidx[i]+1],imagePaths[imgidx[i]+2],imagePaths[imgidx[i]+3]},50,0);
-    }
-    m_props.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-    m_props.back()->SetPosition(m_PositionX[i],m_PositionY[i]);
+    int imgidx_size = imgidx.size();
+    for (int i = 0; i < imgidx_size; i++) {
+        m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET);
+        m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        if(imgidx[i] == 0) {
+            auto tmpp=std::make_shared<MysteryBlock>();
+            auto tempprop = std::make_shared<OneUpMushroom>();
+            tmpp->SetProps(tempprop);
+            m_props.push_back(tempprop);
+            m_props.back()->SetImage(imagePaths[imgidx[i]]);
+            // dynamic_cast<MysteryBlock>
+            // m_props.push_back(std::make_shared<OneUpMushroom>());
+            // m_props.back()->SetImage(imagePaths[imgidx[i]]);
+        } else if(imgidx[i] == 1) {
+            m_props.push_back(std::make_shared<MagicMushroom>());
+            m_props.back()->SetImage(imagePaths[imgidx[i]]);
+        }else if(imgidx[i] == 3) {
+            m_props.push_back(std::make_shared<Starman>());
+            m_props.back()->SetImage({imagePaths[imgidx[i]],imagePaths[imgidx[i]+1],imagePaths[imgidx[i]+2],imagePaths[imgidx[i]+3],imagePaths[imgidx[i]+4]},50,0);
+        }else if(imgidx[i] == 8 || imgidx[i] == 12) {
+            m_props.push_back(std::make_shared<FireFlower>());
+            m_props.back()->SetImage({imagePaths[imgidx[i]],imagePaths[imgidx[i]+1],imagePaths[imgidx[i]+2],imagePaths[imgidx[i]+3]},50,0);
+        }
+        m_props.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        m_props.back()->SetPosition(m_PositionX[i],m_PositionY[i]);
+        m_props.back()->SetZIndex(510);
     }
 }
 std::vector<float> PropsManager::GetPosX() {

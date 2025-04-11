@@ -6,13 +6,13 @@
 
 #include "Props.hpp"
 #include "Block.hpp"
-
 class MysteryBlock : public Block {
 public:
-    MysteryBlock() = default;
+    MysteryBlock();
 
     void AfterCollisionEvents() override;
-    void SetProps();
+
+    void SetProps(std::shared_ptr<Props> prop);
 private:
     std::shared_ptr<Props> inside_prop;
 };

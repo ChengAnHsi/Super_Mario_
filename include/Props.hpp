@@ -1,3 +1,6 @@
+#ifndef PROPS_HPP
+#define PROPS_HPP
+
 #include "BackgroundImage.hpp"
 
 class Props : public BackgroundImage {
@@ -8,3 +11,4 @@ public:
 private:
     bool iscollision = false;
 };
+#endif //PROPS_HPP

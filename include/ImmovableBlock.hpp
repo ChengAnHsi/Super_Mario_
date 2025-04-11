@@ -8,7 +8,7 @@
 
 class ImmovableBlock : public Block {
 public:
-    ImmovableBlock() = default;
+    ImmovableBlock();
 
     void AfterCollisionEvents() override;
 private:

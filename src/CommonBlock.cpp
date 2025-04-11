@@ -3,6 +3,11 @@
 //
 #include "CommonBlock.hpp"
 #include "App.hpp"
+
+CommonBlock::CommonBlock()
+{
+    Blocktype = TYPE::CommonBlock;
+}
 void CommonBlock::AfterCollisionEvents() {
     SetVisible(false);
     isbreak = true;

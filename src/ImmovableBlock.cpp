@@ -3,6 +3,10 @@
 //
 #include "ImmovableBlock.hpp"
 
+ImmovableBlock::ImmovableBlock()
+{
+    Blocktype = TYPE::ImmovableBlock;
+}
 void ImmovableBlock::AfterCollisionEvents() {
     // nothing to do
 }

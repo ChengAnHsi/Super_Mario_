@@ -10,8 +10,10 @@
 #include "BackgroundImage.hpp"
 #include "Global.hpp"
 #include "App.hpp"
-
 #include <iostream>
+
+#include "OneUpMushroom.hpp"
+#include "../PTSD/lib/sdl2/src/joystick/windows/SDL_windowsjoystick_c.h"
 
 BlockManager::BlockManager() {
     int imgidx_size = imgidx.size();
@@ -19,7 +21,9 @@ BlockManager::BlockManager() {
         m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET);
         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         if(imgidx[i] == 6 || imgidx[i] == 9) {
-            m_Blocks.push_back(std::make_shared<MysteryBlock>());
+            auto temp = std::make_shared<MysteryBlock>();
+            temp->SetProps(std::make_shared<OneUpMushroom>());
+            m_Blocks.push_back(temp);
             m_Blocks.back()->SetImage({imagePaths[imgidx[i]],imagePaths[imgidx[i] + 1],imagePaths[imgidx[i] + 2]}, 1000, 0);
         }else if(imgidx[i] == 0 || imgidx[i] == 1) {
             m_Blocks.push_back(std::make_shared<CommonBlock>());

@@ -3,6 +3,11 @@
 //
  #include "MysteryBlock.hpp"
 
+MysteryBlock::MysteryBlock()
+{
+    Blocktype = TYPE::MysteryBlock;
+}
+
 void MysteryBlock::AfterCollisionEvents() {
      // TODO check props pos
      if (isoverworld) {
@@ -10,5 +15,9 @@ void MysteryBlock::AfterCollisionEvents() {
      }else {
          SetImage({RESOURCE_DIR"/Blocks/Underworld/emptyBlock.png"}, 1000, 0);
      }
-
+//    inside_prop->SetVisible(true);
  }
+void MysteryBlock::SetProps(std::shared_ptr<Props> prop){
+    inside_prop = prop;
+
+}
