@@ -61,6 +61,8 @@ void App::Update() {
         m_PRM->ResetPosition();
         // decrease time after start game
         m_PRM->DecreaseTime();
+        // check mario is in enemy vision
+        m_EM->SetEnemyMoving();
     }
 
     if(m_PRM->GetTime() == 0) {
