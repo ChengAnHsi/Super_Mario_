@@ -11,11 +11,11 @@ void App::Start() {
     LOG_TRACE("Start");
     std::vector<std::string> marioImages = {RESOURCE_DIR"/Entities/mario_stand.png"};
     m_Mario = std::make_shared<Mario>(0,3,0,marioImages);
-    m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -240.0f});
+    m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -232.0f});
     m_Mario->SetZIndex(50);
     m_Mario->SetPlaying(true);
     m_Mario->SetLooping(true);
-    m_Mario->m_Transform.scale = glm::vec2(2.0f, 2.0f);
+    m_Mario->m_Transform.scale = glm::vec2(MARIO_MAGNIFICATION, MARIO_MAGNIFICATION);
 
     m_Root.AddChild(m_Mario);
 
@@ -72,7 +72,7 @@ void App::Update() {
         if (m_Mario->GetLive() == 0) {
             // TODO dead situation
         }else {
-            m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -240.0f});
+            m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -232.0f});
             m_PRM->SetTime(LEVEL_TIME[int(m_Phase) - 1]);
         }
     }
@@ -102,7 +102,7 @@ void App::Update() {
     // lower than ground
     if(m_Mario->GetPosition().y < -360) {
         m_Mario->SetLive(m_Mario->GetLive() - 1);
-        m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -200.0f});
+        m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, 300.0f});
     }
 
     camera_movement_dis += dis;
