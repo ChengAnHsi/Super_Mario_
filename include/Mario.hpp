@@ -7,6 +7,7 @@
 #include "AnimatedCharacter.hpp"
 #include "BlockManager.hpp"
 #include "PhaseResourceManger.hpp"
+#include "CollisionState.hpp"
 
 #include <string>
 
@@ -16,13 +17,6 @@ enum class MarioState {
     Jump
 };
 
-enum class CollisionState {
-    Left,
-    Right,
-    Top,
-    Bottom,
-    None
-};
 
 class Mario : public AnimatedCharacter {
 public:

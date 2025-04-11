@@ -11,7 +11,7 @@
 #include "App.hpp"
 
 #include <iostream>
-PropsManager::PropsManager() {
+/*PropsManager::PropsManager() {
     int imgidx_size = imgidx.size();
     for (int i = 0; i < imgidx_size; i++) {
         m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET);
@@ -95,4 +95,4 @@ std::vector<std::shared_ptr<BackgroundImage>> PropsManager::GetBackground() {
 
 std::vector<std::shared_ptr<Props>> PropsManager::GetProps(){
     return m_props;
-}
+}*/

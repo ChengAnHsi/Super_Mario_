@@ -5,31 +5,27 @@
 #ifndef ENEMY_HPP
 #define ENEMY_HPP
 
-#include <vector>
-#include <string>
+#include "AnimatedImage.hpp"
 
-#include "Mario.hpp"
-#include "Animatedimage.hpp"
-#include "BackgroundImage.hpp"
-#include "Util/Animation.hpp"
-
-
-class Enemy : public AnimatedImage {
+class Enemy : public BackgroundImage {
 
 public:
     Enemy() = default;
 
-    Enemy(const std::vector<std::string>& AnimationPaths, int interval, int cooldown) {
-        // use different instructor to setting animation
-        SetImage(AnimationPaths, interval, cooldown);
-    }
-    virtual void move() = 0;
-    bool isMoving;
-    void SetMoving(bool moving) { isMoving = moving; }
-    bool AABBCollides(glm::vec2 enemy_pos, std::shared_ptr<BackgroundImage> box);
-    bool CCDDCollides(glm::vec2 enemy_pos, std::shared_ptr<BackgroundImage> box);
+    virtual void Move() = 0;
+    virtual void Action(float distance) = 0;
     virtual bool GravityAndCollision(float delta) = 0;
-    CollisionState X_state = CollisionState::None;
-    CollisionState Y_state = CollisionState::None;
+    virtual void UpdateAnimation() = 0;
+    //void OnUpdate(float delta);
+
+    // getter and setter
+    bool GetMoving() {return isMoving;}
+    void SetMoving(bool moving) {isMoving = moving;}
+    float GetMoveVelocity();
+
+private:
+    bool isMoving = false;
+    bool isFacingRight = false;
+    float move_velocity = 3.5f;
 };
 #endif //ENEMY_HPP

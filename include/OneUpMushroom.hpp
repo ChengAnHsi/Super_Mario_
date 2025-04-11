@@ -4,13 +4,13 @@
 #ifndef ONEUPMUSHROOM_HPP
 #define ONEUPMUSHROOM_HPP
 
-#include "PropsManager.hpp"
+/*#include "PropsManager.hpp"
 
 class OneUpMushroom : public Props {
 public:
     OneUpMushroom() = default;
 
     void AfterCollisionEvents() override;
-};
+};*/
 
 #endif //ONEUPMUSHROOM_HPP

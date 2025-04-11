@@ -2,7 +2,6 @@
 #define CHARACTER_HPP
 
 #include <string>
-#include <iostream>
 #include "Util/GameObject.hpp"
 
 class Character : public Util::GameObject {

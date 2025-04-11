@@ -4,6 +4,8 @@
 #include "MisteryBlock.hpp"
 #include "CommonBlock.hpp"
 #include "ImmovableBlock.hpp"
+#include "Enemy.hpp"
+#include "Goomba.hpp"
 #include "spdlog/async_logger.h"
 #include "Util/Logger.hpp"
 
@@ -52,25 +54,27 @@ void App::NextPhase() {
     m_Root.AddChildren(m_BM->GetChildren());
 
     // remove old enemy
-    std::vector<std::shared_ptr<BackgroundImage>> ftmp = m_EM->GetBackground();
+    std::vector<std::shared_ptr<Enemy>> ftmp = m_EM->GetEnemies();
     for (const auto & img : ftmp) {
         std::shared_ptr<Util::GameObject> ftmp2 = img;
         m_Root.RemoveChild(ftmp2);
     }
 
     // add new enemy to render
+    std::vector<std::shared_ptr<Enemy>> eneimes;
     std::vector<float> ftmpx = m_EM->GetX(static_cast<int>(m_Phase));
     std::vector<float> ftmpy = m_EM->GetY(static_cast<int>(m_Phase));
     std::vector ftmpidx = m_EM->Getidx(static_cast<int>(m_Phase));
     backgrounds.clear();
     int fimgidx_size = ftmpidx.size();
     for (int i = 0; i < fimgidx_size; i++) {
-        backgrounds.push_back(std::make_shared<BackgroundImage>());
-        backgrounds.back()->SetImage(m_EM->imageFiles[ftmpidx[i]]);
-        backgrounds.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        backgrounds.back()->SetPosition(ftmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, ftmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        // TODO another 3 enemy if ...
+        eneimes.push_back(std::make_shared<Goomba>());
+        eneimes.back()->SetImage(m_EM->imageFiles[ftmpidx[i]]);
+        eneimes.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        eneimes.back()->SetPosition(ftmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, ftmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
     }
-    m_EM->SetBackground(backgrounds);
+    m_EM->SetEnemies(eneimes);
     m_Root.AddChildren(m_EM->GetChildren());
 
     // remove tube and other things

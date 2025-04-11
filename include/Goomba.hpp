@@ -4,62 +4,51 @@
 
 #ifndef GOOMBA_HPP
 #define GOOMBA_HPP
-#include "AnimatedCharacter.hpp"
-#include "BlockManager.hpp"
-#include "PhaseResourceManger.hpp"
+
 #include "Enemy.hpp"
-#include <string>
-
-enum class GoombaState {
-    Stand,
-    Run,
-};
-
+#include "Block.hpp"
+#include "CollisionState.hpp"
 
 class Goomba : public Enemy{
 public:
-    Goomba(int live, const std::vector<std::string>& AnimationPaths){
-        this->live = live;
-    };
+    Goomba() = default;
 
     // move function
-    void move() override;
-    float OnUpdate(float delta);
-    void OnRun(float distance);
+    void Action(float distance) override;
+    void OnUpdate(float delta);
+    void Move() override;
 
     // collision function
+    bool AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box);
+    bool CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box);
     bool GravityAndCollision(float delta) override;
 
-    void UpdateAnimation(const float delta);
+    void UpdateAnimation() override;
 
     // getter and setter
     void SetLive(int live);
     [[nodiscard]] int GetLive() const;
-    void AddCollisionBox(std::vector<std::shared_ptr<BackgroundImage>> box);
-    void ClearCollisionBox();
+    void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
+    void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
+    void ClearCollisionBoxes();
+    void ClearCollisionBlocks();
+    // TODO 被擊倒動畫
 
 private:
     int live = 1;
-    int score = 0;
+    // 被擊倒的分數
+    int score = 100;
 
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
-    std::vector<std::shared_ptr<BackgroundImage>> collision_collectibles;
-
-    MarioState state = MarioState::Stand;
+    std::vector<std::shared_ptr<Block>> collision_blocks;
 
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
 
-
-    bool isRunning = false;
-    bool isfacingright = false;
+    bool isFacingRight = true;
     float delta_time = 1.0f;
-    float run_velocity = 5.0f;
-    float velocityY = 0.0f;      // 角色在 Y 軸的速度
+    float velocityY = 0.0f; // 角色在 Y 軸的速度
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
-    float JUMP_VELOCITY = 360.0f; // 跳躍初速度
-    float SMALL_JUMP_VELOCITY = 250.0f; // 小跳躍初速度
-    float MAX_JUMP_VELOCITY = 55.0f; // 最高跳躍值
 
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/Overworld/goomba0.png",RESOURCE_DIR"/Entities/Overworld/goomba1.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/Overworld/goombaDead.png"};

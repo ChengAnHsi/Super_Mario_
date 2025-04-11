@@ -7,21 +7,15 @@
 
 #include "BackgroundImage.hpp"
 #include "Util/Renderer.hpp"
-#include "AnimatedCharacter.hpp"
 #include "Enemy.hpp"
+
 class EnemyManager {
 public:
     EnemyManager();
     [[nodiscard]] std::vector<std::shared_ptr<Enemy>> GetEnemies() const {
         return m_Enemies;
     }
-    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren() const {
-        std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
-        for (int i = 0; i < m_Backgrounds.size(); i++) {
-            all_obj.emplace_back(m_Backgrounds[i]);
-        }
-        return all_obj;
-    }
+
     std::vector<std::string> imageFiles = {
         RESOURCE_DIR"/Entities/Overworld/flower0.png",
         RESOURCE_DIR"/Entities/Overworld/flower1.png",
@@ -47,20 +41,24 @@ public:
         RESOURCE_DIR"/Entities/unfly_koopa1.png",
         RESOURCE_DIR"/Entities/unfly_koopa_shell0.png",
         RESOURCE_DIR"/Entities/unfly_koopa_shell1.png",
-
     };
 
     std::vector<float> GetX(int phase);
     std::vector<float> GetY(int phase);
     std::vector<int> Getidx(int phase);
+    void SetEnemies(std::vector<std::shared_ptr<Enemy>> enemies);
+    [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren() const {
+        std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
+        for (int i = 0; i < m_Enemies.size(); i++) {
+            all_obj.emplace_back(m_Enemies[i]);
+        }
+        return all_obj;
+    }
+    std::vector<std::shared_ptr<Enemy>> GetEnemies();
     void SetEnemyMoving();
-    void move(float delta);
-    void SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds);
-    std::vector<std::shared_ptr<BackgroundImage>> GetBackground();
     std::vector<int> GetPosX();
 
 private:
-    std::vector<std::shared_ptr<Enemy>> m_Enemies;
     // map 1-1
     std::vector<float> tmp_x = {22,40,51,52.5,80,82,97,98.5,107,114,115.5,124,125.5,128,129.5,174,175.5};
     std::vector<float> tmp_y = {2,2,2,2,10,10,2,2,2.2,2,2,2,2,2,2,2,2};
@@ -74,7 +72,7 @@ private:
     std::vector<float> tmp_y3 = {10.2,11,11,10,9,8.2,9,2.2};
     std::vector<int> imgidx3 = {20,3,3,18,3,20,18,18};
 
-    std::vector<std::shared_ptr<BackgroundImage>> m_Backgrounds;
+    std::vector<std::shared_ptr<Enemy>> m_Enemies;
     std::vector<int> m_PositionX;
     std::vector<int> m_PositionY;
 };

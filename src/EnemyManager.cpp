@@ -5,50 +5,24 @@
 #include "Global.hpp"
 #include "App.hpp"
 #include <iostream>
+
 #include "Goomba.hpp"
+
 EnemyManager::EnemyManager() {
-    int count = tmp_x.size();
-    for (int i = 0; i < count; i++) {
-        float posX = tmp_x[i] * BLOCK_SIZE - 335.0f;
-        float posY = tmp_y[i] * BLOCK_SIZE - 325.0f;
+    int imgidx_size = imgidx.size();
+    for (int i = 0; i < imgidx_size; i++) {
+        m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET);
+        m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
 
-        std::vector<std::string> goombaAnimations = {
-            imageFiles[imgidx[i]]
-        };
-        auto enemy = std::make_shared<Goomba>(1, goombaAnimations);
+        // TODO another 3 enemy should be here
+        m_Enemies.push_back(std::make_shared<Goomba>());
+        m_Enemies.back()->SetImage({imageFiles[imgidx[i]], imageFiles[imgidx[i+1]]}, 1000, 0);
 
-        enemy->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        enemy->SetPosition(posX, posY);
-
-        enemy->SetMoving(false);
-        m_Enemies.push_back(enemy);
+        m_Enemies.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        m_Enemies.back()->SetPosition(m_PositionX[i],m_PositionY[i]);
     }
 }
-void EnemyManager::SetEnemyMoving() {
-    // 如果沒有敵人，則建立一個新的 Goomba 並啟動移動
-    if (m_Enemies.empty()) {
-        std::vector<std::string> goombaAnimations = {
-            imageFiles[2]  // 例如使用 goomba0.png
-        };
-        auto enemy = std::make_shared<Goomba>(1, goombaAnimations);
-        enemy->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        enemy->SetPosition(0, 0);  // 預設位置，可依需求調整
-        enemy->SetMoving(true);
-        m_Enemies.push_back(enemy);
-    } else {
-        // 遍歷所有現有敵人，更新 isMoving 狀態
-        for (auto &enemy : m_Enemies) {
-            if (enemy->GetPosition().x < 360.0f) {
-                enemy->SetMoving(true);
-            }
-        }
-    }
-}
-void EnemyManager::move(float delta) {
-    for (auto &enemy : m_Enemies) {
-        enemy->move();
-    }
-}
+
 std::vector<int> EnemyManager::GetPosX() {
     return m_PositionX;
 }
@@ -96,10 +70,29 @@ std::vector<int> EnemyManager::Getidx(int phase){
     }
 }
 
-void EnemyManager::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds){
+/*void EnemyManager::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds){
     this->m_Backgrounds = backgrounds;
 }
 
 std::vector<std::shared_ptr<BackgroundImage>> EnemyManager::GetBackground(){
     return m_Backgrounds;
+}*/
+
+void EnemyManager::SetEnemyMoving(){
+    for (const auto& enemy : m_Enemies){
+        // map size divide by 2 = 360
+        if (enemy->GetPosition().x < 360){
+            enemy->SetMoving(true);
+            enemy->Move();
+        }
+    }
+}
+
+void EnemyManager::SetEnemies(std::vector<std::shared_ptr<Enemy>> enemies){
+    m_Enemies.clear();
+    this->m_Enemies = enemies;
+}
+
+std::vector<std::shared_ptr<Enemy>> EnemyManager::GetEnemies(){
+    return m_Enemies;
 }
