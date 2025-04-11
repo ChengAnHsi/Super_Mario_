@@ -12,7 +12,7 @@ public:
 
     void AfterCollisionEvents() override;
 private:
-    bool isbreak = false;
+    //bool isbreak = false;
 };
 
 #endif //COMMONBLOCK_HPP

@@ -24,7 +24,7 @@ BlockManager::BlockManager() {
             m_Blocks.push_back(std::make_shared<CommonBlock>());
             m_Blocks.back()->SetImage(imagePaths[imgidx[i]]);
         }else {
-            // immovale block
+            // immovable block
             // TODO buggggg
             //m_Blocks.push_back(std::make_shared<Block>());
             m_Blocks.push_back(std::make_shared<CommonBlock>());
