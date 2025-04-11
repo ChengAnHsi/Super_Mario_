@@ -21,12 +21,12 @@ public:
         RESOURCE_DIR"/Blocks/Underworld/floorbricks.png",
         RESOURCE_DIR"/Blocks/Overworld/immovableBlock.png",
         RESOURCE_DIR"/Blocks/Underworld/immovableBlock.png", // 5
-        RESOURCE_DIR"/Blocks/Overworld/misteryBlock0.png",
-        RESOURCE_DIR"/Blocks/Overworld/misteryBlock1.png",
-        RESOURCE_DIR"/Blocks/Overworld/misteryBlock2.png",
-        RESOURCE_DIR"/Blocks/Underworld/misteryBlock0.png",
-        RESOURCE_DIR"/Blocks/Underworld/misteryBlock1.png", // 10
-        RESOURCE_DIR"/Blocks/Underworld/misteryBlock2.png",
+        RESOURCE_DIR"/Blocks/Overworld/mysteryBlock0.png",
+        RESOURCE_DIR"/Blocks/Overworld/mysteryBlock1.png",
+        RESOURCE_DIR"/Blocks/Overworld/mysteryBlock2.png",
+        RESOURCE_DIR"/Blocks/Underworld/mysteryBlock0.png",
+        RESOURCE_DIR"/Blocks/Underworld/mysteryBlock1.png", // 10
+        RESOURCE_DIR"/Blocks/Underworld/mysteryBlock2.png",
         RESOURCE_DIR"/Blocks/Overworld/platform0.png",
         RESOURCE_DIR"/Blocks/Overworld/platform1.png",
         RESOURCE_DIR"/Blocks/Overworld/platform2.png",

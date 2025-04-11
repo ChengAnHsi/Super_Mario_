@@ -44,7 +44,7 @@ add_executable(${PROJECT_NAME}
         src/Block.cpp
         src/PropsManager.cpp
         src/Props.cpp
-        src/MisteryBlock.cpp
+        src/MysteryBlock.cpp
         src/CommonBlock.cpp
         src/ImmovableBlock.cpp
 )

@@ -8,7 +8,7 @@
 #include "Props.hpp"
 #include "Util/Renderer.hpp"
 
-/*class PropsManager {
+class PropsManager {
 public:
     PropsManager();
 
@@ -61,9 +61,10 @@ private:
     std::vector<int> tmp_x3 = {69,69};
     std::vector<int> tmp_y3 = {5,5};
     std::vector<int> imgidx3 = {1,8};
-    std::vector<std::shared_ptr<Props>> m_props;
     std::vector<float> m_PositionX;
     std::vector<float> m_PositionY;
-};*/
+
+    std::vector<std::shared_ptr<Props>> m_props;
+};
 
 #endif //PROPSMANAGER_HPP

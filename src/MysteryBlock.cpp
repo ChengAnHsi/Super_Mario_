@@ -1,9 +1,9 @@
 //
 // Created by 112590007 on 2025/4/11.
 //
- #include "MisteryBlock.hpp"
+ #include "MysteryBlock.hpp"
 
- void MisteryBlock::AfterCollisionEvents() {
+void MysteryBlock::AfterCollisionEvents() {
      // TODO check props pos
      if (isoverworld) {
          SetImage({RESOURCE_DIR"/Blocks/Overworld/emptyBlock.png"}, 1000, 0);

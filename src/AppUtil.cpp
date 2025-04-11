@@ -1,7 +1,7 @@
 #include "AppUtil.hpp"
 #include "App.hpp"
 #include "Global.hpp"
-#include "MisteryBlock.hpp"
+#include "MysteryBlock.hpp"
 #include "CommonBlock.hpp"
 #include "ImmovableBlock.hpp"
 #include "Enemy.hpp"
@@ -35,7 +35,7 @@ void App::NextPhase() {
     int imgidx_size = tmpidx.size();
     for (int i = 0; i < imgidx_size; i++) {
         if(tmpidx[i] == 6 || tmpidx[i] == 9) {
-            blocks.push_back(std::make_shared<MisteryBlock>());
+            blocks.push_back(std::make_shared<MysteryBlock>());
             blocks.back()->SetImage({m_BM->imagePaths[tmpidx[i]],m_BM->imagePaths[tmpidx[i] + 1],m_BM->imagePaths[tmpidx[i] + 2]}, 1000, 0);
         }else if(tmpidx[i] == 0 || tmpidx[i] == 1) {
             blocks.push_back(std::make_shared<CommonBlock>());

@@ -8,7 +8,7 @@
 #include "Global.hpp"
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
-
+#include "App.hpp"
 void Mario::OnJump() {
     if (!isJumping) {
         velocityY = JUMP_VELOCITY;
@@ -18,6 +18,9 @@ void Mario::OnJump() {
         }else {
             this->SetImages(AnimationJump, 100, 0);
         }
+        std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX >(RESOURCE_DIR"/Sound/Effects/jump.mp3");
+        jump_sfx->SetVolume(25);
+        jump_sfx ->Play();
     }
 }
 
@@ -30,10 +33,14 @@ void Mario::OnSmallJump() {
         }else {
             this->SetImages(AnimationJump, 100, 0);
         }
+        std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX >(RESOURCE_DIR"/Sound/Effects/jump.mp3");
+        jump_sfx->SetVolume(25);
+        jump_sfx ->Play();
     }
 }
 
 void Mario::OnRun(const float distance) {
+
     if (distance == 0) return;
 
     float mario_x = GetPosition().x;
@@ -359,6 +366,9 @@ float Mario::Move() {
 
 void Mario::IncreaseCoin(const int coin) {
     this->coin += coin;
+    std::shared_ptr<Util::SFX> coin_sfx = std::make_shared<Util::SFX >(RESOURCE_DIR"/Sound/Effects/coin.mp3");
+    coin_sfx->SetVolume(70);
+    coin_sfx->Play();
 }
 
 int Mario::GetCoin() const {

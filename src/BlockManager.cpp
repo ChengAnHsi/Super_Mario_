@@ -4,7 +4,7 @@
 
 #include "BlockManager.hpp"
 #include "Block.hpp"
-#include "MisteryBlock.hpp"
+#include "MysteryBlock.hpp"
 #include "CommonBlock.hpp"
 #include "ImmovableBlock.hpp"
 #include "BackgroundImage.hpp"
@@ -19,7 +19,7 @@ BlockManager::BlockManager() {
         m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET);
         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         if(imgidx[i] == 6 || imgidx[i] == 9) {
-            m_Blocks.push_back(std::make_shared<MisteryBlock>());
+            m_Blocks.push_back(std::make_shared<MysteryBlock>());
             m_Blocks.back()->SetImage({imagePaths[imgidx[i]],imagePaths[imgidx[i] + 1],imagePaths[imgidx[i] + 2]}, 1000, 0);
         }else if(imgidx[i] == 0 || imgidx[i] == 1) {
             m_Blocks.push_back(std::make_shared<CommonBlock>());
