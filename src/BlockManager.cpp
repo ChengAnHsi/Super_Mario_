@@ -13,7 +13,6 @@
 #include <iostream>
 
 #include "OneUpMushroom.hpp"
-#include "../PTSD/lib/sdl2/src/joystick/windows/SDL_windowsjoystick_c.h"
 
 BlockManager::BlockManager() {
     int imgidx_size = imgidx.size();
@@ -22,7 +21,14 @@ BlockManager::BlockManager() {
         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         if(imgidx[i] == 6 || imgidx[i] == 9) {
             auto temp = std::make_shared<MysteryBlock>();
-            temp->SetProps(std::make_shared<OneUpMushroom>());
+            auto tempp = std::make_shared<OneUpMushroom>();
+            // TODO props setting
+            tempp->SetImage(imagePaths[imgidx[i]]);
+            tempp->SetScale(BLOCK_MAGNIFICATION - 1, BLOCK_MAGNIFICATION - 1);
+            tempp->SetPosition(m_PositionX[i],m_PositionY[i]);
+            //tempp->SetZIndex(-30);
+
+            temp->SetProps(tempp);
             m_Blocks.push_back(temp);
             m_Blocks.back()->SetImage({imagePaths[imgidx[i]],imagePaths[imgidx[i] + 1],imagePaths[imgidx[i] + 2]}, 1000, 0);
         }else if(imgidx[i] == 0 || imgidx[i] == 1) {

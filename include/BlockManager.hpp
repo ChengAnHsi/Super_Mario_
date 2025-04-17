@@ -8,6 +8,7 @@
 #include "BlockManager.hpp"
 #include "BackgroundImage.hpp"
 #include "Block.hpp"
+#include "MysteryBlock.hpp"
 #include "Util/Renderer.hpp"
 
 class BlockManager {
@@ -36,13 +37,22 @@ public:
     std::vector<int> GetY(int phase);
     std::vector<int> Getidx(int phase);
     void SetBlocks(std::vector<std::shared_ptr<Block>> blocks);
-    std::vector<std::shared_ptr<Util::GameObject>> GetChildren() const {
+    std::vector<std::shared_ptr<Util::GameObject>> GetChildren() {
         std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
         for (int i = 0; i < m_Blocks.size(); i++) {
+            auto mystery = std::dynamic_pointer_cast<MysteryBlock>(m_Blocks[i]);
+            if (mystery) {
+                auto prop = mystery->GetProps();
+                if (prop) {
+                    all_obj.push_back(prop);
+                }
+            }
             all_obj.push_back(std::static_pointer_cast<Util::GameObject>(m_Blocks[i]));
         }
+
         return all_obj;
     }
+
     std::vector<std::shared_ptr<BackgroundImage>> GetBackground();
     std::vector<std::shared_ptr<Block>> GetBlocks();
     std::vector<float> GetPosX();

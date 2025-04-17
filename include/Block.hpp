@@ -15,18 +15,23 @@ public:
         CommonBlock,
         ImmovableBlock
     };
+
     Block() = default;
+    virtual ~Block() = default;
+
     virtual void AfterCollisionEvents() = 0;
+
     bool GetBroken();
+    TYPE GetBlocktype(){
+        return Blocktype;
+    };
 
 protected:
     bool isoverworld = true;
     bool isbreak = false;
     TYPE Blocktype;
 private:
-    TYPE GetBlocktype(){
-        return Blocktype;
-    };
+
     // TODO block up and down animation
 };
 

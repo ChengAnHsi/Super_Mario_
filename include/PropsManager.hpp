@@ -21,23 +21,22 @@ public:
     }
 
     std::vector<std::string> imagePaths = {
-        RESOURCE_DIR"Collectibles/oneupmushroom.png",
-        RESOURCE_DIR"Collectibles/magicmushroom.png",
-        RESOURCE_DIR"Collectibles/superstar0.png",
-        RESOURCE_DIR"Collectibles/superstar1.png",
-        RESOURCE_DIR"Collectibles/superstar2.png",
-        RESOURCE_DIR"Collectibles/superstar3.png",//5
-        RESOURCE_DIR"Collectibles/superstar4.png",
-        RESOURCE_DIR"Collectibles/superstar5.png",
-        RESOURCE_DIR"Collectibles/Overworld/fire_flower0.png",
-        RESOURCE_DIR"Collectibles/Overworld/fire_flower1.png",
-        RESOURCE_DIR"Collectibles/Overworld/fire_flower2.png",//10
-        RESOURCE_DIR"Collectibles/Overworld/fire_flower3.png",
-        RESOURCE_DIR"Collectibles/Underworld/fire_flower0.png",
-        RESOURCE_DIR"Collectibles/Underworld/fire_flower1.png",
-        RESOURCE_DIR"Collectibles/Underworld/fire_flower2.png",
-        RESOURCE_DIR"Collectibles/Underworld/fire_flower3.png",//15
-
+        RESOURCE_DIR"/Collectibles/oneupmushroom.png",
+        RESOURCE_DIR"/Collectibles/magicmushroom.png",
+        RESOURCE_DIR"/Collectibles/superstar0.png",
+        RESOURCE_DIR"/Collectibles/superstar1.png",
+        RESOURCE_DIR"/Collectibles/superstar2.png",
+        RESOURCE_DIR"/Collectibles/superstar3.png",//5
+        RESOURCE_DIR"/Collectibles/superstar4.png",
+        RESOURCE_DIR"/Collectibles/superstar5.png",
+        RESOURCE_DIR"/Collectibles/Overworld/fire_flower0.png",
+        RESOURCE_DIR"/Collectibles/Overworld/fire_flower1.png",
+        RESOURCE_DIR"/Collectibles/Overworld/fire_flower2.png",//10
+        RESOURCE_DIR"/Collectibles/Overworld/fire_flower3.png",
+        RESOURCE_DIR"/Collectibles/Underworld/fire_flower0.png",
+        RESOURCE_DIR"/Collectibles/Underworld/fire_flower1.png",
+        RESOURCE_DIR"/Collectibles/Underworld/fire_flower2.png",
+        RESOURCE_DIR"/Collectibles/Underworld/fire_flower3.png",//15
     };
     std::vector<int> GetX(int phase);
     std::vector<int> GetY(int phase);

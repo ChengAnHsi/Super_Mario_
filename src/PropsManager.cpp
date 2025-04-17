@@ -20,9 +20,7 @@ PropsManager::PropsManager() {
         m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET);
         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         if(imgidx[i] == 0) {
-            auto tmpp=std::make_shared<MysteryBlock>();
             auto tempprop = std::make_shared<OneUpMushroom>();
-            tmpp->SetProps(tempprop);
             m_props.push_back(tempprop);
             m_props.back()->SetImage(imagePaths[imgidx[i]]);
             // dynamic_cast<MysteryBlock>
