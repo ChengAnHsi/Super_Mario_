@@ -6,7 +6,8 @@
 #include "ImmovableBlock.hpp"
 #include "Enemy.hpp"
 #include "Goomba.hpp"
-#include "spdlog/async_logger.h"
+#include "OneUpMushroom.hpp"
+
 #include "Util/Logger.hpp"
 
 // update all game object for next level
@@ -20,9 +21,18 @@ void App::NextPhase() {
 
     // remove last level and set next level block
     std::vector<std::shared_ptr<BackgroundImage>> tmp = m_BM->GetBackground();
+    std::vector<std::shared_ptr<Block>> tmp2 = m_BM->GetBlocks();
+    for (const auto & block : tmp2) {
+        auto mystery = std::dynamic_pointer_cast<MysteryBlock>(block);
+        if (mystery) {
+            auto prop = mystery->GetProps();
+            std::shared_ptr<Util::GameObject> tmp3 = prop;
+            m_Root.RemoveChild(tmp3);
+        }
+    }
     for (const auto & img : tmp) {
-        std::shared_ptr<Util::GameObject> tmp2 = img;
-        m_Root.RemoveChild(tmp2);
+        std::shared_ptr<Util::GameObject> tmp3 = img;
+        m_Root.RemoveChild(tmp3);
     }
 
     // add new block to render
@@ -35,7 +45,15 @@ void App::NextPhase() {
     int imgidx_size = tmpidx.size();
     for (int i = 0; i < imgidx_size; i++) {
         if(tmpidx[i] == 6 || tmpidx[i] == 9) {
-            blocks.push_back(std::make_shared<MysteryBlock>());
+            auto temp = std::make_shared<MysteryBlock>();
+            auto tempp = std::make_shared<OneUpMushroom>();
+            // TODO props setting
+            tempp->SetImage(RESOURCE_DIR"/Collectibles/oneupmushroom.png");
+            tempp->SetScale(BLOCK_MAGNIFICATION - 1, BLOCK_MAGNIFICATION - 1);
+            tempp->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            temp->SetProps(tempp);
+
+            blocks.push_back(temp);
             blocks.back()->SetImage({m_BM->imagePaths[tmpidx[i]],m_BM->imagePaths[tmpidx[i] + 1],m_BM->imagePaths[tmpidx[i] + 2]}, 1000, 0);
         }else if(tmpidx[i] == 0 || tmpidx[i] == 1) {
             blocks.push_back(std::make_shared<CommonBlock>());
@@ -49,7 +67,7 @@ void App::NextPhase() {
         //backgrounds.emplace_back(blocks.back());
     }
     m_BM->SetBlocks(blocks);
-//    m_Mario->AddCollisionBoxes(backgrounds);
+    // m_Mario->AddCollisionBoxes(backgrounds);
     m_Mario->AddCollisionBlocks(blocks);
     m_Root.AddChildren(m_BM->GetChildren());
 

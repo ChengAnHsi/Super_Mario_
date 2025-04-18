@@ -51,7 +51,7 @@ private:
     // map 1-1
     std::vector<int> tmp_x = {0,64,78,101,109};
     std::vector<int> tmp_y = {6,6,5,5,9};
-        std::vector<int> imgidx = {1,0,1,2,1};
+    std::vector<int> imgidx = {1,0,1,2,1};
     //map 1-2
     std::vector<int> tmp_x2 = {10,10,46,69,69,88,150,150};
     std::vector<int> tmp_y2 = {5,5,7,6,6,12,6,6};
