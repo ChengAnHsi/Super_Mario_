@@ -54,6 +54,7 @@ private:
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/Overworld/goombaDead.png"};
 
     bool is_dead = false;
+    bool is_set_runanimation = false;
 };
 #endif //GOOMBA_HPP
 

@@ -244,7 +244,10 @@ void Goomba::OnUpdate(const float delta) {
 void Goomba::Move(){
     if (!GetMoving()) return;
     OnUpdate(1);
-    SetImage(AnimationRun, 1000, 0);
+    if (is_set_runanimation == false) {
+        SetImage(AnimationRun, 500, 0);
+        is_set_runanimation = true;
+    }
 }
 
 void Goomba::SetLive(const int live) {
