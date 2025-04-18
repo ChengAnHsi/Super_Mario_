@@ -8,9 +8,9 @@
 
 class Flower : public Enemy {
 public:
-    Flower();  // Changed to non-default constructor to initialize Y range
+    Flower();
 
-    // move function
+
     void Action(float distance) override;
     void OnUpdate(float delta);
     void Move() override;

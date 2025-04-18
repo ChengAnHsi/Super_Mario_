@@ -26,7 +26,7 @@ void Flower::Action(const float distance) {
     glm::vec2 Flower_size = m_Drawable->GetSize();
     Flower_size *= FLOWER_MAGNIFICATION;
 
-    const float step = BLOCK_SIZE / 12.0f;
+    const float step = BLOCK_SIZE / 32.0f;
     float remaining_distance = distance;
     float step_distance = std::min(step, std::abs(distance));
 

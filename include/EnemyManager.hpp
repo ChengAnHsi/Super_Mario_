@@ -74,7 +74,7 @@ private:
     //map 1-3
     std::vector<float> tmp_x3 = {30,44,46,74,79.8,110,114,133};
     std::vector<float> tmp_y3 = {10.2,11,11,10,9,8.2,9,2.2};
-    std::vector<int> imgidx3 = {20,2,2,18,2 ,20,18,18};
+    std::vector<int> imgidx3 = {20,2,2,18,2 ,20,18,20};
 
     std::vector<std::shared_ptr<Enemy>> m_Enemies;
     std::vector<int> m_PositionX;

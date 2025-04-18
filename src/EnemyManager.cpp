@@ -28,6 +28,18 @@ EnemyManager::EnemyManager() {
         }
         else if(imgidx[i] == 18){
             m_Enemies.push_back(std::make_shared<FlyKoopa>());
+            std::shared_ptr<FlyKoopa> flykoopa = std::dynamic_pointer_cast<FlyKoopa>(m_Enemies.back());
+            if (flykoopa) {
+                float flight_height = 3.0f;
+
+                if (m_PositionX[i] < 80) {
+                    flight_height = 2.0f;
+                } else if (m_PositionX[i] > 100) {
+                    flight_height = 4.0f;
+                }
+
+                flykoopa->SetFlightHeight(flight_height);
+            }
         }
 
         // First set the image so the dimensions are available
