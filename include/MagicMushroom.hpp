@@ -11,6 +11,7 @@ public:
     MagicMushroom() = default;
 
     void AfterCollisionEvents() override;
+    void SpawnProps() override;
 };
 
 #endif //MAGICMUSHROOM_HPP

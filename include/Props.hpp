@@ -7,6 +7,7 @@ class Props : public BackgroundImage {
 public:
     Props() = default;
 
+    virtual void SpawnProps() = 0;
     virtual void AfterCollisionEvents() = 0;
 private:
     bool iscollision = false;

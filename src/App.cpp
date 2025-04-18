@@ -58,13 +58,11 @@ void App::Update() {
     if(m_Phase != Phase::Start) {
         m_Coin->SetLooping(true);
         m_Coin->SetPlaying(true);
-        // fixed position
-        m_Coin->SetPosition({-135.0f, 285.0f});
-        m_PRM->ResetPosition();
         // decrease time after start game
         m_PRM->DecreaseTime();
         // check mario is in enemy visiion
         m_EM->SetEnemyMoving();
+
     }
 
     if(m_PRM->GetTime() == 0) {
@@ -106,6 +104,10 @@ void App::Update() {
     }
 
     camera_movement_dis += dis;
+
+    // fixed position
+    m_PRM->ResetPosition(dis);
+    m_Coin->m_Transform.translation.x += dis;
 
     if (Util::Input::IsKeyDown(Util::Keycode::A)) {
         m_Mario->SetPosition({-20.0f, 0.0f});

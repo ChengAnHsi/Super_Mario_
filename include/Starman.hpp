@@ -11,6 +11,7 @@ public:
     Starman() = default;
 
     void AfterCollisionEvents() override;
+    void SpawnProps() override;
 };
 
 #endif //STARMANAN_HPP
