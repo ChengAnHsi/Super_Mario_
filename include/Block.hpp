@@ -29,6 +29,7 @@ public:
 protected:
     bool isoverworld = true;
     bool isbreak = false;
+    bool iscollision = false;
     TYPE Blocktype;
 private:
 

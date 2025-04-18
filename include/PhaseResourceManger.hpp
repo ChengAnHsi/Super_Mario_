@@ -44,7 +44,7 @@ public:
 
     void NextPhase(int m_phase, std::shared_ptr<Util::BGM> m_BGM);
     // fixed texts
-    void ResetPosition() const;
+    void ResetPosition(float dis) const;
     void DecreaseTime();
 
     // setter and getter

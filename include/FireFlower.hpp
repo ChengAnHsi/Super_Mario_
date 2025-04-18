@@ -11,6 +11,7 @@ public:
     FireFlower() = default;
 
     void AfterCollisionEvents() override;
+    void SpawnProps() override;
 };
 
 #endif //FIREFLOWER_HPP

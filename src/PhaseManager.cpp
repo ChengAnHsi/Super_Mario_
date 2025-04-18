@@ -171,11 +171,16 @@ void PhaseResourceManger::NextPhase(int m_Phase, std::shared_ptr<Util::BGM> m_BG
     m_OtherText->SetTxtIdx(5, 0);
 }
 
-void PhaseResourceManger::ResetPosition() const {
-    m_MarioText->SetPosition(-250, 300);
-    m_MoneyText->SetPosition(-70, 285);
-    m_WorldText->SetPosition(100, 300);
-    m_TimeText->SetPosition(300, 300);
+void PhaseResourceManger::ResetPosition(float dis) const {
+    m_MarioText->m_Transform.translation.x += dis;
+    m_MoneyText->m_Transform.translation.x += dis;
+    m_WorldText->m_Transform.translation.x += dis;
+    m_TimeText->m_Transform.translation.x += dis;
+
+    // m_MarioText->SetPosition(-250, 300);
+    // m_MoneyText->SetPosition(-70, 285);
+    // m_WorldText->SetPosition(100, 300);
+    // m_TimeText->SetPosition(300, 300);
 }
 
 void PhaseResourceManger::DecreaseTime() {
