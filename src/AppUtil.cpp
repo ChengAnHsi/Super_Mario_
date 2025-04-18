@@ -92,28 +92,23 @@ void App::NextPhase() {
     backgrounds.clear();
     int fimgidx_size = ftmpidx.size();
     for (int i = 0; i < fimgidx_size; i++) {
-        // TODO another 3 enemy should be here
-        if(ftmpidx[i] == 2 || ftmpidx[i] == 5)
-        {
+        if(ftmpidx[i] == 2 || ftmpidx[i] == 5){
             eneimes.push_back(std::make_shared<Goomba>());
-            eneimes.back()->SetImage({m_EM->imageFiles[ftmpidx[i]], m_EM->imageFiles [ftmpidx[i+1]]}, 1000, 0);
         }
-        else if(ftmpidx[i] == 0 || ftmpidx[i] == 8)
-        {
+        else if(ftmpidx[i] == 0 || ftmpidx[i] == 8){
             eneimes.push_back(std::make_shared<Flower>());
-            eneimes.back()->SetImage({m_EM->imageFiles[ftmpidx[i]], m_EM->imageFiles[ftmpidx[i+1]]}, 1000, 0);
         }
-        else if(ftmpidx[i] == 10 || ftmpidx[i] == 16 || ftmpidx[i] == 20 )
-        {
+        else if(ftmpidx[i] == 10 || ftmpidx[i] == 16 || ftmpidx[i] == 20){
             eneimes.push_back(std::make_shared<Koopa>());
-            eneimes.back()->SetImage({m_EM->imageFiles[ftmpidx[i]], m_EM->imageFiles[ftmpidx[i+1]]}, 1000, 0);
         }
-        else if(ftmpidx[i] == 18 )
-        {
+        else if(ftmpidx[i] == 18){
             eneimes.push_back(std::make_shared<FlyKoopa>());
-            eneimes.back()->SetImage({m_EM->imageFiles[ftmpidx[i]], m_EM->imageFiles[ftmpidx[i+1]]}, 1000, 0);
         }
-        eneimes.back()->SetScale(BLOCK_MAGNIFICATION,BLOCK_MAGNIFICATION);
+        if (m_Phase == Phase::Level1_2) {
+            eneimes.back()->SetOverworld(false);
+        }
+        eneimes.back()->SetImage({m_EM->imageFiles[ftmpidx[i]]}, 1000, 0);
+        eneimes.back()->SetScale(ENEMY_MAGNIFICATION,ENEMY_MAGNIFICATION);
         eneimes.back()->SetPosition(ftmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,ftmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
     }
     m_EM->SetEnemies(eneimes);

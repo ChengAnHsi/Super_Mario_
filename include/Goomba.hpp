@@ -50,8 +50,11 @@ private:
     float velocityY = 0.0f; // 角色在 Y 軸的速度
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
 
+    // TODO: dead update
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/Overworld/goomba0.png",RESOURCE_DIR"/Entities/Overworld/goomba1.png"};
+    std::vector<std::string> AnimationUnderWorldRun = {RESOURCE_DIR"/Entities/Underworld/goomba0.png",RESOURCE_DIR"/Entities/Underworld/goomba1.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/Overworld/goombaDead.png"};
+    std::vector<std::string> AnimationUnderWorldDead = {RESOURCE_DIR"/Entities/Overworld/goombaDead.png"};
 
     bool is_dead = false;
     bool is_set_runanimation = false;

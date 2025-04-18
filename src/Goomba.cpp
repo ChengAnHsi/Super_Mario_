@@ -245,14 +245,24 @@ void Goomba::Move(){
     if (!GetMoving()) return;
     OnUpdate(1);
     if (is_set_runanimation == false) {
-        SetImage(AnimationRun, 500, 0);
+        if (GetOverworld() == true) {
+            SetImage(AnimationRun, 500, 0);
+        }else {
+            SetImage(AnimationUnderWorldRun, 500, 0);
+        }
         is_set_runanimation = true;
     }
 }
 
 void Goomba::SetLive(const int live) {
     this->live = live;
-    if (live == 0) SetImage(AnimationDead, 100, 0);
+    if (live == 0) {
+        if (GetOverworld() == true) {
+            SetImage(AnimationDead, 1000, 0);
+        }else {
+            SetImage(AnimationUnderWorldDead, 1000, 0);
+        }
+    }
 }
 
 int Goomba::GetLive() const {

@@ -55,6 +55,7 @@ private:
     float max_y_position = GetPosition().y;   // Default maximum Y position
 
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/Underworld/flower0.png",RESOURCE_DIR"/Entities/Underworld/flower1.png"};
+    // TODO: dead update
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/Overworld/goombaDead.png"};
 
     bool is_dead = false;
