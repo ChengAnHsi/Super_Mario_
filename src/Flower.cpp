@@ -2,13 +2,31 @@
 #include "BlockManager.hpp"
 #include "Global.hpp"
 
+Flower::Flower() {
+    // Default constructor will calculate the range after SetPosition is called
+}
+
+void Flower::UpdateYMovementRange() {
+    // Apply your algorithm here
+    if (m_Drawable != nullptr) {
+        min_y_position = GetPosition().y - (m_Drawable->GetSize().y*3.2);
+        max_y_position = GetPosition().y - (m_Drawable->GetSize().y*0.1);
+    }
+}
+
+void Flower::SetPosition(float x, float y) {
+    // First set the position
+    Enemy::SetPosition(x, y);
+    UpdateYMovementRange();
+}
+
 void Flower::Action(const float distance) {
     float Flower_x = GetPosition().x;
     float Flower_y = GetPosition().y;
     glm::vec2 Flower_size = m_Drawable->GetSize();
     Flower_size *= FLOWER_MAGNIFICATION;
 
-    const float step = BLOCK_SIZE / 4.0f;
+    const float step = BLOCK_SIZE / 12.0f;
     float remaining_distance = distance;
     float step_distance = std::min(step, std::abs(distance));
 
@@ -29,13 +47,11 @@ void Flower::Action(const float distance) {
         isFacingUp = false; // Reverse direction to go down
     }
 
-    // Update position
-    Flower_y = next_y;
-    this->SetPosition(Flower_x, Flower_y);
+    // Update position without recalculating the range
+    Enemy::SetPosition(Flower_x, next_y);
 }
 
 bool Flower::AABBCollides(glm::vec2 Flower_pos, std::shared_ptr<BackgroundImage> box) {
-    // Keeping this method for compatibility with the Enemy class
     glm::vec2 a = Flower_pos;
     glm::vec2 Flower_size = this->m_Drawable->GetSize();
     Flower_size *= FLOWER_MAGNIFICATION;
@@ -75,7 +91,6 @@ bool Flower::AABBCollides(glm::vec2 Flower_pos, std::shared_ptr<BackgroundImage>
 }
 
 bool Flower::CCDDCollides(glm::vec2 Flower_pos, std::shared_ptr<BackgroundImage> box) {
-    // Keeping this method for compatibility with the Enemy class
     glm::vec2 a = Flower_pos;
     glm::vec2 Flower_size = this->m_Drawable->GetSize();
     Flower_size *= FLOWER_MAGNIFICATION;
@@ -144,17 +159,9 @@ void Flower::Move() {
     if (is_set_runanimation == false) {
         SetImage(AnimationRun, 500, 0);
         is_set_runanimation = true;
+        // Make sure Y range is updated once we have a drawable
+        UpdateYMovementRange();
     }
-}
-
-void Flower::SetYMovementRange(float min_y, float max_y) {
-    min_y_position = min_y;
-    max_y_position = max_y;
-
-    // Start at the middle of the range by default
-    float current_x = GetPosition().x;
-    float start_y = min_y + (max_y - min_y) / 2;
-    SetPosition(current_x, start_y);
 }
 
 void Flower::SetLive(const int live) {

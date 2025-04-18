@@ -1,7 +1,4 @@
-//
-// Created by 112590007 on 2025/3/6.
-//
-
+// Modified Flower.hpp
 #ifndef FLOWER_HPP
 #define FLOWER_HPP
 
@@ -9,9 +6,9 @@
 #include "Block.hpp"
 #include "CollisionState.hpp"
 
-class Flower : public Enemy{
+class Flower : public Enemy {
 public:
-    Flower() = default;
+    Flower();  // Changed to non-default constructor to initialize Y range
 
     // move function
     void Action(float distance) override;
@@ -25,8 +22,11 @@ public:
 
     void UpdateAnimation() override;
 
-    // Set the Y-axis movement range
-    void SetYMovementRange(float min_y, float max_y);
+    // Re-calculate Y movement range based on current position
+    void UpdateYMovementRange();
+
+    // Set position with range update
+    virtual void  SetPosition(float x, float y);
 
     // getter and setter
     void SetLive(int live);
@@ -50,12 +50,11 @@ private:
     bool isFacingUp = true;
     float delta_time = 1.0f;
 
-    // Y-axis movement boundaries
-    float min_y_position = GetPosition().y-m_Drawable->GetSize().y;  // Default minimum Y position
-    float max_y_position = GetPosition().y;   // Default maximum Y position
+    // Y-axis movement boundaries (will be calculated in constructor and SetPosition)
+    float min_y_position = 0.0f;
+    float max_y_position = 0.0f;
 
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/Underworld/flower0.png",RESOURCE_DIR"/Entities/Underworld/flower1.png"};
-    // TODO: dead update
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/Overworld/goombaDead.png"};
 
     bool is_dead = false;

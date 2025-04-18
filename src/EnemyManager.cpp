@@ -29,9 +29,20 @@ EnemyManager::EnemyManager() {
         else if(imgidx[i] == 18){
             m_Enemies.push_back(std::make_shared<FlyKoopa>());
         }
+
+        // First set the image so the dimensions are available
         m_Enemies.back()->SetImage({imageFiles[imgidx[i]]}, 1000, 0);
         m_Enemies.back()->SetScale(ENEMY_MAGNIFICATION, ENEMY_MAGNIFICATION);
-        m_Enemies.back()->SetPosition(m_PositionX[i],m_PositionY[i]);
+
+        // Then set the position (which will trigger UpdateYMovementRange for Flower instances)
+        m_Enemies.back()->SetPosition(m_PositionX[i], m_PositionY[i]);
+
+        // For Flower type, ensure the Y range is calculated
+        std::shared_ptr<Flower> flower = std::dynamic_pointer_cast<Flower>(m_Enemies.back());
+        if (flower) {
+            // For flowers, we explicitly update the Y movement range after setting position and image
+            flower->UpdateYMovementRange();
+        }
     }
 }
 
@@ -103,6 +114,14 @@ void EnemyManager::SetEnemyMoving(){
 void EnemyManager::SetEnemies(std::vector<std::shared_ptr<Enemy>> enemies){
     m_Enemies.clear();
     this->m_Enemies = enemies;
+
+    // For any flower instances in the new enemy list, update their Y movement range
+    for (const auto& enemy : m_Enemies) {
+        std::shared_ptr<Flower> flower = std::dynamic_pointer_cast<Flower>(enemy);
+        if (flower) {
+            flower->UpdateYMovementRange();
+        }
+    }
 }
 
 std::vector<std::shared_ptr<Enemy>> EnemyManager::GetEnemies(){
