@@ -4,6 +4,9 @@
 #include "EnemyManager.hpp"
 #include "Global.hpp"
 #include "App.hpp"
+#include "Flower.hpp"
+#include "FlyKoopa.hpp"
+#include "Koopa.hpp"
 #include <iostream>
 
 #include "Goomba.hpp"
@@ -15,11 +18,30 @@ EnemyManager::EnemyManager() {
         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
 
         // TODO another 3 enemy should be here
-        m_Enemies.push_back(std::make_shared<Goomba>());
-        m_Enemies.back()->SetImage({imageFiles[imgidx[i]], imageFiles[imgidx[i+1]]}, 1000, 0);
-
+        if(imgidx[i] == 2 || imgidx[i] == 5)
+        {
+            m_Enemies.push_back(std::make_shared<Goomba>());
+            m_Enemies.back()->SetImage({imageFiles[imgidx[i]], imageFiles[imgidx[i+1]]}, 1000, 0);
+        }
+        else if(imgidx[i] == 0 || imgidx[i] == 8)
+        {
+            m_Enemies.push_back(std::make_shared<Flower>());
+            m_Enemies.back()->SetImage({imageFiles[imgidx[i]], imageFiles[imgidx[i+1]]}, 1000, 0);
+        }
+        else if(imgidx[i] == 10 || imgidx[i] == 16 || imgidx[i] == 20 )
+        {
+            m_Enemies.push_back(std::make_shared<Koopa>());
+            m_Enemies.back()->SetImage({imageFiles[imgidx[i]], imageFiles[imgidx[i+1]]}, 1000, 0);
+        }
+        else if(imgidx[i] == 18 )
+        {
+            m_Enemies.push_back(std::make_shared<FlyKoopa>());
+            m_Enemies.back()->SetImage({imageFiles[imgidx[i]], imageFiles[imgidx[i+1]]}, 1000, 0);
+        }
         m_Enemies.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         m_Enemies.back()->SetPosition(m_PositionX[i],m_PositionY[i]);
+
+
     }
 }
 

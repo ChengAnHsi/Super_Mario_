@@ -47,6 +47,7 @@ public:
                     all_obj.push_back(prop);
                 }
             }
+
             all_obj.push_back(std::static_pointer_cast<Util::GameObject>(m_Blocks[i]));
         }
 
