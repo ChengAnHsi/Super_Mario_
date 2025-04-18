@@ -12,22 +12,50 @@
 #include "App.hpp"
 #include <iostream>
 
+#include "FireFlower.hpp"
+#include "MagicMushroom.hpp"
 #include "OneUpMushroom.hpp"
+#include "Starman.hpp"
 
 BlockManager::BlockManager() {
     int imgidx_size = imgidx.size();
-    for (int i = 0; i < imgidx_size; i++) {
+    int propsidx = 0;
+    for (size_t i = 0; i < imgidx_size; i++) {
         m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET);
         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         if(imgidx[i] == 6 || imgidx[i] == 9) {
-            auto temp = std::make_shared<MysteryBlock>();
-            auto tempp = std::make_shared<OneUpMushroom>();
             // TODO props setting
-            tempp->SetImage(RESOURCE_DIR"/Collectibles/oneupmushroom.png");
+            bool setprop = false;
+            if (props_tmp_x[propsidx] == tmp_x[i] && props_tmp_y[propsidx] == tmp_y[i]) {
+                setprop = true;
+            }
+            int prop_imgidx = 0;
+            if (setprop) {
+                prop_imgidx = props_imgidx[propsidx];
+                propsidx += 1;
+                std::cout << propsidx << std::endl;
+            }
+            std::shared_ptr<Props> tempp;
+
+            if (prop_imgidx == 0) {
+                tempp = std::make_shared<OneUpMushroom>();
+                tempp->SetImage(propsImagePaths[prop_imgidx]);
+            }else if (prop_imgidx == 1) {
+                tempp = std::make_shared<MagicMushroom>();
+                tempp->SetImage(propsImagePaths[prop_imgidx]);
+            }else if (prop_imgidx == 2) {
+                tempp = std::make_shared<Starman>();
+                tempp->SetImage({propsImagePaths[prop_imgidx], propsImagePaths[prop_imgidx+1], propsImagePaths[prop_imgidx+2], propsImagePaths[prop_imgidx+3], propsImagePaths[prop_imgidx+4], propsImagePaths[prop_imgidx+5]}, 1000, 0);
+            }else if (prop_imgidx == 8) {
+                tempp = std::make_shared<FireFlower>();
+                tempp->SetImage({propsImagePaths[prop_imgidx], propsImagePaths[prop_imgidx+1], propsImagePaths[prop_imgidx+2], propsImagePaths[prop_imgidx+3], propsImagePaths[prop_imgidx+4], propsImagePaths[prop_imgidx+5]}, 1000, 0);
+            }
+
             tempp->SetScale(BLOCK_MAGNIFICATION - 1, BLOCK_MAGNIFICATION - 1);
             tempp->SetPosition(m_PositionX[i],m_PositionY[i]);
-            //tempp->SetZIndex(-30);
+            // tempp->SetZIndex(-30);
 
+            auto temp = std::make_shared<MysteryBlock>();
             temp->SetProps(tempp);
             m_Blocks.push_back(temp);
             m_Blocks.back()->SetImage({imagePaths[imgidx[i]],imagePaths[imgidx[i] + 1],imagePaths[imgidx[i] + 2]}, 1000, 0);
@@ -41,21 +69,6 @@ BlockManager::BlockManager() {
         m_Blocks.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         m_Blocks.back()->SetPosition(m_PositionX[i],m_PositionY[i]);
     }
-
-    // test block position
-
-/**    m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
-    m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/immovableBlock.png");
-    m_Backgrounds.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-    m_Backgrounds.back()->SetPosition(5 * BLOCK_SIZE - 335.0f,2 * BLOCK_SIZE - 325.0f);
-    m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
-    m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/immovableBlock.png");
-    m_Backgrounds.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-    m_Backgrounds.back()->SetPosition(5 * BLOCK_SIZE - 335.0f,3 * BLOCK_SIZE - 325.0f);
-    m_Backgrounds.push_back(std::make_shared<BackgroundImage>());
-    m_Backgrounds.back()->ChangeImg(RESOURCE_DIR"/Blocks/Overworld/immovableBlock.png");
-    m_Backgrounds.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-    m_Backgrounds.back()->SetPosition(5 * BLOCK_SIZE - 335.0f,4 * BLOCK_SIZE - 325.0f);**/
 }
 
 std::vector<float> BlockManager::GetPosX() {
@@ -102,6 +115,48 @@ std::vector<int> BlockManager::Getidx(int phase){
         return imgidx3;
     default:
         return imgidx;
+    }
+}
+
+std::vector<int> BlockManager::GetpropsX(int phase){
+    switch (phase)
+    {
+        case 1:
+            return props_tmp_x;
+        case 2:
+            return props_tmp_x2;
+        case 3:
+            return props_tmp_x3;
+        default:
+            return props_tmp_x;
+    }
+}
+
+std::vector<int> BlockManager::GetpropsY(int phase){
+    switch (phase)
+    {
+        case 1:
+            return props_tmp_y;
+        case 2:
+            return props_tmp_y2;
+        case 3:
+            return props_tmp_y3;
+        default:
+            return props_tmp_y;
+    }
+}
+
+std::vector<int> BlockManager::Getpropsidx(int phase){
+    switch (phase)
+    {
+        case 1:
+            return props_imgidx;
+        case 2:
+            return props_imgidx2;
+        case 3:
+            return props_imgidx3;
+        default:
+            return props_imgidx;
     }
 }
 

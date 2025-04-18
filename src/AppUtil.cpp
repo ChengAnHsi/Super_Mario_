@@ -7,7 +7,10 @@
 #include "Enemy.hpp"
 #include "Flower.hpp"
 #include "Goomba.hpp"
+#include "FireFlower.hpp"
+#include "MagicMushroom.hpp"
 #include "OneUpMushroom.hpp"
+#include "Starman.hpp"
 #include "EnemyManager.hpp"
 #include "Util/Logger.hpp"
 
@@ -47,18 +50,46 @@ void App::NextPhase() {
     std::vector tmpx = m_BM->GetX(static_cast<int>(m_Phase));
     std::vector tmpy = m_BM->GetY(static_cast<int>(m_Phase));
     std::vector tmpidx = m_BM->Getidx(static_cast<int>(m_Phase));
+    std::vector propsx = m_BM->Getpropsidx(static_cast<int>(m_Phase));
+    std::vector propsy = m_BM->Getpropsidx(static_cast<int>(m_Phase));
+    std::vector propsidx = m_BM->Getpropsidx(static_cast<int>(m_Phase));
 
     int imgidx_size = tmpidx.size();
-    for (int i = 0; i < imgidx_size; i++) {
+    int propidx = 0;
+    for (size_t i = 0; i < imgidx_size; i++) {
         if(tmpidx[i] == 6 || tmpidx[i] == 9) {
-            auto temp = std::make_shared<MysteryBlock>();
-            auto tempp = std::make_shared<OneUpMushroom>();
             // TODO props setting
-            tempp->SetImage(RESOURCE_DIR"/Collectibles/oneupmushroom.png");
+            bool setprop = false;
+            if (propsx[propidx] == tmpx[i] && propsy[propidx] == tmpy[i]) {
+                setprop = true;
+            }
+            int prop_imgidx = 0;
+            if (setprop) {
+                prop_imgidx = propsidx[propidx];
+                propidx += 1;
+                std::cout << propidx << std::endl;
+            }
+            std::shared_ptr<Props> tempp;
+
+            if (prop_imgidx == 0) {
+                tempp = std::make_shared<OneUpMushroom>();
+                tempp->SetImage(m_BM->propsImagePaths[prop_imgidx]);
+            }else if (prop_imgidx == 1) {
+                tempp = std::make_shared<MagicMushroom>();
+                tempp->SetImage(m_BM->propsImagePaths[prop_imgidx]);
+            }else if (prop_imgidx == 2) {
+                tempp = std::make_shared<Starman>();
+                tempp->SetImage({m_BM->propsImagePaths[prop_imgidx], m_BM->propsImagePaths[prop_imgidx+1], m_BM->propsImagePaths[prop_imgidx+2], m_BM->propsImagePaths[prop_imgidx+3], m_BM->propsImagePaths[prop_imgidx+4], m_BM->propsImagePaths[prop_imgidx+5]}, 1000, 0);
+            }else if (prop_imgidx == 8) {
+                tempp = std::make_shared<FireFlower>();
+                tempp->SetImage({m_BM->propsImagePaths[prop_imgidx], m_BM->propsImagePaths[prop_imgidx+1], m_BM->propsImagePaths[prop_imgidx+2], m_BM->propsImagePaths[prop_imgidx+3], m_BM->propsImagePaths[prop_imgidx+4], m_BM->propsImagePaths[prop_imgidx+5]}, 1000, 0);
+            }
+
             tempp->SetScale(BLOCK_MAGNIFICATION - 1, BLOCK_MAGNIFICATION - 1);
             tempp->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
-            temp->SetProps(tempp);
 
+            auto temp = std::make_shared<MysteryBlock>();
+            temp->SetProps(tempp);
             blocks.push_back(temp);
             blocks.back()->SetImage({m_BM->imagePaths[tmpidx[i]],m_BM->imagePaths[tmpidx[i] + 1],m_BM->imagePaths[tmpidx[i] + 2]}, 1000, 0);
         }else if(tmpidx[i] == 0 || tmpidx[i] == 1) {
@@ -70,7 +101,6 @@ void App::NextPhase() {
         }
         blocks.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         blocks.back()->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
-        //backgrounds.emplace_back(blocks.back());
     }
     m_BM->SetBlocks(blocks);
     // m_Mario->AddCollisionBoxes(backgrounds);

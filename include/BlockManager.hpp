@@ -33,10 +33,32 @@ public:
         RESOURCE_DIR"/Blocks/Overworld/platform2.png",
         RESOURCE_DIR"/Blocks/Overworld/platform3.png" // 15
     };
+    std::vector<std::string> propsImagePaths = {
+        RESOURCE_DIR"/Collectibles/oneupmushroom.png",
+        RESOURCE_DIR"/Collectibles/magicmushroom.png",
+        RESOURCE_DIR"/Collectibles/superstar0.png",
+        RESOURCE_DIR"/Collectibles/superstar1.png",
+        RESOURCE_DIR"/Collectibles/superstar2.png",
+        RESOURCE_DIR"/Collectibles/superstar3.png",//5
+        RESOURCE_DIR"/Collectibles/superstar4.png",
+        RESOURCE_DIR"/Collectibles/superstar5.png",
+        RESOURCE_DIR"/Collectibles/Overworld/fire_flower0.png",
+        RESOURCE_DIR"/Collectibles/Overworld/fire_flower1.png",
+        RESOURCE_DIR"/Collectibles/Overworld/fire_flower2.png",//10
+        RESOURCE_DIR"/Collectibles/Overworld/fire_flower3.png",
+        RESOURCE_DIR"/Collectibles/Underworld/fire_flower0.png",
+        RESOURCE_DIR"/Collectibles/Underworld/fire_flower1.png",
+        RESOURCE_DIR"/Collectibles/Underworld/fire_flower2.png",
+        RESOURCE_DIR"/Collectibles/Underworld/fire_flower3.png",//15
+    };
+
     std::vector<int> GetX(int phase);
     std::vector<int> GetY(int phase);
     std::vector<int> Getidx(int phase);
-    void SetBlocks(std::vector<std::shared_ptr<Block>> blocks);
+    std::vector<int> GetpropsX(int phase);
+    std::vector<int> GetpropsY(int phase);
+    std::vector<int> Getpropsidx(int phase);
+
     std::vector<std::shared_ptr<Util::GameObject>> GetChildren() {
         std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
         for (int i = 0; i < m_Blocks.size(); i++) {
@@ -56,10 +78,12 @@ public:
 
     std::vector<std::shared_ptr<BackgroundImage>> GetBackground();
     std::vector<std::shared_ptr<Block>> GetBlocks();
+    void SetBlocks(std::vector<std::shared_ptr<Block>> blocks);
     std::vector<float> GetPosX();
 
 private:
     // 0-1: block, 2-3: floor, 4-5: immovable block, 6-11: mistery block, platform: 12-15
+    // 0: oneupmushroom, 1: magicmushroom, 2-7: superstar, 8-15 fireflower
     // map 1-1
     std::vector<int> tmp_x = {22,80,81,82,83,84,85,86,87,91,92,93,94,109,121,122,123,128,129,130,131,188,189,
         187,188,189,
@@ -91,6 +115,9 @@ private:
         4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
         2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
         2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2};
+    std::vector<int> props_tmp_x = {109,64,21,78,101};
+    std::vector<int> props_tmp_y = {9,6,5,5,5};
+    std::vector<int> props_imgidx = {1,0,1,1,2};
     //map 1-2
     std::vector<int> tmp_x2 = {0,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,161,162,163,164,165,166,167,170,171,172,173,174,175,176,177,
         0,54,55,58,59,60,61,62,63,66,67,68,69,76,77,78,79,170,171,172,173,174,175,176,177,
@@ -134,6 +161,9 @@ private:
         3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
         3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
     };
+    std::vector<int> props_tmp_x2 = {89,46,69,69,150,150,10,10};
+    std::vector<int> props_tmp_y2 = {12,7,6,6,6,6,5,5};
+    std::vector<int> props_imgidx2 = {0,2,1,8,1,8,1,8};
     //map 1-3
     std::vector<int> tmp_x3 = {40,41,42,43,44,45,46,
         26,27,28,29,30,60,61,62,63,142,143,
@@ -171,6 +201,10 @@ private:
         2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,13,14,14,15,13,14,14,14,15,13,14,14,14,15,13,14,15,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
         2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
     };
+    std::vector<int> props_tmp_x3 = {59,59};
+    std::vector<int> props_tmp_y3 = {5,5};
+    std::vector<int> props_imgidx3 = {1,8};
+
     std::vector<std::shared_ptr<Block>> m_Blocks;
     std::vector<float> m_PositionX;
     std::vector<float> m_PositionY;

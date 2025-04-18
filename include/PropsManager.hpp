@@ -47,10 +47,10 @@ public:
     std::vector<float> GetPosX();
 
 private:
-    // 0-1: block, 2-3: floor, ...
+    // 0: oneupmushroom, 1: magicmushroom, 2-7: superstar, 8-15 fireflower
     // map 1-1
-    std::vector<int> tmp_x = {0,64,78,101,109};
-    std::vector<int> tmp_y = {6,6,5,5,9};
+    std::vector<int> tmp_x = {21,64,78,101,109};
+    std::vector<int> tmp_y = {5,6,5,5,9};
     std::vector<int> imgidx = {1,0,1,2,1};
     //map 1-2
     std::vector<int> tmp_x2 = {10,10,46,69,69,88,150,150};
