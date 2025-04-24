@@ -42,7 +42,7 @@ public:
         RESOURCE_DIR"/Collectibles/Underworld/ground_coin2.png"
     };
 
-    void NextPhase(int m_phase, std::shared_ptr<Util::BGM> m_BGM);
+    void NextPhase(int m_phase);
     // fixed texts
     void ResetPosition(float dis) const;
     void DecreaseTime();

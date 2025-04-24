@@ -188,3 +188,23 @@ void BlockManager::UpdatePropsAnimation() {
         }
     }
 }
+
+void BlockManager::AddAllPropsCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) {
+    for (int i = 0; i < m_Blocks.size(); i++) {
+        auto mystery = std::dynamic_pointer_cast<MysteryBlock>(m_Blocks[i]);
+        if (mystery) {
+            auto prop = mystery->GetProps();
+            prop->AddCollisionBlocks(blocks);
+        }
+    }
+}
+
+void BlockManager::AddAllPropsCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) {
+    for (int i = 0; i < m_Blocks.size(); i++) {
+        auto mystery = std::dynamic_pointer_cast<MysteryBlock>(m_Blocks[i]);
+        if (mystery) {
+            auto prop = mystery->GetProps();
+            prop->AddCollisionBoxes(boxes);
+        }
+    }
+}

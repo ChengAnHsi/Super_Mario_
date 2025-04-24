@@ -78,6 +78,8 @@ public:
 
     std::vector<std::shared_ptr<BackgroundImage>> GetBackground();
     void UpdatePropsAnimation();
+    void AddAllPropsCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
+    void AddAllPropsCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     std::vector<std::shared_ptr<Block>> GetBlocks();
     void SetBlocks(std::vector<std::shared_ptr<Block>> blocks);
     std::vector<float> GetPosX();

@@ -6,6 +6,7 @@
 
 #include "Props.hpp"
 #include "Block.hpp"
+
 class MysteryBlock : public Block {
 public:
     MysteryBlock();

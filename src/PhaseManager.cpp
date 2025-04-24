@@ -69,7 +69,7 @@ PhaseResourceManger::PhaseResourceManger() {
     }
 }
 
-void PhaseResourceManger::NextPhase(int m_Phase, std::shared_ptr<Util::BGM> m_BGM) {
+void PhaseResourceManger::NextPhase(int m_Phase) {
     LOG_DEBUG("Passed! Next phase: {}", m_Phase);
 
     if (m_Phase == 1){
@@ -89,8 +89,6 @@ void PhaseResourceManger::NextPhase(int m_Phase, std::shared_ptr<Util::BGM> m_BG
         // TODO [3]> mountain, cloud... set invisible use app->nextphase
     }
     if (m_Phase == 2){
-        m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Underworld/theme.mp3");
-        m_BGM->Play();
         m_Background.clear();
         // [0]: black background image
         m_Background.push_back(std::make_shared<BackgroundImage>());
@@ -134,8 +132,6 @@ void PhaseResourceManger::NextPhase(int m_Phase, std::shared_ptr<Util::BGM> m_BG
         }
     }
     if (m_Phase == 3) {
-        m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
-        m_BGM->Play();
         m_Background.clear();
         // [0]: black background image
         m_Background.push_back(std::make_shared<BackgroundImage>());
@@ -176,11 +172,6 @@ void PhaseResourceManger::ResetPosition(float dis) const {
     m_MoneyText->m_Transform.translation.x += dis;
     m_WorldText->m_Transform.translation.x += dis;
     m_TimeText->m_Transform.translation.x += dis;
-
-    // m_MarioText->SetPosition(-250, 300);
-    // m_MoneyText->SetPosition(-70, 285);
-    // m_WorldText->SetPosition(100, 300);
-    // m_TimeText->SetPosition(300, 300);
 }
 
 void PhaseResourceManger::DecreaseTime() {

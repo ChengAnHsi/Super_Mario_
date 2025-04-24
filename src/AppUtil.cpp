@@ -170,33 +170,43 @@ void App::ValidTask() {
             LOG_DEBUG("Welcome to Super Mario!");
             m_Phase = Phase::Level1_1;
             // init is Level1_1 don't need to call NextPhase
-            m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
+            m_PRM->NextPhase(static_cast<int>(m_Phase));
             m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
             m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
             m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
             m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
+            m_BM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
+            m_BM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
             break;
         case Phase::Level1_1:
             LOG_DEBUG("Congratulations! You have completed Level1-1!");
             m_Phase = Phase::Level1_2;
             NextPhase();
-            m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
+            m_PRM->NextPhase(static_cast<int>(m_Phase));
+            m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Underworld/theme.mp3");
+            m_BGM->Play();
             m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
             m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
             m_Root.AddChildren(m_PRM->GetChildren(false));
             m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
             m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
+            m_BM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
+            m_BM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
             break;
         case Phase::Level1_2:
             LOG_DEBUG("Congratulations! You have completed Level1-2!");
             m_Phase = Phase::Level1_3;
             NextPhase();
-            m_PRM->NextPhase(static_cast<int>(m_Phase), m_BGM);
+            m_PRM->NextPhase(static_cast<int>(m_Phase));
+            m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
+            m_BGM->Play();
             m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
             m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
             m_Root.AddChildren(m_PRM->GetChildren(false));
             m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
             m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
+            m_BM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
+            m_BM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
             break;
         case Phase::Level1_3:
             LOG_DEBUG("Congratulations! You have completed Super Mario!");
