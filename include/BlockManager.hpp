@@ -77,6 +77,7 @@ public:
     }
 
     std::vector<std::shared_ptr<BackgroundImage>> GetBackground();
+    void UpdatePropsAnimation();
     std::vector<std::shared_ptr<Block>> GetBlocks();
     void SetBlocks(std::vector<std::shared_ptr<Block>> blocks);
     std::vector<float> GetPosX();

@@ -9,19 +9,14 @@
 
 class OneUpMushroom : public Props {
 public:
-    enum class MushroomState {
-        Spawning,
-        Active
-    };
-
     OneUpMushroom() = default;
     void SpawnProps() override;         // 叫出蘑菇
-    void Update(float dt);
+    void Update(float dt) override;
     void AfterCollisionEvents() override;
 
 private:
     bool is_spawning = false;
-    MushroomState state = MushroomState::Spawning;
+    PropsState state = PropsState::Not_Activated;
     float remaining_distance = BLOCK_SIZE;
     float velocityY = -64.0f; // 向上浮出速度
     float gravity = 150.0f;   // 任意你想設的下落速度

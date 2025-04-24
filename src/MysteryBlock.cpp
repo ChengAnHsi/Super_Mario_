@@ -9,6 +9,10 @@ MysteryBlock::MysteryBlock(){
 
 void MysteryBlock::AfterCollisionEvents() {
      // TODO check props pos
+    if(iscollision == true) {
+        return ;
+    }
+
     if (isoverworld) {
         SetImage({RESOURCE_DIR"/Blocks/Overworld/emptyBlock.png"}, 1000, 0);
     }else {

@@ -81,6 +81,7 @@ void App::Update() {
         dis = m_Mario->Move();
         // when mario move show coins he got
         m_PRM->SetCoin(m_Mario->GetCoin());
+        m_BM->UpdatePropsAnimation();
     }
 
     // Camera cannot move left

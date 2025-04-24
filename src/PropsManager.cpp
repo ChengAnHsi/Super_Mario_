@@ -24,8 +24,6 @@ PropsManager::PropsManager() {
             m_props.push_back(tempprop);
             m_props.back()->SetImage(imagePaths[imgidx[i]]);
             // dynamic_cast<MysteryBlock>
-            // m_props.push_back(std::make_shared<OneUpMushroom>());
-            // m_props.back()->SetImage(imagePaths[imgidx[i]]);
         } else if(imgidx[i] == 1) {
             m_props.push_back(std::make_shared<MagicMushroom>());
             m_props.back()->SetImage(imagePaths[imgidx[i]]);

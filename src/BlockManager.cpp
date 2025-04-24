@@ -176,3 +176,15 @@ std::vector<std::shared_ptr<BackgroundImage>> BlockManager::GetBackground() {
 std::vector<std::shared_ptr<Block>> BlockManager::GetBlocks(){
     return m_Blocks;
 }
+
+void BlockManager::UpdatePropsAnimation() {
+    for (int i = 0; i < m_Blocks.size(); i++) {
+        auto mystery = std::dynamic_pointer_cast<MysteryBlock>(m_Blocks[i]);
+        if (mystery) {
+            auto prop = mystery->GetProps();
+            if (prop) {
+                prop->Update(1.0f);
+            }
+        }
+    }
+}
