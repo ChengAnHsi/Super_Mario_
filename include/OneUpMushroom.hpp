@@ -24,8 +24,6 @@ public:
     bool CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box);
     bool GravityAndCollision(float delta) override;
 
-    void UpdateAnimation() override;
-
 private:
     bool is_spawning = false;
     PropsState state = PropsState::Not_Activated;

@@ -174,15 +174,22 @@ bool Starman::CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage
     return Y_state != CollisionState::None;
 }
 
+void Starman::Jump() {
+    if (!isJumping) {
+        velocityY = JUMP_VELOCITY;
+        isJumping = true;
+    }
+}
+
 bool Starman::GravityAndCollision(const float delta) {
     glm::vec2 prop_size = this->m_Drawable->GetSize();
-    prop_size *= GOOMBA_MAGNIFICATION;
-    float goomba_x = this->GetPosition().x;
-    float goomba_y = this->GetPosition().y;
+    prop_size *= PROP_MAGNIFICATION;
+    float char_x = this->GetPosition().x;
+    float char_y = this->GetPosition().y;
 
     // 更新垂直速度（根據重力）
     velocityY += GRAVITY * (delta / 60.0f);
-    goomba_y += velocityY * (delta / 60.0f);
+    char_y += velocityY * (delta / 60.0f);
 
     bool collision = false;
     for (const auto &box : collision_boxes){
@@ -194,18 +201,18 @@ bool Starman::GravityAndCollision(const float delta) {
         b_size.x *= box->GetScale().x;
         b_size.y *= box->GetScale().y;
 
-        collision = CCDDCollides({goomba_x, goomba_y}, box);
+        collision = CCDDCollides({char_x, char_y}, box);
 
         if (Y_state == CollisionState::Bottom) {
-            goomba_y = box->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
+            char_y = box->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
             velocityY = 0;
-            this->SetPosition(goomba_x, goomba_y);
+            this->SetPosition(char_x, char_y);
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
             // 固定在方塊下方開始下墜
-            goomba_y = box->GetTransform().translation.y - b_size.y / 2 - prop_size.y / 2;
-            this->SetPosition(goomba_x, goomba_y);
+            char_y = box->GetTransform().translation.y - b_size.y / 2 - prop_size.y / 2;
+            this->SetPosition(char_x, char_y);
             break;
         }
     }
@@ -218,36 +225,30 @@ bool Starman::GravityAndCollision(const float delta) {
         b_size.x *= block->GetScale().x;
         b_size.y *= block->GetScale().y;
 
-        collision = CCDDCollides({goomba_x, goomba_y}, block);
+        collision = CCDDCollides({char_x, char_y}, block);
 
         if (Y_state == CollisionState::Bottom) {
             // 固定瑪利歐在地板位置
-            goomba_y = block->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
+            char_y = block->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
             velocityY = 0;
-            this->SetPosition(goomba_x, goomba_y);
+            this->SetPosition(char_x, char_y);
             return false;  // 碰撞到地面，不在滯空狀態
         }
+        if(Y_state == CollisionState::Top) {
+            // 固定在方塊下方開始下墜
+            char_y = block->GetTransform().translation.y - b_size.y / 2 - prop_size.y / 2;
+            this->SetPosition(char_x, char_y);
+            break;
+        }
     }
-    this->SetPosition(goomba_x, goomba_y);
+    if (Y_state == CollisionState::Top) {
+        velocityY = 0;
+        return true;
+    }
+    this->SetPosition(char_x, char_y);
 
     // 如果沒有碰撞，表示在滯空狀態
     return !collision;
-}
-
-void Starman::UpdateAnimation() {
-    //float distance = move_velocity * delta;
-
-    // facing left
-    // if (isFacingRight == false) {
-    //     m_Transform.scale = glm::vec2{-GOOMBA_MAGNIFICATION, GOOMBA_MAGNIFICATION};
-    //     //distance *= -1;
-    // }
-    // facing right
-    // if (isFacingRight == true)  {
-    //     m_Transform.scale = glm::vec2{GOOMBA_MAGNIFICATION, GOOMBA_MAGNIFICATION};
-    // }
-
-	//Action(move_velocity);
 }
 
 void Starman::OnUpdate(const float delta) {
@@ -263,9 +264,11 @@ void Starman::OnUpdate(const float delta) {
         //m_Transform.scale = glm::vec2{GOOMBA_MAGNIFICATION, GOOMBA_MAGNIFICATION};
     }
 
-    GravityAndCollision(3 * delta);
+    isJumping = GravityAndCollision(3 * delta);
 
-    UpdateAnimation();
+    if (!isJumping) {
+        Jump();  // 自動連續跳
+    }
 
     Action(distance);
 }

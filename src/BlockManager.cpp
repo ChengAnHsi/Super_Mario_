@@ -43,7 +43,7 @@ BlockManager::BlockManager() {
                 tempp->SetImage(propsImagePaths[prop_imgidx]);
             }else if (prop_imgidx == 2) {
                 tempp = std::make_shared<Starman>();
-                tempp->SetImage({propsImagePaths[prop_imgidx], propsImagePaths[prop_imgidx+1], propsImagePaths[prop_imgidx+2], propsImagePaths[prop_imgidx+3], propsImagePaths[prop_imgidx+4], propsImagePaths[prop_imgidx+5]}, 1000, 0);
+                tempp->SetImage({propsImagePaths[prop_imgidx], propsImagePaths[prop_imgidx+1], propsImagePaths[prop_imgidx+2], propsImagePaths[prop_imgidx+3], propsImagePaths[prop_imgidx+4], propsImagePaths[prop_imgidx+5]}, 200, 0);
             }else if (prop_imgidx == 8) {
                 tempp = std::make_shared<FireFlower>();
                 tempp->SetImage({propsImagePaths[prop_imgidx], propsImagePaths[prop_imgidx+1], propsImagePaths[prop_imgidx+2], propsImagePaths[prop_imgidx+3], propsImagePaths[prop_imgidx+4], propsImagePaths[prop_imgidx+5]}, 1000, 0);
