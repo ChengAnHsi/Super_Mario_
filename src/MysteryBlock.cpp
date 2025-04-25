@@ -8,7 +8,7 @@ MysteryBlock::MysteryBlock(){
 }
 
 void MysteryBlock::AfterCollisionEvents() {
-     // TODO check props pos
+    // TODO check props pos
     if(iscollision == true) {
         return ;
     }
@@ -19,7 +19,7 @@ void MysteryBlock::AfterCollisionEvents() {
         SetImage({RESOURCE_DIR"/Blocks/Underworld/emptyBlock.png"}, 1000, 0);
     }
 
-    if (iscollision == false) {
+    if (iscollision == false && inside_prop) {
         inside_prop->SpawnProps();
         iscollision = true;
     }

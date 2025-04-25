@@ -6,12 +6,18 @@
 #define COMMONBLOCK_HPP
 
 #include "Block.hpp"
+#include "Props.hpp"
 
-class CommonBlock : public Block {
+class CommonBlock : public Block{
 public:
     CommonBlock();
 
     void AfterCollisionEvents() override;
+
+    void SetProps(std::shared_ptr<Props> prop);
+    std::shared_ptr<Props> GetProps();
+private:
+    std::shared_ptr<Props> inside_prop;
 };
 
 #endif //COMMONBLOCK_HPP

@@ -32,11 +32,21 @@ void App::NextPhase() {
     std::vector<std::shared_ptr<BackgroundImage>> tmp = m_BM->GetBackground();
     std::vector<std::shared_ptr<Block>> tmp2 = m_BM->GetBlocks();
     for (const auto & block : tmp2) {
-        auto mystery = std::dynamic_pointer_cast<MysteryBlock>(block);
-        if (mystery) {
+        if (block->GetBlocktype() == Block::TYPE::CommonBlock) {
+            auto common = std::dynamic_pointer_cast<CommonBlock>(block);
+            auto prop = common->GetProps();
+            if (prop) {
+                std::shared_ptr<Util::GameObject> tmp3 = prop;
+                m_Root.RemoveChild(tmp3);
+            }
+        }
+        if (block->GetBlocktype() == Block::TYPE::MysteryBlock) {
+            auto mystery = std::dynamic_pointer_cast<MysteryBlock>(block);
             auto prop = mystery->GetProps();
-            std::shared_ptr<Util::GameObject> tmp3 = prop;
-            m_Root.RemoveChild(tmp3);
+            if (prop) {
+                std::shared_ptr<Util::GameObject> tmp3 = prop;
+                m_Root.RemoveChild(tmp3);
+            }
         }
     }
     for (const auto & img : tmp) {
@@ -57,19 +67,17 @@ void App::NextPhase() {
     int imgidx_size = tmpidx.size();
     int propidx = 0;
     for (size_t i = 0; i < imgidx_size; i++) {
-        if(tmpidx[i] == 6 || tmpidx[i] == 9) {
-            // TODO props setting
-            bool setprop = false;
-            if (propsx[propidx] == tmpx[i] && propsy[propidx] == tmpy[i]) {
-                setprop = true;
-            }
+        // TODO props setting
+        bool setprop = false;
+        if (propsx[propidx] == tmpx[i] && propsy[propidx] == tmpy[i]) {
+            setprop = true;
+        }
+
+        std::shared_ptr<Props> tempp;
+        if (setprop) {
             int prop_imgidx = 0;
-            if (setprop) {
-                prop_imgidx = propsidx[propidx];
-                propidx += 1;
-                std::cout << propidx << std::endl;
-            }
-            std::shared_ptr<Props> tempp;
+            prop_imgidx = propsidx[propidx];
+            propidx += 1;
 
             if (prop_imgidx == 0) {
                 tempp = std::make_shared<OneUpMushroom>();
@@ -84,16 +92,24 @@ void App::NextPhase() {
                 tempp = std::make_shared<FireFlower>();
                 tempp->SetImage({m_BM->propsImagePaths[prop_imgidx], m_BM->propsImagePaths[prop_imgidx+1], m_BM->propsImagePaths[prop_imgidx+2], m_BM->propsImagePaths[prop_imgidx+3], m_BM->propsImagePaths[prop_imgidx+4], m_BM->propsImagePaths[prop_imgidx+5]}, 1000, 0);
             }
-
             tempp->SetScale(BLOCK_MAGNIFICATION - 1, BLOCK_MAGNIFICATION - 1);
             tempp->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            // tempp->SetZIndex(-30);
+        }
 
+        if(tmpidx[i] == 6 || tmpidx[i] == 9) {
             auto temp = std::make_shared<MysteryBlock>();
-            temp->SetProps(tempp);
+            if (setprop) {
+                temp->SetProps(tempp);
+            }
             blocks.push_back(temp);
-            blocks.back()->SetImage({m_BM->imagePaths[tmpidx[i]],m_BM->imagePaths[tmpidx[i] + 1],m_BM->imagePaths[tmpidx[i] + 2]}, 1000, 0);
+            blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
         }else if(tmpidx[i] == 0 || tmpidx[i] == 1) {
-            blocks.push_back(std::make_shared<CommonBlock>());
+            auto temp = std::make_shared<CommonBlock>();
+            if (setprop) {
+                temp->SetProps(tempp);
+            }
+            blocks.push_back(temp);
             blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
         }else {
             blocks.push_back(std::make_shared<ImmovableBlock>());

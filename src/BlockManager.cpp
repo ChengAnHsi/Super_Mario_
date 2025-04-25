@@ -23,19 +23,17 @@ BlockManager::BlockManager() {
     for (size_t i = 0; i < imgidx_size; i++) {
         m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET);
         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
-        if(imgidx[i] == 6 || imgidx[i] == 9) {
-            // TODO props setting
-            bool setprop = false;
-            if (props_tmp_x[propsidx] == tmp_x[i] && props_tmp_y[propsidx] == tmp_y[i]) {
-                setprop = true;
-            }
+        // TODO props setting
+        bool setprop = false;
+        if (props_tmp_x[propsidx] == tmp_x[i] && props_tmp_y[propsidx] == tmp_y[i]) {
+            setprop = true;
+        }
+
+        std::shared_ptr<Props> tempp;
+        if (setprop) {
             int prop_imgidx = 0;
-            if (setprop) {
-                prop_imgidx = props_imgidx[propsidx];
-                propsidx += 1;
-                std::cout << propsidx << std::endl;
-            }
-            std::shared_ptr<Props> tempp;
+            prop_imgidx = props_imgidx[propsidx];
+            propsidx += 1;
 
             if (prop_imgidx == 0) {
                 tempp = std::make_shared<OneUpMushroom>();
@@ -50,17 +48,23 @@ BlockManager::BlockManager() {
                 tempp = std::make_shared<FireFlower>();
                 tempp->SetImage({propsImagePaths[prop_imgidx], propsImagePaths[prop_imgidx+1], propsImagePaths[prop_imgidx+2], propsImagePaths[prop_imgidx+3], propsImagePaths[prop_imgidx+4], propsImagePaths[prop_imgidx+5]}, 1000, 0);
             }
-
             tempp->SetScale(BLOCK_MAGNIFICATION - 1, BLOCK_MAGNIFICATION - 1);
             tempp->SetPosition(m_PositionX[i],m_PositionY[i]);
             // tempp->SetZIndex(-30);
-
+        }
+        if(imgidx[i] == 6 || imgidx[i] == 9) {
             auto temp = std::make_shared<MysteryBlock>();
-            temp->SetProps(tempp);
+            if (setprop) {
+                temp->SetProps(tempp);
+            }
             m_Blocks.push_back(temp);
             m_Blocks.back()->SetImage({imagePaths[imgidx[i]],imagePaths[imgidx[i] + 1],imagePaths[imgidx[i] + 2]}, 1000, 0);
         }else if(imgidx[i] == 0 || imgidx[i] == 1) {
-            m_Blocks.push_back(std::make_shared<CommonBlock>());
+            auto temp = std::make_shared<CommonBlock>();
+            if (setprop) {
+                temp->SetProps(tempp);
+            }
+            m_Blocks.push_back(temp);
             m_Blocks.back()->SetImage(imagePaths[imgidx[i]]);
         }else {
             m_Blocks.push_back(std::make_shared<ImmovableBlock>());
@@ -179,11 +183,22 @@ std::vector<std::shared_ptr<Block>> BlockManager::GetBlocks(){
 
 void BlockManager::UpdatePropsAnimation() {
     for (int i = 0; i < m_Blocks.size(); i++) {
-        auto mystery = std::dynamic_pointer_cast<MysteryBlock>(m_Blocks[i]);
-        if (mystery) {
-            auto prop = mystery->GetProps();
-            if (prop) {
-                prop->Update(1.0f);
+        if (m_Blocks[i]->GetBlocktype() == Block::TYPE::CommonBlock || m_Blocks[i]->GetBlocktype() == Block::TYPE::MysteryBlock) {
+            auto block = m_Blocks[i];
+            auto common = std::dynamic_pointer_cast<CommonBlock>(block);
+            if (common) {
+                auto prop = common->GetProps();
+                if (prop) {
+                    prop->Update(1.0f);
+                }
+            }
+
+            auto mystery = std::dynamic_pointer_cast<MysteryBlock>(block);
+            if (mystery) {
+                auto prop = mystery->GetProps();
+                if (prop) {
+                    prop->Update(1.0f);
+                }
             }
         }
     }
@@ -191,20 +206,44 @@ void BlockManager::UpdatePropsAnimation() {
 
 void BlockManager::AddAllPropsCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) {
     for (int i = 0; i < m_Blocks.size(); i++) {
-        auto mystery = std::dynamic_pointer_cast<MysteryBlock>(m_Blocks[i]);
-        if (mystery) {
-            auto prop = mystery->GetProps();
-            prop->AddCollisionBlocks(blocks);
+        if (m_Blocks[i]->GetBlocktype() == Block::TYPE::CommonBlock || m_Blocks[i]->GetBlocktype() == Block::TYPE::MysteryBlock) {
+            auto block = m_Blocks[i];
+            auto common = std::dynamic_pointer_cast<CommonBlock>(block);
+            if (common) {
+                auto prop = common->GetProps();
+                if (prop) {
+                    prop->AddCollisionBlocks(blocks);
+                }
+            }
+
+            auto mystery = std::dynamic_pointer_cast<MysteryBlock>(block);
+            if (mystery) {
+                auto prop = mystery->GetProps();
+                if (prop) {
+                    prop->AddCollisionBlocks(blocks);
+                }
+            }
         }
     }
 }
 
 void BlockManager::AddAllPropsCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) {
     for (int i = 0; i < m_Blocks.size(); i++) {
-        auto mystery = std::dynamic_pointer_cast<MysteryBlock>(m_Blocks[i]);
+        auto block = m_Blocks[i];
+        auto common = std::dynamic_pointer_cast<CommonBlock>(block);
+        if (common) {
+            auto prop = common->GetProps();
+            if (prop) {
+                prop->AddCollisionBoxes(boxes);
+            }
+        }
+
+        auto mystery = std::dynamic_pointer_cast<MysteryBlock>(block);
         if (mystery) {
             auto prop = mystery->GetProps();
-            prop->AddCollisionBoxes(boxes);
+            if (prop) {
+                prop->AddCollisionBoxes(boxes);
+            }
         }
     }
 }

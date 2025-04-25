@@ -8,6 +8,7 @@
 #include "BlockManager.hpp"
 #include "BackgroundImage.hpp"
 #include "Block.hpp"
+#include "CommonBlock.hpp"
 #include "MysteryBlock.hpp"
 #include "Util/Renderer.hpp"
 
@@ -62,7 +63,16 @@ public:
     std::vector<std::shared_ptr<Util::GameObject>> GetChildren() {
         std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
         for (int i = 0; i < m_Blocks.size(); i++) {
-            auto mystery = std::dynamic_pointer_cast<MysteryBlock>(m_Blocks[i]);
+            auto block = m_Blocks[i];
+            auto common = std::dynamic_pointer_cast<CommonBlock>(block);
+            if (common) {
+                auto prop = common->GetProps();
+                if (prop) {
+                    all_obj.push_back(prop);
+                }
+            }
+
+            auto mystery = std::dynamic_pointer_cast<MysteryBlock>(block);
             if (mystery) {
                 auto prop = mystery->GetProps();
                 if (prop) {
@@ -70,9 +80,8 @@ public:
                 }
             }
 
-            all_obj.push_back(std::static_pointer_cast<Util::GameObject>(m_Blocks[i]));
+            all_obj.push_back(std::static_pointer_cast<Util::GameObject>(block));
         }
-
         return all_obj;
     }
 
