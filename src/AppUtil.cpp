@@ -92,7 +92,7 @@ void App::NextPhase() {
                 tempp = std::make_shared<FireFlower>();
                 tempp->SetImage({m_BM->propsImagePaths[prop_imgidx], m_BM->propsImagePaths[prop_imgidx+1], m_BM->propsImagePaths[prop_imgidx+2], m_BM->propsImagePaths[prop_imgidx+3], m_BM->propsImagePaths[prop_imgidx+4], m_BM->propsImagePaths[prop_imgidx+5]}, 1000, 0);
             }
-            tempp->SetScale(BLOCK_MAGNIFICATION - 1, BLOCK_MAGNIFICATION - 1);
+            tempp->SetScale(PROP_MAGNIFICATION, PROP_MAGNIFICATION);
             tempp->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
             // tempp->SetZIndex(-30);
         }

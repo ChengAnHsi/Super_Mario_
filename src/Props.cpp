@@ -4,6 +4,16 @@
 
 #include "Props.hpp"
 
+void Props::Move() {}
+
+void Props::Action(float distance) {}
+
+bool Props::GravityAndCollision(float delta) {}
+
+void Props::AfterCollisionEvents() {}
+
+void Props::UpdateAnimation(){}
+
 void Props::AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) {
     for (const auto& box : boxes) {
         collision_boxes.push_back(box);

@@ -32,10 +32,8 @@ void MagicMushroom::Update(float dt) {
 }
 
 void MagicMushroom::Action(const float distance) {
-    float goomba_x = GetPosition().x;
-    float goomba_y = GetPosition().y;
-    glm::vec2 goomba_size = m_Drawable->GetSize();
-    goomba_size *= PROP_MAGNIFICATION;
+    float char_x = GetPosition().x;
+    float char_y = GetPosition().y;
 
     const float step = BLOCK_SIZE / 4.0f;
     float remaining_distance = distance;
@@ -50,14 +48,14 @@ void MagicMushroom::Action(const float distance) {
     while (std::abs(remaining_distance) > 0.0f) {
         float step_distance = (remaining_distance > 0.0f) ? std::min(step, remaining_distance)
                                                           : std::max(-step, remaining_distance);
-        float next_x = goomba_x + step_distance;  // 計算下一幀位置
+        float next_x = char_x + step_distance;  // 計算下一幀位置
 
         for (const auto& box : collision_boxes) {
             // box had already destroyed
             if (box->GetVisible() == false) {
                 continue;
             }
-            AABBCollides({next_x, goomba_y}, box);
+            AABBCollides({next_x, char_y}, box);
             // check next step will collision or not
             if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
                 collision = true;
@@ -73,7 +71,7 @@ void MagicMushroom::Action(const float distance) {
             if (block->GetVisible() == false) {
                 continue;
             }
-            AABBCollides({next_x, goomba_y}, block);
+            AABBCollides({next_x, char_y}, block);
             // check next step will collision or not
             if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
                 collision = true;
@@ -85,8 +83,8 @@ void MagicMushroom::Action(const float distance) {
             break;
         }
 
-        goomba_x = next_x;
-        this->SetPosition(goomba_x, goomba_y);
+        char_x = next_x;
+        SetPosition(char_x, char_y);
         remaining_distance -= step_distance;
     }
 
@@ -96,10 +94,10 @@ void MagicMushroom::Action(const float distance) {
     }
 }
 
-bool MagicMushroom::AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box) {
-    glm::vec2 a = goomba_pos;
-    glm::vec2 goomba_size = this->m_Drawable->GetSize();
-    goomba_size *= PROP_MAGNIFICATION;
+bool MagicMushroom::AABBCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundImage> box) {
+    glm::vec2 a = char_pos;
+    glm::vec2 prop_size = m_Drawable->GetSize();
+    prop_size *= PROP_MAGNIFICATION;
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
@@ -107,10 +105,10 @@ bool MagicMushroom::AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<Backgroun
     b_size.y *= box->GetScale().y;
 
     X_state = CollisionState::None;
-    float aleft = a.x - goomba_size.x / 2;
-    float aright = a.x + goomba_size.x / 2;
-    float atop = a.y + goomba_size.y / 2;
-    float abottom = a.y - goomba_size.y / 2;
+    float aleft = a.x - prop_size.x / 2;
+    float aright = a.x + prop_size.x / 2;
+    float atop = a.y + prop_size.y / 2;
+    float abottom = a.y - prop_size.y / 2;
 
     float bleft = b.x - b_size.x / 2;
     float bright = b.x + b_size.x / 2;
@@ -135,10 +133,10 @@ bool MagicMushroom::AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<Backgroun
     return X_state != CollisionState::None;
 }
 
-bool MagicMushroom::CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box) {
-    glm::vec2 a = goomba_pos;
-    glm::vec2 goomba_size = this->m_Drawable->GetSize();
-    goomba_size *= PROP_MAGNIFICATION;
+bool MagicMushroom::CCDDCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundImage> box) {
+    glm::vec2 a = char_pos;
+    glm::vec2 prop_size = m_Drawable->GetSize();
+    prop_size *= PROP_MAGNIFICATION;
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
@@ -146,10 +144,10 @@ bool MagicMushroom::CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<Backgroun
     b_size.y *= box->GetScale().y;
 
     Y_state = CollisionState::None;
-    float aleft = a.x - goomba_size.x / 2;
-    float aright = a.x + goomba_size.x / 2;
-    float atop = a.y + goomba_size.y / 2;
-    float abottom = a.y - goomba_size.y / 2;
+    float aleft = a.x - prop_size.x / 2;
+    float aright = a.x + prop_size.x / 2;
+    float atop = a.y + prop_size.y / 2;
+    float abottom = a.y - prop_size.y / 2;
 
     float bleft = b.x - b_size.x / 2;
     float bright = b.x + b_size.x / 2;
@@ -175,14 +173,14 @@ bool MagicMushroom::CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<Backgroun
 }
 
 bool MagicMushroom::GravityAndCollision(const float delta) {
-    glm::vec2 prop_size = this->m_Drawable->GetSize();
+    glm::vec2 prop_size = m_Drawable->GetSize();
     prop_size *= PROP_MAGNIFICATION;
-    float goomba_x = this->GetPosition().x;
-    float goomba_y = this->GetPosition().y;
+    float char_x = GetPosition().x;
+    float char_y = GetPosition().y;
 
     // 更新垂直速度（根據重力）
     velocityY += GRAVITY * (delta / 60.0f);
-    goomba_y += velocityY * (delta / 60.0f);
+    char_y += velocityY * (delta / 60.0f);
 
     bool collision = false;
     for (const auto &box : collision_boxes){
@@ -194,18 +192,18 @@ bool MagicMushroom::GravityAndCollision(const float delta) {
         b_size.x *= box->GetScale().x;
         b_size.y *= box->GetScale().y;
 
-        collision = CCDDCollides({goomba_x, goomba_y}, box);
+        collision = CCDDCollides({char_x, char_y}, box);
 
         if (Y_state == CollisionState::Bottom) {
-            goomba_y = box->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
+            char_y = box->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
             velocityY = 0;
-            this->SetPosition(goomba_x, goomba_y);
+            this->SetPosition(char_x, char_y);
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
             // 固定在方塊下方開始下墜
-            goomba_y = box->GetTransform().translation.y - b_size.y / 2 - prop_size.y / 2;
-            this->SetPosition(goomba_x, goomba_y);
+            char_y = box->GetTransform().translation.y - b_size.y / 2 - prop_size.y / 2;
+            this->SetPosition(char_x, char_y);
             break;
         }
     }
@@ -218,20 +216,30 @@ bool MagicMushroom::GravityAndCollision(const float delta) {
         b_size.x *= block->GetScale().x;
         b_size.y *= block->GetScale().y;
 
-        collision = CCDDCollides({goomba_x, goomba_y}, block);
+        collision = CCDDCollides({char_x, char_y}, block);
 
         if (Y_state == CollisionState::Bottom) {
             // 固定瑪利歐在地板位置
-            goomba_y = block->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
+            char_y = block->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
             velocityY = 0;
-            this->SetPosition(goomba_x, goomba_y);
+            this->SetPosition(char_x, char_y);
             return false;  // 碰撞到地面，不在滯空狀態
         }
     }
-    this->SetPosition(goomba_x, goomba_y);
+    this->SetPosition(char_x, char_y);
 
     // 如果沒有碰撞，表示在滯空狀態
     return !collision;
+}
+
+void MagicMushroom::UpdateAnimation() {
+    if (isFacingRight == false) {
+        m_Transform.scale = glm::vec2{-MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
+    }
+
+    if (isFacingRight)  {
+        m_Transform.scale = glm::vec2{MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
+    }
 }
 
 void MagicMushroom::OnUpdate(const float delta) {
@@ -248,6 +256,8 @@ void MagicMushroom::OnUpdate(const float delta) {
     }
 
     GravityAndCollision(3 * delta);
+
+    UpdateAnimation();
 
     Action(distance);
 }

@@ -28,7 +28,6 @@ public:
 
 private:
     bool is_spawning = false;
-    PropsState state = PropsState::Not_Activated;
     float remaining_distance = BLOCK_SIZE;
     float velocityY = 0.0f; // 角色在 Y 軸的速度
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位

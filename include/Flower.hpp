@@ -1,9 +1,11 @@
-// Modified Flower.hpp
+//
+// Created by 112590007 on 2025/4/25.
+//
+
 #ifndef FLOWER_HPP
 #define FLOWER_HPP
 
 #include "Enemy.hpp"
-#include "Block.hpp"
 #include "CollisionState.hpp"
 
 class Flower : public Enemy {

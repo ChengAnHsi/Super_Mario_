@@ -15,13 +15,15 @@ public:
 
     Props() = default;
 
-    virtual void Move() = 0;
-    virtual void Action(float distance) = 0;
-    virtual bool GravityAndCollision(float delta) = 0;
+    virtual void Move();
+    virtual void Action(float distance);
+    virtual bool GravityAndCollision(float delta);
+
+    virtual void UpdateAnimation();
 
     virtual void SpawnProps() = 0;
     virtual void Update(float dt) = 0;
-    virtual void AfterCollisionEvents() = 0;
+    virtual void AfterCollisionEvents();
 
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
@@ -33,6 +35,7 @@ protected:
     bool isFacingRight = true;
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
+    PropsState state = PropsState::Not_Activated;
 private:
     bool iscollision = false;
 };

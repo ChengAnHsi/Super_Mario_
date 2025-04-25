@@ -48,7 +48,7 @@ BlockManager::BlockManager() {
                 tempp = std::make_shared<FireFlower>();
                 tempp->SetImage({propsImagePaths[prop_imgidx], propsImagePaths[prop_imgidx+1], propsImagePaths[prop_imgidx+2], propsImagePaths[prop_imgidx+3], propsImagePaths[prop_imgidx+4], propsImagePaths[prop_imgidx+5]}, 1000, 0);
             }
-            tempp->SetScale(BLOCK_MAGNIFICATION - 1, BLOCK_MAGNIFICATION - 1);
+            tempp->SetScale(PROP_MAGNIFICATION, PROP_MAGNIFICATION);
             tempp->SetPosition(m_PositionX[i],m_PositionY[i]);
             // tempp->SetZIndex(-30);
         }

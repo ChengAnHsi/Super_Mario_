@@ -47,6 +47,7 @@ add_executable(${PROJECT_NAME}
         src/MysteryBlock.cpp
         src/CommonBlock.cpp
         src/ImmovableBlock.cpp
+        src/Coin.cpp
 )
 
 if(MSVC)

@@ -96,10 +96,10 @@ void FireFlower::Action(const float distance) {
     }
 }
 
-bool FireFlower::AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box) {
-    glm::vec2 a = goomba_pos;
-    glm::vec2 goomba_size = this->m_Drawable->GetSize();
-    goomba_size *= GOOMBA_MAGNIFICATION;
+bool FireFlower::AABBCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundImage> box) {
+    glm::vec2 a = char_pos;
+    glm::vec2 prop_size = m_Drawable->GetSize();
+    prop_size *= PROP_MAGNIFICATION;
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
@@ -107,10 +107,10 @@ bool FireFlower::AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundIm
     b_size.y *= box->GetScale().y;
 
     X_state = CollisionState::None;
-    float aleft = a.x - goomba_size.x / 2;
-    float aright = a.x + goomba_size.x / 2;
-    float atop = a.y + goomba_size.y / 2;
-    float abottom = a.y - goomba_size.y / 2;
+    float aleft = a.x - prop_size.x / 2;
+    float aright = a.x + prop_size.x / 2;
+    float atop = a.y + prop_size.y / 2;
+    float abottom = a.y - prop_size.y / 2;
 
     float bleft = b.x - b_size.x / 2;
     float bright = b.x + b_size.x / 2;
@@ -135,10 +135,10 @@ bool FireFlower::AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundIm
     return X_state != CollisionState::None;
 }
 
-bool FireFlower::CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box) {
-    glm::vec2 a = goomba_pos;
-    glm::vec2 goomba_size = this->m_Drawable->GetSize();
-    goomba_size *= GOOMBA_MAGNIFICATION;
+bool FireFlower::CCDDCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundImage> box) {
+    glm::vec2 a = char_pos;
+    glm::vec2 prop_size = m_Drawable->GetSize();
+    prop_size *= PROP_MAGNIFICATION;
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
@@ -146,10 +146,10 @@ bool FireFlower::CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundIm
     b_size.y *= box->GetScale().y;
 
     Y_state = CollisionState::None;
-    float aleft = a.x - goomba_size.x / 2;
-    float aright = a.x + goomba_size.x / 2;
-    float atop = a.y + goomba_size.y / 2;
-    float abottom = a.y - goomba_size.y / 2;
+    float aleft = a.x - prop_size.x / 2;
+    float aright = a.x + prop_size.x / 2;
+    float atop = a.y + prop_size.y / 2;
+    float abottom = a.y - prop_size.y / 2;
 
     float bleft = b.x - b_size.x / 2;
     float bright = b.x + b_size.x / 2;
@@ -176,13 +176,13 @@ bool FireFlower::CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundIm
 
 bool FireFlower::GravityAndCollision(const float delta) {
     glm::vec2 prop_size = this->m_Drawable->GetSize();
-    prop_size *= GOOMBA_MAGNIFICATION;
-    float goomba_x = this->GetPosition().x;
-    float goomba_y = this->GetPosition().y;
+    prop_size *= PROP_MAGNIFICATION;
+    float char_x = this->GetPosition().x;
+    float char_y = this->GetPosition().y;
 
     // 更新垂直速度（根據重力）
     velocityY += GRAVITY * (delta / 60.0f);
-    goomba_y += velocityY * (delta / 60.0f);
+    char_y += velocityY * (delta / 60.0f);
 
     bool collision = false;
     for (const auto &box : collision_boxes){
@@ -194,18 +194,18 @@ bool FireFlower::GravityAndCollision(const float delta) {
         b_size.x *= box->GetScale().x;
         b_size.y *= box->GetScale().y;
 
-        collision = CCDDCollides({goomba_x, goomba_y}, box);
+        collision = CCDDCollides({char_x, char_y}, box);
 
         if (Y_state == CollisionState::Bottom) {
-            goomba_y = box->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
+            char_y = box->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
             velocityY = 0;
-            this->SetPosition(goomba_x, goomba_y);
+            this->SetPosition(char_x, char_y);
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
             // 固定在方塊下方開始下墜
-            goomba_y = box->GetTransform().translation.y - b_size.y / 2 - prop_size.y / 2;
-            this->SetPosition(goomba_x, goomba_y);
+            char_y = box->GetTransform().translation.y - b_size.y / 2 - prop_size.y / 2;
+            this->SetPosition(char_x, char_y);
             break;
         }
     }
@@ -218,17 +218,17 @@ bool FireFlower::GravityAndCollision(const float delta) {
         b_size.x *= block->GetScale().x;
         b_size.y *= block->GetScale().y;
 
-        collision = CCDDCollides({goomba_x, goomba_y}, block);
+        collision = CCDDCollides({char_x, char_y}, block);
 
         if (Y_state == CollisionState::Bottom) {
             // 固定瑪利歐在地板位置
-            goomba_y = block->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
+            char_y = block->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
             velocityY = 0;
-            this->SetPosition(goomba_x, goomba_y);
+            this->SetPosition(char_x, char_y);
             return false;  // 碰撞到地面，不在滯空狀態
         }
     }
-    this->SetPosition(goomba_x, goomba_y);
+    this->SetPosition(char_x, char_y);
 
     // 如果沒有碰撞，表示在滯空狀態
     return !collision;

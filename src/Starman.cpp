@@ -32,10 +32,8 @@ void Starman::Update(float dt) {
 }
 
 void Starman::Action(const float distance) {
-    float goomba_x = GetPosition().x;
-    float goomba_y = GetPosition().y;
-    glm::vec2 goomba_size = m_Drawable->GetSize();
-    goomba_size *= GOOMBA_MAGNIFICATION;
+    float char_x = GetPosition().x;
+    float char_y = GetPosition().y;
 
     const float step = BLOCK_SIZE / 4.0f;
     float remaining_distance = distance;
@@ -50,14 +48,14 @@ void Starman::Action(const float distance) {
     while (std::abs(remaining_distance) > 0.0f) {
         float step_distance = (remaining_distance > 0.0f) ? std::min(step, remaining_distance)
                                                           : std::max(-step, remaining_distance);
-        float next_x = goomba_x + step_distance;  // 計算下一幀位置
+        float next_x = char_x + step_distance;  // 計算下一幀位置
 
         for (const auto& box : collision_boxes) {
             // box had already destroyed
             if (box->GetVisible() == false) {
                 continue;
             }
-            AABBCollides({next_x, goomba_y}, box);
+            AABBCollides({next_x, char_y}, box);
             // check next step will collision or not
             if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
                 collision = true;
@@ -73,7 +71,7 @@ void Starman::Action(const float distance) {
             if (block->GetVisible() == false) {
                 continue;
             }
-            AABBCollides({next_x, goomba_y}, block);
+            AABBCollides({next_x, char_y}, block);
             // check next step will collision or not
             if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
                 collision = true;
@@ -85,8 +83,8 @@ void Starman::Action(const float distance) {
             break;
         }
 
-        goomba_x = next_x;
-        this->SetPosition(goomba_x, goomba_y);
+        char_x = next_x;
+        this->SetPosition(char_x, char_y);
         remaining_distance -= step_distance;
     }
 
@@ -96,10 +94,10 @@ void Starman::Action(const float distance) {
     }
 }
 
-bool Starman::AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box) {
-    glm::vec2 a = goomba_pos;
-    glm::vec2 goomba_size = this->m_Drawable->GetSize();
-    goomba_size *= GOOMBA_MAGNIFICATION;
+bool Starman::AABBCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundImage> box) {
+    glm::vec2 a = char_pos;
+    glm::vec2 prop_size = m_Drawable->GetSize();
+    prop_size *= PROP_MAGNIFICATION;
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
@@ -107,10 +105,10 @@ bool Starman::AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage
     b_size.y *= box->GetScale().y;
 
     X_state = CollisionState::None;
-    float aleft = a.x - goomba_size.x / 2;
-    float aright = a.x + goomba_size.x / 2;
-    float atop = a.y + goomba_size.y / 2;
-    float abottom = a.y - goomba_size.y / 2;
+    float aleft = a.x - prop_size.x / 2;
+    float aright = a.x + prop_size.x / 2;
+    float atop = a.y + prop_size.y / 2;
+    float abottom = a.y - prop_size.y / 2;
 
     float bleft = b.x - b_size.x / 2;
     float bright = b.x + b_size.x / 2;
@@ -135,10 +133,10 @@ bool Starman::AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage
     return X_state != CollisionState::None;
 }
 
-bool Starman::CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box) {
-    glm::vec2 a = goomba_pos;
-    glm::vec2 goomba_size = this->m_Drawable->GetSize();
-    goomba_size *= GOOMBA_MAGNIFICATION;
+bool Starman::CCDDCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundImage> box) {
+    glm::vec2 a = char_pos;
+    glm::vec2 prop_size = m_Drawable->GetSize();
+    prop_size *= PROP_MAGNIFICATION;
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
@@ -146,10 +144,10 @@ bool Starman::CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage
     b_size.y *= box->GetScale().y;
 
     Y_state = CollisionState::None;
-    float aleft = a.x - goomba_size.x / 2;
-    float aright = a.x + goomba_size.x / 2;
-    float atop = a.y + goomba_size.y / 2;
-    float abottom = a.y - goomba_size.y / 2;
+    float aleft = a.x - prop_size.x / 2;
+    float aright = a.x + prop_size.x / 2;
+    float atop = a.y + prop_size.y / 2;
+    float abottom = a.y - prop_size.y / 2;
 
     float bleft = b.x - b_size.x / 2;
     float bright = b.x + b_size.x / 2;
@@ -251,6 +249,16 @@ bool Starman::GravityAndCollision(const float delta) {
     return !collision;
 }
 
+void Starman::UpdateAnimation() {
+    if (isFacingRight == false) {
+        m_Transform.scale = glm::vec2{-MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
+    }
+
+    if (isFacingRight)  {
+        m_Transform.scale = glm::vec2{MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
+    }
+}
+
 void Starman::OnUpdate(const float delta) {
     float distance = velocityX * delta;
 
@@ -269,6 +277,8 @@ void Starman::OnUpdate(const float delta) {
     if (!isJumping) {
         Jump();  // 自動連續跳
     }
+
+    UpdateAnimation();
 
     Action(distance);
 }
