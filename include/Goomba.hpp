@@ -8,7 +8,7 @@
 #include "Enemy.hpp"
 #include "Block.hpp"
 #include "CollisionState.hpp"
-
+#include "Mario.hpp"
 class Goomba : public Enemy{
 public:
     Goomba() = default;
@@ -32,8 +32,11 @@ public:
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) override;
     void ClearCollisionBoxes() override;
     void ClearCollisionBlocks() override;
+    bool CheckMarioCollision(std::shared_ptr<Mario> mario);
+    void KillGoomba();
+    bool IsDead() const { return is_dead; }
     // TODO 被擊倒動畫
-
+    bool is_dead = false;
 private:
     int live = 1;
     // 被擊倒的分數
@@ -54,9 +57,11 @@ private:
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/Overworld/goomba0.png",RESOURCE_DIR"/Entities/Overworld/goomba1.png"};
     std::vector<std::string> AnimationUnderWorldRun = {RESOURCE_DIR"/Entities/Underworld/goomba0.png",RESOURCE_DIR"/Entities/Underworld/goomba1.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/Overworld/goombaDead.png"};
-    std::vector<std::string> AnimationUnderWorldDead = {RESOURCE_DIR"/Entities/Overworld/goombaDead.png"};
+    std::vector<std::string> AnimationUnderWorldDead = {RESOURCE_DIR"/Entities/Underworld/goombaDead.png"};
 
-    bool is_dead = false;
+
+    float death_timer = 0.0f;
+    const float DEATH_ANIMATION_TIME = 80.0f;
     bool is_set_runanimation = false;
 };
 #endif //GOOMBA_HPP

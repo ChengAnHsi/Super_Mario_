@@ -29,6 +29,7 @@ public:
     // move function
     void OnJump();
     void OnSmallJump();
+    void OnKillJump();
     void OnRun(float distance);
     float Move();
     float OnUpdate(float delta);
@@ -53,7 +54,8 @@ public:
     void ClearCollisionBoxes();
     void ClearCollectibles();
     void ClearCollisionBlocks();
-
+    float velocityY = 0.0f;      // 角色在 Y 軸的速度
+    bool is_dead = false;
 private:
     int coin = 0;
     int live = 3;
@@ -74,7 +76,7 @@ private:
     float delta_time = 1.0f;
     float run_velocity = 5.0f;
     float jump_velocity = 12.7f;
-    float velocityY = 0.0f;      // 角色在 Y 軸的速度
+
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
     float JUMP_VELOCITY = 360.0f; // 跳躍初速度
     float SMALL_JUMP_VELOCITY = 250.0f; // 小跳躍初速度
@@ -94,7 +96,7 @@ private:
     std::vector<std::string> AnimationStandGrow = {RESOURCE_DIR"/Entities/mario_grown_stand.png"};
 
     bool is_grow = false;
-    bool is_dead = false;
+
 };
 #endif //MARIO_HPP
 

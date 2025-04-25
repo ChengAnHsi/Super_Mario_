@@ -1,7 +1,94 @@
 #include "Goomba.hpp"
 #include "BlockManager.hpp"
 #include "Global.hpp"
+#include "Mario.hpp"
+#include "App.hpp"
+bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
+    if (is_dead || !GetVisible() || mario->is_dead) {
+        return false; // No collision if already dead or not visible
+    }
 
+    glm::vec2 goomba_pos = GetPosition();
+    glm::vec2 goomba_size = m_Drawable->GetSize();
+    goomba_size *= GOOMBA_MAGNIFICATION;
+
+    glm::vec2 mario_pos = mario->GetPosition();
+    glm::vec2 mario_size = this->m_Drawable->GetSize();
+    mario_size *= MARIO_MAGNIFICATION;
+
+    // Calculate bounding boxes
+    float goomba_left = goomba_pos.x - goomba_size.x / 2;
+    float goomba_right = goomba_pos.x + goomba_size.x / 2;
+    float goomba_top = goomba_pos.y + goomba_size.y / 2;
+    float goomba_bottom = goomba_pos.y - goomba_size.y / 2;
+
+    float mario_left = mario_pos.x - mario_size.x / 2;
+    float mario_right = mario_pos.x + mario_size.x / 2;
+    float mario_top = mario_pos.y + mario_size.y / 2;
+    float mario_bottom = mario_pos.y - mario_size.y / 2;
+
+    // Check for collision
+    bool collision_x = (mario_left < goomba_right) && (mario_right > goomba_left);
+    bool collision_y = (mario_bottom < goomba_top) && (mario_top > goomba_bottom);
+
+    if (collision_x && collision_y) {
+        // Calculate the vertical velocity direction
+        bool mario_moving_down = mario->velocityY <= 0;
+
+        // Calculate vertical overlap percentage to determine stomping
+        float vertical_overlap = std::min(mario_top, goomba_top) - std::max(mario_bottom, goomba_bottom);
+        float mario_height = mario_top - mario_bottom;
+        float overlap_percentage = vertical_overlap / mario_height;
+
+        // Check if Mario is above Goomba (stepping on it)
+        // We consider Mario is stepping on Goomba if:
+        // 1. Mario's bottom is near Goomba's top
+        // 2. Mario is moving downward (falling)
+        // 3. The vertical overlap is small compared to Mario's height
+        float overlap_threshold = 12.0f; // Allow a slightly larger overlap
+
+        if ((mario_bottom <= goomba_top + overlap_threshold) &&
+            mario_moving_down &&
+            overlap_percentage < 0.5f) {
+
+            // Mario is stepping on Goomba from above
+            KillGoomba();
+            // Make Mario bounce with a small jump
+            mario->OnKillJump();
+            // Increase Mario's score
+            mario->IncreaseScore(score);
+            return true;
+        } else {
+            // Collision from the side or bottom - Mario gets hurt if not invincible
+            if (mario->GetLive() > 0) {
+                mario->SetLive(mario->GetLive() - 1);
+
+                // Play hurt sound effect
+                std::shared_ptr<Util::SFX> hurt_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/powerdown.mp3");
+                if (hurt_sfx) {
+                    hurt_sfx->SetVolume(100);
+                    hurt_sfx->Play();
+                }
+            }
+        }
+    }
+    return false;
+}
+
+void Goomba::KillGoomba() {
+    if (GetLive() > 0) {
+        SetLive(0); // This will trigger the death animation
+        is_dead = true; // Set the death flag
+        death_timer = 0.0f; // Reset the death timer
+
+        // Play a sound effect for Goomba death
+        std::shared_ptr<Util::SFX> death_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/goomba_stomp.wav");
+        if (death_sfx) {
+            death_sfx->SetVolume(200);
+            death_sfx->Play();
+        }
+    }
+}
 void Goomba::Action(const float distance) {
     float goomba_x = GetPosition().x;
     float goomba_y = GetPosition().y;
@@ -222,25 +309,27 @@ void Goomba::UpdateAnimation() {
 }
 
 void Goomba::OnUpdate(const float delta) {
+    if (is_dead) {
+        death_timer += delta;
+        if (death_timer >= DEATH_ANIMATION_TIME) {
+            // After the animation time, make the Goomba disappear
+            SetVisible(false);
+        }
+        return; // Skip normal updates if dead
+    }
+
+    // Normal update logic for living Goomba
     float distance = GetMoveVelocity() * delta;
 
     // facing left
     if (isFacingRight == false) {
-        //m_Transform.scale = glm::vec2{-GOOMBA_MAGNIFICATION, GOOMBA_MAGNIFICATION};
         distance *= -1;
-    }
-    // facing right
-    if (isFacingRight == true)  {
-        //m_Transform.scale = glm::vec2{GOOMBA_MAGNIFICATION, GOOMBA_MAGNIFICATION};
     }
 
     GravityAndCollision(3 * delta);
-
     UpdateAnimation();
-
     Action(distance);
 }
-
 void Goomba::Move(){
     if (!GetMoving()) return;
     OnUpdate(1);
@@ -259,9 +348,11 @@ void Goomba::SetLive(const int live) {
     if (live == 0) {
         if (GetOverworld() == true) {
             SetImage(AnimationDead, 1000, 0);
-        }else {
+        } else {
             SetImage(AnimationUnderWorldDead, 1000, 0);
         }
+        is_dead = true; // Set the death flag
+        death_timer = 0.0f; // Reset the death timer
     }
 }
 

@@ -414,7 +414,7 @@ void FlyKoopa::ConvertToUnfly() {
 void FlyKoopa::SetMoveVelocity(float speed)
 {
     velocityX = speed;
-    
+
 }
 void FlyKoopa::ConvertToShell() {
     // 只在非飛行、非龜殼狀態下轉換

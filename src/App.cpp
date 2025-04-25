@@ -82,6 +82,9 @@ void App::Update() {
         // when mario move show coins he got
         m_PRM->SetCoin(m_Mario->GetCoin());
         m_BM->UpdatePropsAnimation();
+
+        // Add this line to check for collisions with enemies
+        m_EM->CheckMarioCollisions(m_Mario);
     }
 
     // Camera cannot move left
