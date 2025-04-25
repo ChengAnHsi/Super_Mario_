@@ -39,19 +39,18 @@ void Mario::OnSmallJump() {
 
     }
 }
-void Mario::OnKillJump() {
-        velocityY = SMALL_JUMP_VELOCITY;
-        state = MarioState::Jump;
-        if(is_grow) {
-            this->SetImages(AnimationJumpGrow, 100, 0);
-        }else {
-            this->SetImages(AnimationJump, 100, 0);
-        }
 
+void Mario::OnKillJump() {
+    velocityY = SMALL_JUMP_VELOCITY;
+    state = MarioState::Jump;
+    if(is_grow) {
+        this->SetImages(AnimationJumpGrow, 100, 0);
+    }else {
+        this->SetImages(AnimationJump, 100, 0);
+    }
 }
 
 void Mario::OnRun(const float distance) {
-
     if (distance == 0) return;
 
     float mario_x = GetPosition().x;

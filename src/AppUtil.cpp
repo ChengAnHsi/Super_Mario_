@@ -87,7 +87,7 @@ void App::NextPhase() {
                 tempp->SetImage(m_BM->propsImagePaths[prop_imgidx]);
             }else if (prop_imgidx == 2) {
                 tempp = std::make_shared<Starman>();
-                tempp->SetImage({m_BM->propsImagePaths[prop_imgidx], m_BM->propsImagePaths[prop_imgidx+1], m_BM->propsImagePaths[prop_imgidx+2], m_BM->propsImagePaths[prop_imgidx+3], m_BM->propsImagePaths[prop_imgidx+4], m_BM->propsImagePaths[prop_imgidx+5]}, 1000, 0);
+                tempp->SetImage({m_BM->propsImagePaths[prop_imgidx], m_BM->propsImagePaths[prop_imgidx+1], m_BM->propsImagePaths[prop_imgidx+2], m_BM->propsImagePaths[prop_imgidx+3], m_BM->propsImagePaths[prop_imgidx+4], m_BM->propsImagePaths[prop_imgidx+5]}, 200, 0);
             }else if (prop_imgidx == 8) {
                 tempp = std::make_shared<FireFlower>();
                 tempp->SetImage({m_BM->propsImagePaths[prop_imgidx], m_BM->propsImagePaths[prop_imgidx+1], m_BM->propsImagePaths[prop_imgidx+2], m_BM->propsImagePaths[prop_imgidx+3], m_BM->propsImagePaths[prop_imgidx+4], m_BM->propsImagePaths[prop_imgidx+5]}, 1000, 0);

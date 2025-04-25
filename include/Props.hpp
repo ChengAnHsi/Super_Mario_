@@ -18,7 +18,6 @@ public:
     virtual void Move() = 0;
     virtual void Action(float distance) = 0;
     virtual bool GravityAndCollision(float delta) = 0;
-    virtual void UpdateAnimation() = 0;
 
     virtual void SpawnProps() = 0;
     virtual void Update(float dt) = 0;

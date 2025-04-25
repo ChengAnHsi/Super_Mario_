@@ -234,22 +234,6 @@ bool MagicMushroom::GravityAndCollision(const float delta) {
     return !collision;
 }
 
-void MagicMushroom::UpdateAnimation() {
-    //float distance = move_velocity * delta;
-
-    // facing left
-    // if (isFacingRight == false) {
-    //     m_Transform.scale = glm::vec2{-GOOMBA_MAGNIFICATION, GOOMBA_MAGNIFICATION};
-    //     //distance *= -1;
-    // }
-    // facing right
-    // if (isFacingRight == true)  {
-    //     m_Transform.scale = glm::vec2{GOOMBA_MAGNIFICATION, GOOMBA_MAGNIFICATION};
-    // }
-
-	//Action(move_velocity);
-}
-
 void MagicMushroom::OnUpdate(const float delta) {
     float distance = velocityX * delta;
 
@@ -264,8 +248,6 @@ void MagicMushroom::OnUpdate(const float delta) {
     }
 
     GravityAndCollision(3 * delta);
-
-    UpdateAnimation();
 
     Action(distance);
 }
