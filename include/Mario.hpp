@@ -56,13 +56,21 @@ public:
     void ClearCollisionBlocks();
     float velocityY = 0.0f;      // 角色在 Y 軸的速度
     bool is_dead = false;
+    void Die(); // Handle Mario's death sequence
+    void UpdateDeadState(float delta); // Update function for when Mario is dead
 private:
     int coin = 0;
     int live = 3;
     int score = 0;
     bool is_left_key_down = false;
     bool is_right_key_down = false;
-
+    
+    // Add these variables to track death state
+    bool is_dying = false; // Transitional state between alive and dead
+    float death_timer = 0.0f;
+    const float DEATH_PAUSE_TIME = 60.0f; // 1 second at 60fps
+    const float DEATH_JUMP_VELOCITY = 300.0f;
+    bool collision_enabled = true;
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
     std::vector<std::shared_ptr<BackgroundImage>> collision_collectibles;

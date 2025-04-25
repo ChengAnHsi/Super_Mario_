@@ -64,7 +64,16 @@ void App::Update() {
         m_EM->SetEnemyMoving();
 
     }
-
+    if(m_Mario->GetPosition().y < -360) {
+        if (!m_Mario->is_dead) {
+            m_Mario->SetLive(m_Mario->GetLive() - 1);
+            if (m_Mario->GetLive() <= 0) {
+                m_Mario->Die(); // Call our new death function
+            } else {
+                m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, 300.0f});
+            }
+        }
+    }
     if(m_PRM->GetTime() == 0) {
         m_Mario->SetLive(m_Mario->GetLive() - 1);
         if (m_Mario->GetLive() == 0) {

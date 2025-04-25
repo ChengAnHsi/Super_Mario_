@@ -328,7 +328,56 @@ void Mario::UpdateAnimation() {
         }
     }
 }
+void Mario::Die() {
+    if (is_dead) return; // Already dead
 
+    if (is_grow) {
+        // If Mario is grown, shrink him and play powerdown sound
+        is_grow = false;
+        this->SetImages(this->AnimationStand, 100, 0);
+        std::shared_ptr<Util::SFX> powerdown_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/powerdown.mp3");
+        powerdown_sfx->SetVolume(70);
+        powerdown_sfx->Play();
+    } else {
+        // Mario dies
+        is_dying = true;
+        is_dead = true;
+        death_timer = 0.0f;
+        collision_enabled = false; // Disable collisions
+
+        // Play death sound
+        std::shared_ptr<Util::SFX> death_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/mario_die.mp3");
+        death_sfx->SetVolume(70);
+        death_sfx->Play();
+
+        // Set death animation
+        this->SetImages(AnimationDead, 100, 0);
+        this->SetPlaying(true);
+        this->SetLooping(false);
+    }
+}
+
+void Mario::UpdateDeadState(float delta) {
+    if (!is_dying || !is_dead) return;
+
+    death_timer += delta;
+
+    if (death_timer <= DEATH_PAUSE_TIME) {
+        // Just wait during the pause time - freeze position
+        return;
+    } else if (death_timer == DEATH_PAUSE_TIME + 1) {
+        // Initial jump velocity right after pause time
+        velocityY = DEATH_JUMP_VELOCITY;
+    }
+
+    // Apply gravity after the pause
+    velocityY += GRAVITY * (delta / 60.0f);
+
+    // Update position without collision checks
+    float mario_x = GetPosition().x;
+    float mario_y = GetPosition().y + velocityY * (delta / 60.0f);
+    this->SetPosition({mario_x, mario_y});
+}
 float Mario::OnUpdate(const float delta) {
     // update moving
     const int direction = is_right_key_down - is_left_key_down;
@@ -345,8 +394,8 @@ float Mario::OnUpdate(const float delta) {
 
 float Mario::Move() {
     if (is_dead) {
-        this->SetImages(this->AnimationDead, 100, 0);
-        return 0.0f;
+        UpdateDeadState(1.0f);
+        return 0.0f; // No camera movement when dead
     }
 
     if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
