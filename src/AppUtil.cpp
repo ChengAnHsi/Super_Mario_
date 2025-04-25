@@ -60,8 +60,8 @@ void App::NextPhase() {
     std::vector tmpx = m_BM->GetX(static_cast<int>(m_Phase));
     std::vector tmpy = m_BM->GetY(static_cast<int>(m_Phase));
     std::vector tmpidx = m_BM->Getidx(static_cast<int>(m_Phase));
-    std::vector propsx = m_BM->Getpropsidx(static_cast<int>(m_Phase));
-    std::vector propsy = m_BM->Getpropsidx(static_cast<int>(m_Phase));
+    std::vector propsx = m_BM->GetpropsX(static_cast<int>(m_Phase));
+    std::vector propsy = m_BM->GetpropsY(static_cast<int>(m_Phase));
     std::vector propsidx = m_BM->Getpropsidx(static_cast<int>(m_Phase));
 
     int imgidx_size = tmpidx.size();
