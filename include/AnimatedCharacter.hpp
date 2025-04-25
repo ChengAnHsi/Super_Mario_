@@ -21,6 +21,10 @@ public:
         return std::dynamic_pointer_cast<Util::Animation>(m_Drawable)->GetState() == Util::Animation::State::PLAY;
     }
 
+    glm::vec2 GetSize() {
+        return m_Drawable->GetSize();
+    }
+
     void SetImages(const std::vector<std::string>& AnimationPaths, int interval, int cooldown) {
         m_Drawable = std::make_shared<Util::Animation>(AnimationPaths, IsPlaying(), interval, IsLooping(), cooldown);
     }

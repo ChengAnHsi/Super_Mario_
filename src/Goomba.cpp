@@ -13,7 +13,7 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     goomba_size *= GOOMBA_MAGNIFICATION;
 
     glm::vec2 mario_pos = mario->GetPosition();
-    glm::vec2 mario_size = this->m_Drawable->GetSize();
+    glm::vec2 mario_size = mario->GetSize();
     mario_size *= MARIO_MAGNIFICATION;
 
     // Calculate bounding boxes
