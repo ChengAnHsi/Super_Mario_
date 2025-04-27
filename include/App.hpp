@@ -11,6 +11,7 @@
 #include "AnimatedCharacter.hpp"
 #include "Mario.hpp"
 #include "EnemyManager.hpp"
+
 class App {
 public:
     enum class State {
@@ -28,7 +29,7 @@ public:
     void End(); // NOLINT(readability-convert-member-functions-to-static)
 
 private:
-    void ValidTask();
+    void ValidTask(bool is_nextphase);
     void NextPhase();
 
     enum class Phase {

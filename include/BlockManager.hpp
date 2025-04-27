@@ -53,6 +53,10 @@ public:
         RESOURCE_DIR"/Collectibles/Underworld/fire_flower3.png",//15
     };
 
+    void UpdatePropsAnimation() const;
+    void AddAllPropsCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) const;
+    void AddAllPropsCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) const;
+
     std::vector<int> GetX(int phase);
     std::vector<int> GetY(int phase);
     std::vector<int> Getidx(int phase);
@@ -60,38 +64,10 @@ public:
     std::vector<int> GetpropsY(int phase);
     std::vector<int> Getpropsidx(int phase);
 
-    std::vector<std::shared_ptr<Util::GameObject>> GetChildren() {
-        std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
-        for (int i = 0; i < m_Blocks.size(); i++) {
-            auto block = m_Blocks[i];
-            auto common = std::dynamic_pointer_cast<CommonBlock>(block);
-            if (common) {
-                auto prop = common->GetProps();
-                if (prop) {
-                    all_obj.push_back(prop);
-                }
-            }
-
-            auto mystery = std::dynamic_pointer_cast<MysteryBlock>(block);
-            if (mystery) {
-                auto prop = mystery->GetProps();
-                if (prop) {
-                    all_obj.push_back(prop);
-                }
-            }
-
-            all_obj.push_back(std::static_pointer_cast<Util::GameObject>(block));
-        }
-        return all_obj;
-    }
-
-    std::vector<std::shared_ptr<BackgroundImage>> GetBackground();
-    void UpdatePropsAnimation();
-    void AddAllPropsCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
-    void AddAllPropsCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
-    std::vector<std::shared_ptr<Block>> GetBlocks();
+    std::vector<std::shared_ptr<Util::GameObject>> GetChildren();
+    std::vector<std::shared_ptr<BackgroundImage>> GetBackground() const;
     void SetBlocks(std::vector<std::shared_ptr<Block>> blocks);
-    std::vector<float> GetPosX();
+    std::vector<std::shared_ptr<Block>> GetBlocks();
 
 private:
     // 0-1: block, 2-3: floor, 4-5: immovable block, 6-11: mistery block, platform: 12-15
@@ -218,8 +194,6 @@ private:
     std::vector<int> props_imgidx3 = {1,8};
 
     std::vector<std::shared_ptr<Block>> m_Blocks;
-    std::vector<float> m_PositionX;
-    std::vector<float> m_PositionY;
 };
 
 #endif //BLOCKMANAGER_HPP

@@ -4,9 +4,7 @@
 #include "Util/GameObject.hpp"
 #include "Util/BGM.hpp"
 #include "TaskText.hpp"
-#include "BlockManager.hpp"
 #include "BackgroundImage.hpp"
-#include "Mario.hpp"
 #include <chrono>
 
 class PhaseResourceManger {
@@ -52,7 +50,7 @@ public:
     int GetTime() const;
     std::vector<std::shared_ptr<BackgroundImage>> GetBackground();
     std::vector<std::shared_ptr<BackgroundImage>> GetCollisionBoxes();
-    void SetCoin(int coin);
+    void SetCoin(int coin) const;
     std::vector<std::shared_ptr<BackgroundImage>> GetCollectibleCoins();
 
 private:
@@ -64,7 +62,6 @@ private:
     std::vector<std::shared_ptr<BackgroundImage>> m_Background;
     std::vector<std::shared_ptr<BackgroundImage>> m_CollisionBoxes;
     std::vector<std::shared_ptr<BackgroundImage>> m_CollectibleCoins;
-    //std::shared_ptr<Mario> m_Mario;
 
     int time = 400;
     std::chrono::steady_clock::time_point last_update;
@@ -95,27 +92,27 @@ private:
     // coin position
     // map 1-2
     std::vector<int> coin_x2 = {41,42,43,44,84,85,86,87,88,89,
-    40,45,58,59,60,61,68};
+        40,45,58,59,60,61,68};
     std::vector<int> coin_y2 = {9,9,9,9,9,9,9,9,9,9,
-    6,6,6,6,6,6,6};
+        6,6,6,6,6,6,6};
     std::vector<int> coin_imgidx2 = {7,7,7,7,7,7,7,7,7,7,
-    7,7,7,7,7,7,7};
+        7,7,7,7,7,7,7};
     // map 1-3
     std::vector<int> coin_x3 = {37,38,
-    27,28,29,60,61,62,63,93,94,97,98,
-    85,86,120,121,
-    50,51,
-    113,114,115};
+        27,28,29,60,61,62,63,93,94,97,98,
+        85,86,120,121,
+        50,51,
+        113,114,115};
     std::vector<int> coin_y3 = {12,12,
-    10,10,10,10,10,10,10,10,10,10,10,
-    9,9,9,9,
-    8,8,
-    2,2,2};
+        10,10,10,10,10,10,10,10,10,10,10,
+        9,9,9,9,
+        8,8,
+        2,2,2};
     std::vector<int> coin_imgidx3 = {3,3,
-    3,3,3,3,3,3,3,3,3,3,3,
-    3,3,3,3,
-    3,3,
-    3,3,3};
+        3,3,3,3,3,3,3,3,3,3,3,
+        3,3,3,3,
+        3,3,
+        3,3,3};
 };
 
 

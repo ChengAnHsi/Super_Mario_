@@ -12,7 +12,7 @@
 #include "Goomba.hpp"
 
 EnemyManager::EnemyManager() {
-    int imgidx_size = imgidx.size();
+    size_t imgidx_size = imgidx.size();
     for (size_t i = 0; i < imgidx_size; i++) {
         m_PositionX.push_back(tmp_x[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET);
         m_PositionY.push_back(tmp_y[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
@@ -28,8 +28,7 @@ EnemyManager::EnemyManager() {
         }
         else if(imgidx[i] == 18){
             m_Enemies.push_back(std::make_shared<FlyKoopa>());
-            std::shared_ptr<FlyKoopa> flykoopa = std::dynamic_pointer_cast<FlyKoopa>(m_Enemies.back());
-            if (flykoopa) {
+            if (std::shared_ptr<FlyKoopa> flykoopa = std::dynamic_pointer_cast<FlyKoopa>(m_Enemies.back())) {
                 float flight_height = 3.0f;
 
                 if (m_PositionX[i] < 80) {
@@ -50,16 +49,11 @@ EnemyManager::EnemyManager() {
         m_Enemies.back()->SetPosition(m_PositionX[i], m_PositionY[i]);
 
         // For Flower type, ensure the Y range is calculated
-        std::shared_ptr<Flower> flower = std::dynamic_pointer_cast<Flower>(m_Enemies.back());
-        if (flower) {
+        if (std::shared_ptr<Flower> flower = std::dynamic_pointer_cast<Flower>(m_Enemies.back())) {
             // For flowers, we explicitly update the Y movement range after setting position and image
             flower->UpdateYMovementRange();
         }
     }
-}
-
-std::vector<int> EnemyManager::GetPosX() {
-    return m_PositionX;
 }
 
 std::vector<float> EnemyManager::GetX(int phase){
@@ -105,14 +99,6 @@ std::vector<int> EnemyManager::Getidx(int phase){
     }
 }
 
-/*void EnemyManager::SetBackground(std::vector<std::shared_ptr<BackgroundImage>> backgrounds){
-    this->m_Backgrounds = backgrounds;
-}
-
-std::vector<std::shared_ptr<BackgroundImage>> EnemyManager::GetBackground(){
-    return m_Backgrounds;
-}*/
-
 void EnemyManager::SetEnemyMoving(){
     for (const auto& enemy : m_Enemies){
         // map size divide by 2 = 360
@@ -125,12 +111,11 @@ void EnemyManager::SetEnemyMoving(){
 
 void EnemyManager::SetEnemies(std::vector<std::shared_ptr<Enemy>> enemies){
     m_Enemies.clear();
-    this->m_Enemies = enemies;
+    m_Enemies = enemies;
 
     // For any flower instances in the new enemy list, update their Y movement range
     for (const auto& enemy : m_Enemies) {
-        std::shared_ptr<Flower> flower = std::dynamic_pointer_cast<Flower>(enemy);
-        if (flower) {
+        if (std::shared_ptr<Flower> flower = std::dynamic_pointer_cast<Flower>(enemy)) {
             flower->UpdateYMovementRange();
         }
     }
@@ -154,8 +139,7 @@ void EnemyManager::SetAllEnemyCollisionBlocks(std::vector<std::shared_ptr<Block>
 void EnemyManager::CheckMarioCollisions(std::shared_ptr<Mario> mario) {
     for (const auto& enemy : m_Enemies) {
         // Dynamic cast to check if the enemy is a Goomba
-        auto goomba = std::dynamic_pointer_cast<Goomba>(enemy);
-        if (goomba) {
+        if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
             goomba->CheckMarioCollision(mario);
         }
     }

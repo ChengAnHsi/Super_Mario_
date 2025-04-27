@@ -1,28 +1,31 @@
 #include "AppUtil.hpp"
 #include "App.hpp"
 #include "Global.hpp"
+#include "Util/Logger.hpp"
+#include <iostream>
+
 #include "MysteryBlock.hpp"
 #include "CommonBlock.hpp"
 #include "ImmovableBlock.hpp"
-#include "Enemy.hpp"
-#include "Flower.hpp"
-#include "Goomba.hpp"
+
 #include "FireFlower.hpp"
 #include "MagicMushroom.hpp"
 #include "OneUpMushroom.hpp"
 #include "Starman.hpp"
-#include "EnemyManager.hpp"
-#include "Util/Logger.hpp"
 
+#include "Enemy.hpp"
+#include "Goomba.hpp"
+#include "Flower.hpp"
 #include "FlyKoopa.hpp"
 #include "Koopa.hpp"
-#include <iostream>
-
+#include "EnemyManager.hpp"
 
 // update all game object for next level
 void App::NextPhase() {
     if(m_Phase == Phase::Level1_2) {
         m_Mario->SetPosition({-380.0f + 3.0f * BLOCK_SIZE, -240.0f + 9.5 * BLOCK_SIZE});
+    }else {
+        m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -232.0f});
     }
     // update next level block
     m_Mario->ClearCollisionBoxes();
@@ -67,7 +70,6 @@ void App::NextPhase() {
     int imgidx_size = tmpidx.size();
     int propidx = 0;
     for (size_t i = 0; i < imgidx_size; i++) {
-        // TODO props setting
         bool setprop = false;
         if (propsx[propidx] == tmpx[i] && propsy[propidx] == tmpy[i]) {
             setprop = true;
@@ -94,7 +96,8 @@ void App::NextPhase() {
             }
             tempp->SetScale(PROP_MAGNIFICATION, PROP_MAGNIFICATION);
             tempp->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
-            // tempp->SetZIndex(-30);
+            // test props position visible or not
+            tempp->SetZIndex(-30);
         }
 
         if(tmpidx[i] == 6 || tmpidx[i] == 9) {
@@ -179,39 +182,32 @@ void App::NextPhase() {
     }
 }
 
-void App::ValidTask() {
+void App::ValidTask(bool is_nextphase) {
     LOG_DEBUG("Validating the task {}", static_cast<int>(m_Phase));
+    if(is_nextphase) {
+        switch (m_Phase) {
+            case Phase::Start:
+                LOG_DEBUG("Welcome to Super Mario!");
+                m_Phase = Phase::Level1_1;
+                break;
+            case Phase::Level1_1:
+                LOG_DEBUG("Congratulations! You have completed Level1-1!");
+                m_Phase = Phase::Level1_2;
+                break;
+            case Phase::Level1_2:
+                LOG_DEBUG("Congratulations! You have completed Level1-2!");
+                m_Phase = Phase::Level1_3;
+                break;
+            case Phase::Level1_3:
+                LOG_DEBUG("Congratulations! You have completed Super Mario!");
+                m_CurrentState = State::END;
+                break;
+            default:
+                break;
+        }
+    }
     switch (m_Phase) {
-        case Phase::Start:
-            LOG_DEBUG("Welcome to Super Mario!");
-            m_Phase = Phase::Level1_1;
-            // init is Level1_1 don't need to call NextPhase
-            m_PRM->NextPhase(static_cast<int>(m_Phase));
-            m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
-            m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
-            m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
-            m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
-            m_BM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
-            m_BM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
-            break;
         case Phase::Level1_1:
-            LOG_DEBUG("Congratulations! You have completed Level1-1!");
-            m_Phase = Phase::Level1_2;
-            NextPhase();
-            m_PRM->NextPhase(static_cast<int>(m_Phase));
-            m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Underworld/theme.mp3");
-            m_BGM->Play();
-            m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
-            m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
-            m_Root.AddChildren(m_PRM->GetChildren(false));
-            m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
-            m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
-            m_BM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
-            m_BM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
-            break;
-        case Phase::Level1_2:
-            LOG_DEBUG("Congratulations! You have completed Level1-2!");
-            m_Phase = Phase::Level1_3;
             NextPhase();
             m_PRM->NextPhase(static_cast<int>(m_Phase));
             m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
@@ -224,9 +220,31 @@ void App::ValidTask() {
             m_BM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
             m_BM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
             break;
+        case Phase::Level1_2:
+            NextPhase();
+            m_PRM->NextPhase(static_cast<int>(m_Phase));
+            m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Underworld/theme.mp3");
+            m_BGM->Play();
+            m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
+            m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
+            m_Root.AddChildren(m_PRM->GetChildren(false));
+            m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
+            m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
+            m_BM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
+            m_BM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
+            break;
         case Phase::Level1_3:
-            LOG_DEBUG("Congratulations! You have completed Super Mario!");
-            m_CurrentState = State::END;
+            NextPhase();
+            m_PRM->NextPhase(static_cast<int>(m_Phase));
+            m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
+            m_BGM->Play();
+            m_Mario->AddCollisionBoxes(m_PRM->GetCollisionBoxes());
+            m_Mario->AddCollectibles(m_PRM->GetCollectibleCoins());
+            m_Root.AddChildren(m_PRM->GetChildren(false));
+            m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
+            m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
+            m_BM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
+            m_BM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
             break;
         default:
             break;

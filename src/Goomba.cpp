@@ -1,10 +1,9 @@
 #include "Goomba.hpp"
-#include "BlockManager.hpp"
 #include "Global.hpp"
 #include "Mario.hpp"
 #include "App.hpp"
-bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
 
+bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     if (is_dead || !GetVisible() || mario->is_dead) {
         return false; // No collision if already dead or not visible
     }
@@ -59,11 +58,11 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
             // Increase Mario's score
             mario->IncreaseScore(score);
             return true;
-        } else {
-            // Collision from the side or bottom - Mario gets hurt if not invincible
-            if (!mario->is_dead && mario->GetLive() > 0) {
-                mario->Die(); // Call our new Die method instead
-            }
+        }
+
+        // Collision from the side or bottom - Mario gets hurt if not invincible
+        if (!mario->is_dead && mario->GetLive() > 0) {
+            mario->Die(); // Call our new Die method instead
         }
     }
     return false;

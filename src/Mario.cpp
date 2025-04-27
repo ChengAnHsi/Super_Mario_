@@ -3,12 +3,13 @@
 //
 
 #include "Mario.hpp"
-
 #include "BlockManager.hpp"
 #include "Global.hpp"
+#include "App.hpp"
+
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
-#include "App.hpp"
+
 void Mario::OnJump() {
     if (!isJumping) {
         velocityY = JUMP_VELOCITY;
@@ -18,9 +19,9 @@ void Mario::OnJump() {
         }else {
             this->SetImages(AnimationJump, 100, 0);
         }
-        std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX >(RESOURCE_DIR"/Sound/Effects/jump.mp3");
+        std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/jump.mp3");
         jump_sfx->SetVolume(25);
-        jump_sfx ->Play();
+        jump_sfx->Play();
     }
 }
 
@@ -33,10 +34,9 @@ void Mario::OnSmallJump() {
         }else {
             this->SetImages(AnimationJump, 100, 0);
         }
-        std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX >(RESOURCE_DIR"/Sound/Effects/jump.mp3");
+        std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/jump.mp3");
         jump_sfx->SetVolume(25);
-        jump_sfx ->Play();
-
+        jump_sfx->Play();
     }
 }
 
@@ -141,10 +141,8 @@ bool Mario::AABBCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> b
     float btop = b.y + b_size.y / 2;
     float bbottom = b.y - b_size.y / 2;
 
-    float EPSILON = 0.0f;  // 允許 0.0 pixel 誤差
-
-    bool collisionX = (aleft < bright - EPSILON) && (aright > bleft + EPSILON);
-    bool collisionY = (abottom < btop - EPSILON) && (atop > bbottom + EPSILON);
+    bool collisionX = (aleft < bright) && (aright > bleft);
+    bool collisionY = (abottom < btop) && (atop > bbottom);
 
     if (!(collisionX && collisionY)) {
         return false;
@@ -180,10 +178,8 @@ bool Mario::CCDDCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> b
     float btop = b.y + b_size.y / 2;
     float bbottom = b.y - b_size.y / 2;
 
-    float EPSILON = 0.0f;  // 允許 0.0 pixel 誤差
-
-    bool collisionX = (aleft < bright - EPSILON) && (aright > bleft + EPSILON);
-    bool collisionY = (abottom < btop - EPSILON) && (atop > bbottom + EPSILON);
+    bool collisionX = (aleft < bright) && (aright > bleft);
+    bool collisionY = (abottom < btop) && (atop > bbottom);
 
     if (!(collisionX && collisionY)) {
         return false;
@@ -264,7 +260,11 @@ bool Mario::GravityAndCollision(const float delta) {
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
-            block->AfterCollisionEvents();
+            // TODO need to check common block, but has prop(solution: change has prop block to mystery block)
+            if(is_grow && block->GetBlocktype() == Block::TYPE::CommonBlock || block->GetBlocktype() == Block::TYPE::MysteryBlock) {
+                block->AfterCollisionEvents();
+            }
+
             // 固定在方塊下方開始下墜
             mario_y = block->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
             this->SetPosition({ mario_x, mario_y });
@@ -333,50 +333,63 @@ void Mario::Die() {
     if (is_grow) {
         // If Mario is grown, shrink him and play powerdown sound
         is_grow = false;
-        this->SetImages(this->AnimationStand, 100, 0);
+
         std::shared_ptr<Util::SFX> powerdown_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/powerdown.mp3");
         powerdown_sfx->SetVolume(70);
         powerdown_sfx->Play();
+
+        this->SetImages(this->AnimationStand, 1000, 0);
     } else {
         // Mario dies
         is_dying = true;
-        is_dead = true;
         death_timer = 0.0f;
         collision_enabled = false; // Disable collisions
 
         // Play death sound
-        std::shared_ptr<Util::SFX> death_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/mario_die.mp3");
-        death_sfx->SetVolume(70);
-        death_sfx->Play();
+        // TODO find this sound
+        // std::shared_ptr<Util::SFX> death_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/mario_die.mp3");
+        // death_sfx->SetVolume(70);
+        // death_sfx->Play();
 
         // Set death animation
-        this->SetImages(AnimationDead, 100, 0);
-        this->SetPlaying(true);
-        this->SetLooping(false);
+        this->SetImages(AnimationDead, 1000, 0);
     }
 }
 
 void Mario::UpdateDeadState(float delta) {
-    if (!is_dying || !is_dead) return;
+    if (!is_dying) return; // 確認是否正在死亡過程
 
     death_timer += delta;
 
     if (death_timer <= DEATH_PAUSE_TIME) {
         // Just wait during the pause time - freeze position
         return;
-    } else if (death_timer == DEATH_PAUSE_TIME + 1) {
-        // Initial jump velocity right after pause time
-        velocityY = DEATH_JUMP_VELOCITY;
     }
+    if (death_timer <= DEATH_PAUSE_TIME + DEATH_JUMP_DURATION) {
+        // flying
+        if (death_timer == DEATH_PAUSE_TIME + 1) {
+            velocityY = DEATH_JUMP_VELOCITY;
+        }
 
-    // Apply gravity after the pause
-    velocityY += GRAVITY * (delta / 60.0f);
+        velocityY += GRAVITY * (delta / 60.0f);
 
-    // Update position without collision checks
-    float mario_x = GetPosition().x;
-    float mario_y = GetPosition().y + velocityY * (delta / 60.0f);
-    this->SetPosition({mario_x, mario_y});
+        float mario_x = GetPosition().x;
+        float mario_y = GetPosition().y + velocityY * (delta / 60.0f);
+        this->SetPosition({mario_x, mario_y});
+
+    } else {
+        // after dying
+        is_dying = false;
+        SetLive(GetLive() - 1);
+
+        // Game Over
+        if (GetLive() < 0) {
+            is_dead = true;
+        }
+    }
 }
+
+
 float Mario::OnUpdate(const float delta) {
     // update moving
     const int direction = is_right_key_down - is_left_key_down;
@@ -392,7 +405,7 @@ float Mario::OnUpdate(const float delta) {
 }
 
 float Mario::Move() {
-    if (is_dead) {
+    if (is_dying) {
         UpdateDeadState(1.0f);
         return 0.0f; // No camera movement when dead
     }
@@ -420,6 +433,10 @@ float Mario::Move() {
     if (Util::Input::IsKeyUp(Util::Keycode::RIGHT)) {
         is_right_key_down = false;
     }
+    // test locate to center
+    if (Util::Input::IsKeyDown(Util::Keycode::A)) {
+        SetPosition({-20.0f, 0.0f});
+    }
     return OnUpdate(1);
 }
 
@@ -436,7 +453,6 @@ int Mario::GetCoin() const {
 
 void Mario::SetLive(const int live) {
     this->live = live;
-    if (live == 0) SetImages(AnimationDead, 100, 0);
 }
 
 int Mario::GetLive() const {

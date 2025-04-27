@@ -9,6 +9,7 @@
 #include "Util/Renderer.hpp"
 #include "Enemy.hpp"
 #include "Mario.hpp"
+
 class EnemyManager {
 public:
     EnemyManager();
@@ -49,8 +50,8 @@ public:
     void SetEnemies(std::vector<std::shared_ptr<Enemy>> enemies);
     [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren() const {
         std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
-        for (int i = 0; i < m_Enemies.size(); i++) {
-            all_obj.emplace_back(m_Enemies[i]);
+        for (const auto & enemy : m_Enemies) {
+            all_obj.emplace_back(enemy);
         }
         return all_obj;
     }
@@ -58,7 +59,6 @@ public:
     void SetEnemyMoving();
     void SetAllEnemyCollisionBoxs(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void SetAllEnemyCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
-    std::vector<int> GetPosX();
     void CheckMarioCollisions(std::shared_ptr<Mario> mario);
 private:
     // map 1-1

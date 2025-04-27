@@ -62,25 +62,13 @@ void App::Update() {
         m_PRM->DecreaseTime();
         // check mario is in enemy visiion
         m_EM->SetEnemyMoving();
+    }
 
-    }
-    if(m_Mario->GetPosition().y < -360) {
-        if (!m_Mario->is_dead) {
-            m_Mario->SetLive(m_Mario->GetLive() - 1);
-            if (m_Mario->GetLive() <= 0) {
-                m_Mario->Die(); // Call our new death function
-            } else {
-                m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, 300.0f});
-            }
-        }
-    }
     if(m_PRM->GetTime() == 0) {
-        m_Mario->SetLive(m_Mario->GetLive() - 1);
-        if (m_Mario->GetLive() == 0) {
-            // TODO dead situation
-        }else {
-            m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -232.0f});
-            m_PRM->SetTime(LEVEL_TIME[int(m_Phase) - 1]);
+        m_Mario->Die();
+        if (m_Mario->GetLive() > 0) {
+            // reset phase
+            ValidTask(false);
         }
     }
 
@@ -112,8 +100,13 @@ void App::Update() {
 
     // lower than ground
     if(m_Mario->GetPosition().y < -360) {
-        m_Mario->SetLive(m_Mario->GetLive() - 1);
-        m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, 300.0f});
+        if (m_Mario->is_dying == false) {
+            m_Mario->Die();
+            if (m_Mario->GetLive() > 0) {
+                // reset phase
+                ValidTask(false);
+            }
+        }
     }
 
     camera_movement_dis += dis;
@@ -121,11 +114,7 @@ void App::Update() {
     // fixed position
     m_PRM->ResetPosition(dis);
     m_Coin->m_Transform.translation.x += dis;
-
-    if (Util::Input::IsKeyDown(Util::Keycode::A)) {
-        m_Mario->SetPosition({-20.0f, 0.0f});
-    }
-
+    // move camera
     m_Root.Update({dis,0.0f});
 
     /*
@@ -137,9 +126,14 @@ void App::Update() {
         m_CurrentState = State::END;
     }
 
+    if (m_Mario->GetLive() == 0) {
+        // TODO gameover
+        m_CurrentState = State::END;
+    }
+
     if (m_EnterDown) {
         if (!Util::Input::IsKeyPressed(Util::Keycode::RETURN)) {
-            ValidTask();
+            ValidTask(true);
         }
     }
     m_EnterDown = Util::Input::IsKeyPressed(Util::Keycode::RETURN);
