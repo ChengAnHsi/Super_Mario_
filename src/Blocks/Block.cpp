@@ -2,7 +2,7 @@
 // Created by 112590007 on 2025/4/11.
 //
 
-#include "../../include/Blocks/Block.hpp"
+#include "Blocks/Block.hpp"
 
 bool Block::GetBroken() {
     return isbreak;

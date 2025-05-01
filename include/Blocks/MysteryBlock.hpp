@@ -4,7 +4,7 @@
 #ifndef MYSTERYBLOCK_HPP
 #define MYSTERYBLOCK_HPP
 
-#include "../Props/Props.hpp"
+#include "Props/Props.hpp"
 #include "Block.hpp"
 
 class MysteryBlock : public Block {

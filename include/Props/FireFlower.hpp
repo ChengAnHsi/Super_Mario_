@@ -5,8 +5,8 @@
 #ifndef FIREFLOWER_HPP
 #define FIREFLOWER_HPP
 
-#include "../Manager/PropsManager.hpp"
-#include "../Global.hpp"
+#include "Manager/PropsManager.hpp"
+#include "Global.hpp"
 
 class FireFlower : public Props {
 public:

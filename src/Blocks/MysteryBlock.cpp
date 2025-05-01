@@ -1,7 +1,8 @@
 //
 // Created by 112590007 on 2025/4/11.
 //
-#include "../../include/Blocks/MysteryBlock.hpp"
+
+#include "Blocks/MysteryBlock.hpp"
 
 MysteryBlock::MysteryBlock(){
     Blocktype = TYPE::MysteryBlock;

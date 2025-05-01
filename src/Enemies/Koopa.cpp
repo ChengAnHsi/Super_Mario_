@@ -1,4 +1,4 @@
-#include "../../include/Enemies/Koopa.hpp"
+#include "Enemies/Koopa.hpp"
 #include "Manager/BlockManager.hpp"
 #include "Global.hpp"
 

@@ -2,14 +2,12 @@
 // Created by 112590007 on 2025/3/14.
 //
 
-#include "../../include/BackgroundImage.hpp"
-#include "../../include/Global.hpp"
-#include "../../include/App.hpp"
+#include "BackgroundImage.hpp"
+#include "Global.hpp"
+#include "Blocks/Block.hpp"
+#include "Blocks/CommonBlock.hpp"
 
-#include "../../include/Blocks/Block.hpp"
-#include "../../include/Blocks/CommonBlock.hpp"
-
-#include "../../include/Manager/BlockManager.hpp"
+#include "Manager/BlockManager.hpp"
 
 BlockManager::BlockManager() {
     // initial screen floor

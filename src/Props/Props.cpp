@@ -2,7 +2,7 @@
 // Created by 112590007 on 2025/4/11.
 //
 
-#include "../../include/Props/Props.hpp"
+#include "Props/Props.hpp"
 
 void Props::Move() {}
 

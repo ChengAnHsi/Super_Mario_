@@ -1,4 +1,4 @@
-#include "../../include/Props/FireFlower.hpp"
+#include "Props/FireFlower.hpp"
 #include "Global.hpp"
 
 void FireFlower::AfterCollisionEvents(){

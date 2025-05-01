@@ -1,11 +1,12 @@
-#include "App.hpp"
-
 #include "Util/Image.hpp"
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
 #include "Util/Logger.hpp"
+
 #include "Global.hpp"
-#include "../include/Manager/EnemyManager.hpp"
+#include "App.hpp"
+
+#include "Manager/EnemyManager.hpp"
 
 void App::Start() {
     LOG_TRACE("Start");

@@ -1,6 +1,5 @@
-#include "../../include/Enemies/Flower.hpp"
-#include "Manager/BlockManager.hpp"
-#include "../../include/Global.hpp"
+#include "Enemies/Flower.hpp"
+#include "Global.hpp"
 
 Flower::Flower() {
     this -> SetZIndex(-10);

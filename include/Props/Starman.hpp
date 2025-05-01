@@ -5,8 +5,8 @@
 #ifndef STARMANAN_HPP
 #define STARMANAN_HPP
 
-#include "../Manager/PropsManager.hpp"
-#include "../Global.hpp"
+#include "Manager/PropsManager.hpp"
+#include "Global.hpp"
 
 class Starman : public Props {
 public:

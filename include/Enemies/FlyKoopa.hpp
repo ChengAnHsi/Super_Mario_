@@ -2,8 +2,8 @@
 #define FLYKOOPA_HPP
 
 #include "Enemy.hpp"
-#include "../Blocks/Block.hpp"
-#include "../CollisionState.hpp"
+#include "Blocks/Block.hpp"
+#include "CollisionState.hpp"
 
 class FlyKoopa : public Enemy{
 public:

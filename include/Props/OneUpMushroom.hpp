@@ -4,8 +4,8 @@
 #ifndef ONEUPMUSHROOM_HPP
 #define ONEUPMUSHROOM_HPP
 
-#include "../Manager/PropsManager.hpp"
-#include "../Global.hpp"
+#include "Manager/PropsManager.hpp"
+#include "Global.hpp"
 
 class OneUpMushroom : public Props {
 public:

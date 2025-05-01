@@ -1,9 +1,10 @@
+#include "Util/Logger.hpp"
+
 #include "AnimatedImage.hpp"
-#include "Manager/BlockManager.hpp"
-#include "Manager/PhaseResourceManger.hpp"
 #include "App.hpp"
 #include "Global.hpp"
-#include "Util/Logger.hpp"
+
+#include "Manager/PhaseResourceManger.hpp"
 
 PhaseResourceManger::PhaseResourceManger() {
     last_update = std::chrono::steady_clock::now();

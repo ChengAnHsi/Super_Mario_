@@ -5,7 +5,7 @@
 #ifndef COIN_HPP
 #define COIN_HPP
 
-#include "../Manager/PropsManager.hpp"
+#include "Manager/PropsManager.hpp"
 #include "Global.hpp"
 
 class Coin : public Props {

@@ -5,8 +5,8 @@
 #ifndef MAGICMUSHROOM_HPP
 #define MAGICMUSHROOM_HPP
 
-#include "../Manager/PropsManager.hpp"
-#include "../Global.hpp"
+#include "Manager/PropsManager.hpp"
+#include "Global.hpp"
 
 class MagicMushroom : public Props {
 public:

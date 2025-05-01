@@ -5,22 +5,23 @@
 #include "Global.hpp"
 #include "Util/Logger.hpp"
 
-#include "../include/Blocks/MysteryBlock.hpp"
-#include "../include/Blocks/CommonBlock.hpp"
-#include "../include/Blocks/ImmovableBlock.hpp"
+#include "Blocks/MysteryBlock.hpp"
+#include "Blocks/CommonBlock.hpp"
+#include "Blocks/ImmovableBlock.hpp"
 
-#include "../include/Props/FireFlower.hpp"
-#include "../include/Props/MagicMushroom.hpp"
-#include "../include/Props/OneUpMushroom.hpp"
-#include "../include/Props/Starman.hpp"
-#include "../include/Props/Coin.hpp"
+#include "Props/FireFlower.hpp"
+#include "Props/MagicMushroom.hpp"
+#include "Props/OneUpMushroom.hpp"
+#include "Props/Starman.hpp"
+#include "Props/Coin.hpp"
 
-#include "../include/Enemies/Enemy.hpp"
-#include "../include/Enemies/Goomba.hpp"
-#include "../include/Enemies/Flower.hpp"
-#include "../include/Enemies/FlyKoopa.hpp"
-#include "../include/Enemies/Koopa.hpp"
-#include "../include/Manager/EnemyManager.hpp"
+#include "Enemies/Enemy.hpp"
+#include "Enemies/Goomba.hpp"
+#include "Enemies/Flower.hpp"
+#include "Enemies/FlyKoopa.hpp"
+#include "Enemies/Koopa.hpp"
+
+#include "Manager/EnemyManager.hpp"
 
 // update all game object for next level
 void App::ResetPhase() {
@@ -49,7 +50,6 @@ void App::ResetPhase() {
     }
 
     // add new block to render
-    std::vector<std::shared_ptr<BackgroundImage>> backgrounds;
     std::vector<std::shared_ptr<Block>> blocks;
     std::vector<std::shared_ptr<Props>> props;
     std::vector tmpx = m_BM->GetX(static_cast<int>(m_Phase));
@@ -103,12 +103,12 @@ void App::ResetPhase() {
 
         if(!setprop) {
             if(tmpidx[i] == 6 || tmpidx[i] == 9) {
-                // TODO 暫時放置之後刪除
-                auto temp = std::make_shared<MysteryBlock>();
-                blocks.push_back(temp);
-                blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
+                // mysteryblock but will not goto here
+                // auto temp = std::make_shared<MysteryBlock>();
+                // blocks.push_back(temp);
+                // blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
             }else if(tmpidx[i] == 0 || tmpidx[i] == 1) {
-                // TODO cancel common block has prop(or prop drop if common block?)
+                // TODO prop drop if common block
                 auto temp = std::make_shared<CommonBlock>();
                 blocks.push_back(temp);
                 blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
@@ -119,11 +119,10 @@ void App::ResetPhase() {
         }
 
         blocks.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        blocks.back()->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        blocks.back()->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
     }
     m_BM->SetBlocks(blocks);
     m_PM->SetProps(props);
-    // m_Mario->AddCollisionBoxes(backgrounds);
     m_Mario->AddCollisionBlocks(blocks);
     m_Root.AddChildren(m_BM->GetChildren());
     m_Root.AddChildren(m_PM->GetChildren());
@@ -140,9 +139,8 @@ void App::ResetPhase() {
     std::vector<float> ftmpx = m_EM->GetX(static_cast<int>(m_Phase));
     std::vector<float> ftmpy = m_EM->GetY(static_cast<int>(m_Phase));
     std::vector ftmpidx = m_EM->Getidx(static_cast<int>(m_Phase));
-    backgrounds.clear();
-    int fimgidx_size = ftmpidx.size();
-    for (int i = 0; i < fimgidx_size; i++) {
+    size_t fimgidx_size = ftmpidx.size();
+    for (size_t i = 0; i < fimgidx_size; i++) {
         if(ftmpidx[i] == 2 || ftmpidx[i] == 5){
             eneimes.push_back(std::make_shared<Goomba>());
         }

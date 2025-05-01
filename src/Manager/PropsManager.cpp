@@ -2,11 +2,9 @@
 // Created by 112590007 on 2025/4/11.
 //
 
-#include "../../include/Manager/PropsManager.hpp"
-#include "../../include/BackgroundImage.hpp"
-#include "../../include/App.hpp"
-
-#include <iostream>
+#include "Manager/PropsManager.hpp"
+#include "BackgroundImage.hpp"
+#include "App.hpp"
 
 std::vector<std::shared_ptr<Util::GameObject>> PropsManager::GetChildren() const {
     std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
@@ -35,7 +33,6 @@ void PropsManager::AddAllPropsCollisionBoxes(std::vector<std::shared_ptr<Backgro
 }
 
 std::vector<int> PropsManager::GetpropsX(int phase){
-    std::cout << phase;
     switch (phase)
     {
         case 1:

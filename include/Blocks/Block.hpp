@@ -5,7 +5,7 @@
 #ifndef BLOCK_HPP
 #define BLOCK_HPP
 
-#include "../AnimatedImage.hpp"
+#include "AnimatedImage.hpp"
 
 class Block : public BackgroundImage {
 

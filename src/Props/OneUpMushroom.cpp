@@ -1,4 +1,4 @@
-#include "../../include/Props/OneUpMushroom.hpp"
+#include "Props/OneUpMushroom.hpp"
 
 void OneUpMushroom::AfterCollisionEvents(){
 

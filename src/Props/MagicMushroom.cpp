@@ -1,5 +1,5 @@
-#include "../../include/Props/MagicMushroom.hpp"
-#include "../../include/Global.hpp"
+#include "Props/MagicMushroom.hpp"
+#include "Global.hpp"
 
 void MagicMushroom::AfterCollisionEvents(){
 

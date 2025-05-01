@@ -1,10 +1,9 @@
 #ifndef PHASE_MANGER_HPP
 #define PHASE_MANGER_HPP
 
-#include "../../PTSD/include/Util/GameObject.hpp"
-#include "../../PTSD/include/Util/BGM.hpp"
-#include "../TaskText.hpp"
-#include "../BackgroundImage.hpp"
+#include "../PTSD/include/Util/GameObject.hpp"
+#include "TaskText.hpp"
+#include "BackgroundImage.hpp"
 #include <chrono>
 
 class PhaseResourceManger {

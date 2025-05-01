@@ -3,7 +3,7 @@
 //
 
 #include "Props/Coin.hpp"
-#include "../include/Global.hpp"
+#include "Global.hpp"
 
 void Coin::SpawnProps() {
     state = PropsState::Spawning;

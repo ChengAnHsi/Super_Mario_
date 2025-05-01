@@ -6,7 +6,7 @@
 #define FLOWER_HPP
 
 #include "Enemy.hpp"
-#include "../CollisionState.hpp"
+#include "CollisionState.hpp"
 
 class Flower : public Enemy {
 public:

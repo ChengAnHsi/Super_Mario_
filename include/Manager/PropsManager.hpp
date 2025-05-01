@@ -5,8 +5,8 @@
 #ifndef PROPSMANAGER_HPP
 #define PROPSMANAGER_HPP
 
-#include "../Props/Props.hpp"
-#include "../../PTSD/include/Util/Renderer.hpp"
+#include "Props/Props.hpp"
+#include "../PTSD/include/Util/Renderer.hpp"
 
 class PropsManager {
 public:

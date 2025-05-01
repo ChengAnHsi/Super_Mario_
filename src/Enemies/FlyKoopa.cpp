@@ -1,6 +1,5 @@
-#include "../../include/Enemies/FlyKoopa.hpp"
-#include "Manager/BlockManager.hpp"
-#include "../../include/Global.hpp"
+#include "Enemies/FlyKoopa.hpp"
+#include "Global.hpp"
 
 FlyKoopa::FlyKoopa() {
     // Default constructor will calculate the range after SetPosition is called

@@ -4,15 +4,15 @@
 
 #include <iostream>
 
-#include "../include/Global.hpp"
-#include "../include/App.hpp"
+#include "Global.hpp"
+#include "App.hpp"
 
-#include "../include/Enemies/Flower.hpp"
-#include "../include/Enemies/FlyKoopa.hpp"
-#include "../include/Enemies/Koopa.hpp"
-#include "../include/Enemies/Goomba.hpp"
+#include "Enemies/Flower.hpp"
+#include "Enemies/FlyKoopa.hpp"
+#include "Enemies/Koopa.hpp"
+#include "Enemies/Goomba.hpp"
 
-#include "../include/Manager/EnemyManager.hpp"
+#include "Manager/EnemyManager.hpp"
 
 EnemyManager::EnemyManager() {
     size_t imgidx_size = imgidx.size();

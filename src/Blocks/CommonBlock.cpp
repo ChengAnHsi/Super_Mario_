@@ -1,8 +1,9 @@
 //
 // Created by 112590007 on 2025/4/11.
 //
-#include "../../include/Blocks/CommonBlock.hpp"
-#include "../../include/App.hpp"
+
+#include "Blocks/CommonBlock.hpp"
+#include "Util/SFX.hpp"
 
 CommonBlock::CommonBlock()
 {
@@ -20,15 +21,6 @@ void CommonBlock::AfterCollisionEvents() {
     break_sfx->Play();
 
     if (iscollision == false) {
-        if (inside_prop) {
-            inside_prop->SpawnProps();
-            iscollision = true;
-        }
+        iscollision = true;
     }
-}
-void CommonBlock::SetProps(std::shared_ptr<Props> prop){
-    inside_prop = prop;
-}
-std::shared_ptr<Props> CommonBlock::GetProps() {
-    return inside_prop;
 }

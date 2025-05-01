@@ -5,10 +5,9 @@
 #ifndef ENEMYMANAGER_HPP
 #define ENEMYMANAGER_HPP
 
-#include "../BackgroundImage.hpp"
-//#include "../../PTSD/include/Util/Renderer.hpp"
-#include "../Enemies/Enemy.hpp"
-#include "../Mario.hpp"
+#include "BackgroundImage.hpp"
+#include "Enemies/Enemy.hpp"
+#include "Mario.hpp"
 
 class EnemyManager {
 public:

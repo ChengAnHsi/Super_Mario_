@@ -1,7 +1,7 @@
-#include "../../include/Enemies/Goomba.hpp"
-#include "../../include/Global.hpp"
-#include "../../include/Mario.hpp"
-#include "../../include/App.hpp"
+#include "Enemies/Goomba.hpp"
+#include "Global.hpp"
+#include "Mario.hpp"
+#include "Util/SFX.hpp"
 
 bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     if (is_dead || !GetVisible() || mario->is_dead) {

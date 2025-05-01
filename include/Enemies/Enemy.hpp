@@ -6,7 +6,7 @@
 #define ENEMY_HPP
 
 #include "AnimatedImage.hpp"
-#include "../Blocks/Block.hpp"
+#include "Blocks/Block.hpp"
 
 class Enemy : public BackgroundImage {
 

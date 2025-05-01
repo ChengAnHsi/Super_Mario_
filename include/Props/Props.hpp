@@ -1,9 +1,9 @@
 #ifndef PROPS_HPP
 #define PROPS_HPP
 
-#include "../BackgroundImage.hpp"
-#include "../Blocks/Block.hpp"
-#include "../CollisionState.hpp"
+#include "BackgroundImage.hpp"
+#include "Blocks/Block.hpp"
+#include "CollisionState.hpp"
 
 class Props : public BackgroundImage {
 public:

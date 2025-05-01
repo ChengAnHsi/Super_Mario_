@@ -1,5 +1,5 @@
-#include "../../include/Props/Starman.hpp"
-#include "../../include/Global.hpp"
+#include "Props/Starman.hpp"
+#include "Global.hpp"
 
 void Starman::AfterCollisionEvents(){
 
