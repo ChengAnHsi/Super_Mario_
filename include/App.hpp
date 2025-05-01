@@ -6,11 +6,12 @@
 #include "Renderer.hpp"
 #include "Util/SFX.hpp"
 #include "Util/BGM.hpp"
-#include "PhaseResourceManger.hpp"
+#include "Manager/PhaseResourceManger.hpp"
 #include "BlockManager.hpp"
 #include "AnimatedCharacter.hpp"
 #include "Mario.hpp"
-#include "EnemyManager.hpp"
+#include "Manager/EnemyManager.hpp"
+#include "Manager/PropsManager.hpp"
 
 class App {
 public:
@@ -29,8 +30,8 @@ public:
     void End(); // NOLINT(readability-convert-member-functions-to-static)
 
 private:
-    void ValidTask(bool is_nextphase);
-    void NextPhase();
+    void NextPhase(bool is_nextphase);
+    void ResetPhase();
 
     enum class Phase {
         Start = 0,
@@ -50,6 +51,7 @@ private:
     std::shared_ptr<PhaseResourceManger> m_PRM;
     std::shared_ptr<BlockManager> m_BM;
     std::shared_ptr<EnemyManager> m_EM;
+    std::shared_ptr<PropsManager> m_PM;
     std::shared_ptr<Util::BGM> m_BGM;
     std::shared_ptr<Util::SFX> m_SFX;
 

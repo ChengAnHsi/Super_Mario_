@@ -4,54 +4,44 @@
 #include "Util/Logger.hpp"
 #include <iostream>
 
-#include "MysteryBlock.hpp"
-#include "CommonBlock.hpp"
+#include "../include/Blocks/MysteryBlock.hpp"
+#include "../include/Blocks/CommonBlock.hpp"
 #include "ImmovableBlock.hpp"
 
-#include "FireFlower.hpp"
+#include "../include/Props/FireFlower.hpp"
 #include "MagicMushroom.hpp"
-#include "OneUpMushroom.hpp"
-#include "Starman.hpp"
+#include "../include/Props/OneUpMushroom.hpp"
+#include "../include/Props/Starman.hpp"
+#include "Coin.hpp"
 
 #include "Enemy.hpp"
-#include "Goomba.hpp"
-#include "Flower.hpp"
-#include "FlyKoopa.hpp"
-#include "Koopa.hpp"
-#include "EnemyManager.hpp"
+#include "../include/Enemies/Goomba.hpp"
+#include "../include/Enemies/Flower.hpp"
+#include "../include/Enemies/FlyKoopa.hpp"
+#include "../include/Enemies/Koopa.hpp"
+#include "../include/Manager/EnemyManager.hpp"
 
 // update all game object for next level
-void App::NextPhase() {
+void App::ResetPhase() {
+    // update mario spawn position
     if(m_Phase == Phase::Level1_2) {
         m_Mario->SetPosition({-380.0f + 3.0f * BLOCK_SIZE, -240.0f + 9.5 * BLOCK_SIZE});
     }else {
         m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -232.0f});
     }
+
     // update next level block
     m_Mario->ClearCollisionBoxes();
     m_Mario->ClearCollisionBlocks();
 
     // remove last level and set next level block
-    std::vector<std::shared_ptr<BackgroundImage>> tmp = m_BM->GetBackground();
-    std::vector<std::shared_ptr<Block>> tmp2 = m_BM->GetBlocks();
-    for (const auto & block : tmp2) {
-        if (block->GetBlocktype() == Block::TYPE::CommonBlock) {
-            auto common = std::dynamic_pointer_cast<CommonBlock>(block);
-            auto prop = common->GetProps();
-            if (prop) {
-                std::shared_ptr<Util::GameObject> tmp3 = prop;
-                m_Root.RemoveChild(tmp3);
-            }
-        }
-        if (block->GetBlocktype() == Block::TYPE::MysteryBlock) {
-            auto mystery = std::dynamic_pointer_cast<MysteryBlock>(block);
-            auto prop = mystery->GetProps();
-            if (prop) {
-                std::shared_ptr<Util::GameObject> tmp3 = prop;
-                m_Root.RemoveChild(tmp3);
-            }
-        }
+    std::vector<std::shared_ptr<Props>> tmp2 = m_PM->GetProps();
+    for (const auto & prop : tmp2) {
+        std::shared_ptr<Util::GameObject> tmp3 = prop;
+        m_Root.RemoveChild(tmp3);
     }
+
+    std::vector<std::shared_ptr<BackgroundImage>> tmp = m_BM->GetBackground();
     for (const auto & img : tmp) {
         std::shared_ptr<Util::GameObject> tmp3 = img;
         m_Root.RemoveChild(tmp3);
@@ -60,14 +50,15 @@ void App::NextPhase() {
     // add new block to render
     std::vector<std::shared_ptr<BackgroundImage>> backgrounds;
     std::vector<std::shared_ptr<Block>> blocks;
+    std::vector<std::shared_ptr<Props>> props;
     std::vector tmpx = m_BM->GetX(static_cast<int>(m_Phase));
     std::vector tmpy = m_BM->GetY(static_cast<int>(m_Phase));
     std::vector tmpidx = m_BM->Getidx(static_cast<int>(m_Phase));
-    std::vector propsx = m_BM->GetpropsX(static_cast<int>(m_Phase));
-    std::vector propsy = m_BM->GetpropsY(static_cast<int>(m_Phase));
-    std::vector propsidx = m_BM->Getpropsidx(static_cast<int>(m_Phase));
+    std::vector propsx = m_PM->GetpropsX(static_cast<int>(m_Phase));
+    std::vector propsy = m_PM->GetpropsY(static_cast<int>(m_Phase));
+    std::vector propsidx = m_PM->Getpropsidx(static_cast<int>(m_Phase));
 
-    int imgidx_size = tmpidx.size();
+    size_t imgidx_size = tmpidx.size();
     int propidx = 0;
     for (size_t i = 0; i < imgidx_size; i++) {
         bool setprop = false;
@@ -83,48 +74,58 @@ void App::NextPhase() {
 
             if (prop_imgidx == 0) {
                 tempp = std::make_shared<OneUpMushroom>();
-                tempp->SetImage(m_BM->propsImagePaths[prop_imgidx]);
+                tempp->SetImage(m_PM->propsImagePaths[prop_imgidx]);
             }else if (prop_imgidx == 1) {
                 tempp = std::make_shared<MagicMushroom>();
-                tempp->SetImage(m_BM->propsImagePaths[prop_imgidx]);
+                tempp->SetImage(m_PM->propsImagePaths[prop_imgidx]);
             }else if (prop_imgidx == 2) {
                 tempp = std::make_shared<Starman>();
-                tempp->SetImage({m_BM->propsImagePaths[prop_imgidx], m_BM->propsImagePaths[prop_imgidx+1], m_BM->propsImagePaths[prop_imgidx+2], m_BM->propsImagePaths[prop_imgidx+3], m_BM->propsImagePaths[prop_imgidx+4], m_BM->propsImagePaths[prop_imgidx+5]}, 200, 0);
+                tempp->SetImage({m_PM->propsImagePaths[prop_imgidx], m_PM->propsImagePaths[prop_imgidx+1], m_PM->propsImagePaths[prop_imgidx+2], m_PM->propsImagePaths[prop_imgidx+3], m_PM->propsImagePaths[prop_imgidx+4], m_PM->propsImagePaths[prop_imgidx+5]}, 200, 0);
             }else if (prop_imgidx == 8) {
                 tempp = std::make_shared<FireFlower>();
-                tempp->SetImage({m_BM->propsImagePaths[prop_imgidx], m_BM->propsImagePaths[prop_imgidx+1], m_BM->propsImagePaths[prop_imgidx+2], m_BM->propsImagePaths[prop_imgidx+3], m_BM->propsImagePaths[prop_imgidx+4], m_BM->propsImagePaths[prop_imgidx+5]}, 1000, 0);
+                tempp->SetImage({m_PM->propsImagePaths[prop_imgidx], m_PM->propsImagePaths[prop_imgidx+1], m_PM->propsImagePaths[prop_imgidx+2], m_PM->propsImagePaths[prop_imgidx+3], m_PM->propsImagePaths[prop_imgidx+4], m_PM->propsImagePaths[prop_imgidx+5]}, 1000, 0);
+            }else if(prop_imgidx == 16) {
+                tempp = std::make_shared<Coin>();
+                tempp->SetImage({m_PM->propsImagePaths[prop_imgidx], m_PM->propsImagePaths[prop_imgidx+1], m_PM->propsImagePaths[prop_imgidx+2], m_PM->propsImagePaths[prop_imgidx+3]}, 200, 0);
             }
             tempp->SetScale(PROP_MAGNIFICATION, PROP_MAGNIFICATION);
-            tempp->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            tempp->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
             // test props position visible or not
             tempp->SetZIndex(-30);
+            props.push_back(tempp);
+
+            auto temp = std::make_shared<MysteryBlock>();
+            temp->SetProps(tempp);
+            blocks.push_back(temp);
+            blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
         }
 
-        if(tmpidx[i] == 6 || tmpidx[i] == 9) {
-            auto temp = std::make_shared<MysteryBlock>();
-            if (setprop) {
-                temp->SetProps(tempp);
+        if(!setprop) {
+            if(tmpidx[i] == 6 || tmpidx[i] == 9) {
+                // TODO 暫時放置之後刪除
+                auto temp = std::make_shared<MysteryBlock>();
+                blocks.push_back(temp);
+                blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
+            }else if(tmpidx[i] == 0 || tmpidx[i] == 1) {
+                // TODO cancel common block has prop(or prop drop if common block?)
+                auto temp = std::make_shared<CommonBlock>();
+                blocks.push_back(temp);
+                blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
+            }else {
+                blocks.push_back(std::make_shared<ImmovableBlock>());
+                blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
             }
-            blocks.push_back(temp);
-            blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
-        }else if(tmpidx[i] == 0 || tmpidx[i] == 1) {
-            auto temp = std::make_shared<CommonBlock>();
-            if (setprop) {
-                temp->SetProps(tempp);
-            }
-            blocks.push_back(temp);
-            blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
-        }else {
-            blocks.push_back(std::make_shared<ImmovableBlock>());
-            blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
         }
+
         blocks.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         blocks.back()->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
     }
     m_BM->SetBlocks(blocks);
+    m_PM->SetProps(props);
     // m_Mario->AddCollisionBoxes(backgrounds);
     m_Mario->AddCollisionBlocks(blocks);
     m_Root.AddChildren(m_BM->GetChildren());
+    m_Root.AddChildren(m_PM->GetChildren());
 
     // remove old enemy
     std::vector<std::shared_ptr<Enemy>> ftmp = m_EM->GetEnemies();
@@ -182,7 +183,7 @@ void App::NextPhase() {
     }
 }
 
-void App::ValidTask(bool is_nextphase) {
+void App::NextPhase(bool is_nextphase) {
     LOG_DEBUG("Validating the task {}", static_cast<int>(m_Phase));
     if(is_nextphase) {
         switch (m_Phase) {
@@ -208,7 +209,7 @@ void App::ValidTask(bool is_nextphase) {
     }
     switch (m_Phase) {
         case Phase::Level1_1:
-            NextPhase();
+            ResetPhase();
             m_PRM->NextPhase(static_cast<int>(m_Phase));
             m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
             m_BGM->Play();
@@ -217,11 +218,11 @@ void App::ValidTask(bool is_nextphase) {
             m_Root.AddChildren(m_PRM->GetChildren(false));
             m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
             m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
-            m_BM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
-            m_BM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
+            m_PM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
+            m_PM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
             break;
         case Phase::Level1_2:
-            NextPhase();
+            ResetPhase();
             m_PRM->NextPhase(static_cast<int>(m_Phase));
             m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Underworld/theme.mp3");
             m_BGM->Play();
@@ -230,11 +231,11 @@ void App::ValidTask(bool is_nextphase) {
             m_Root.AddChildren(m_PRM->GetChildren(false));
             m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
             m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
-            m_BM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
-            m_BM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
+            m_PM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
+            m_PM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
             break;
         case Phase::Level1_3:
-            NextPhase();
+            ResetPhase();
             m_PRM->NextPhase(static_cast<int>(m_Phase));
             m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
             m_BGM->Play();
@@ -243,8 +244,8 @@ void App::ValidTask(bool is_nextphase) {
             m_Root.AddChildren(m_PRM->GetChildren(false));
             m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
             m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
-            m_BM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
-            m_BM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
+            m_PM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
+            m_PM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
             break;
         default:
             break;

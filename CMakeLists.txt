@@ -35,19 +35,19 @@ add_executable(${PROJECT_NAME}
     ${SRC_DIR}/main.cpp
     ${SRC_FILES}
     ${HEADER_FILES}
-        include/BlockManager.hpp
-        src/BlockManager.cpp
+        include/Manager/BlockManager.hpp
+        src/Manager/BlockManager.cpp
         src/Renderer.cpp
         include/Renderer.hpp
         include/AnimatedImage.hpp
         src/AnimatedImage.cpp
-        src/Block.cpp
-        src/PropsManager.cpp
-        src/Props.cpp
-        src/MysteryBlock.cpp
-        src/CommonBlock.cpp
-        src/ImmovableBlock.cpp
-        src/Coin.cpp
+        src/Blocks/Block.cpp
+        src/Manager/PropsManager.cpp
+        src/Props/Props.cpp
+        src/Blocks/MysteryBlock.cpp
+        src/Blocks/CommonBlock.cpp
+        src/Blocks/ImmovableBlock.cpp
+        src/Props/Coin.cpp
 )
 
 if(MSVC)

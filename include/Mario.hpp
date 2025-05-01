@@ -7,7 +7,7 @@
 
 #include "AnimatedCharacter.hpp"
 #include "BlockManager.hpp"
-#include "PhaseResourceManger.hpp"
+#include "Manager/PhaseResourceManger.hpp"
 #include "CollisionState.hpp"
 
 #include <string>

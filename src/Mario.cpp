@@ -3,7 +3,6 @@
 //
 
 #include "Mario.hpp"
-#include "BlockManager.hpp"
 #include "Global.hpp"
 #include "App.hpp"
 
@@ -261,7 +260,7 @@ bool Mario::GravityAndCollision(const float delta) {
         }
         if(Y_state == CollisionState::Top) {
             // TODO need to check common block, but has prop(solution: change has prop block to mystery block)
-            if(is_grow && block->GetBlocktype() == Block::TYPE::CommonBlock || block->GetBlocktype() == Block::TYPE::MysteryBlock) {
+            if(is_grow && (block->GetBlocktype() == Block::TYPE::CommonBlock || block->GetBlocktype() == Block::TYPE::MysteryBlock)) {
                 block->AfterCollisionEvents();
             }
 

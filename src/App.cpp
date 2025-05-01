@@ -5,7 +5,7 @@
 #include "Util/Keycode.hpp"
 #include "Util/Logger.hpp"
 #include "Global.hpp"
-#include "EnemyManager.hpp"
+#include "../include/Manager/EnemyManager.hpp"
 
 void App::Start() {
     LOG_TRACE("Start");
@@ -42,13 +42,10 @@ void App::Start() {
     m_BM = std::make_shared<BlockManager>();
     m_Root.AddChildren(m_BM->GetChildren());
 
-//    m_Mario->AddCollisionBoxes(m_BM->GetBackground());
-    m_Mario->AddCollisionBlocks(m_BM->GetBlocks());
-    //m_Mario->AddCollisionBox(m_PRM->GetTube());
+    m_PM = std::make_shared<PropsManager>();
+    m_Root.AddChildren(m_PM->GetChildren());
 
     m_EM = std::make_shared<EnemyManager>();
-    // m_EM->SetAllEnemyCollisionBlocks(m_BM->GetBlocks());
-    // m_EM->SetAllEnemyCollisionBoxs(m_BM->GetBackground());
     m_Root.AddChildren(m_EM->GetChildren());
 
     m_CurrentState = State::UPDATE;
@@ -58,8 +55,10 @@ void App::Update() {
     if(m_Phase != Phase::Start) {
         m_Coin->SetLooping(true);
         m_Coin->SetPlaying(true);
+
         // decrease time after start game
         m_PRM->DecreaseTime();
+
         // check mario is in enemy visiion
         m_EM->SetEnemyMoving();
     }
@@ -68,7 +67,7 @@ void App::Update() {
         m_Mario->Die();
         if (m_Mario->GetLive() > 0) {
             // reset phase
-            ValidTask(false);
+            NextPhase(false);
         }
     }
 
@@ -78,7 +77,9 @@ void App::Update() {
         dis = m_Mario->Move();
         // when mario move show coins he got
         m_PRM->SetCoin(m_Mario->GetCoin());
-        m_BM->UpdatePropsAnimation();
+
+        // update all activated props animation
+        m_PM->UpdatePropsAnimation();
 
         // Add this line to check for collisions with enemies
         m_EM->CheckMarioCollisions(m_Mario);
@@ -104,7 +105,7 @@ void App::Update() {
             m_Mario->Die();
             if (m_Mario->GetLive() > 0) {
                 // reset phase
-                ValidTask(false);
+                NextPhase(false);
             }
         }
     }
@@ -114,13 +115,9 @@ void App::Update() {
     // fixed position
     m_PRM->ResetPosition(dis);
     m_Coin->m_Transform.translation.x += dis;
+
     // move camera
     m_Root.Update({dis,0.0f});
-
-    /*
-     * Do not touch the code below as they serve the purpose for
-     * closing the window.
-     */
 
     if (Util::Input::IsKeyUp(Util::Keycode::ESCAPE) || Util::Input::IfExit()) {
         m_CurrentState = State::END;
@@ -133,7 +130,7 @@ void App::Update() {
 
     if (m_EnterDown) {
         if (!Util::Input::IsKeyPressed(Util::Keycode::RETURN)) {
-            ValidTask(true);
+            NextPhase(true);
         }
     }
     m_EnterDown = Util::Input::IsKeyPressed(Util::Keycode::RETURN);
