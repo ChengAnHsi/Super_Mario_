@@ -1,20 +1,21 @@
+#include <iostream>
+
 #include "AppUtil.hpp"
 #include "App.hpp"
 #include "Global.hpp"
 #include "Util/Logger.hpp"
-#include <iostream>
 
 #include "../include/Blocks/MysteryBlock.hpp"
 #include "../include/Blocks/CommonBlock.hpp"
-#include "ImmovableBlock.hpp"
+#include "../include/Blocks/ImmovableBlock.hpp"
 
 #include "../include/Props/FireFlower.hpp"
-#include "MagicMushroom.hpp"
+#include "../include/Props/MagicMushroom.hpp"
 #include "../include/Props/OneUpMushroom.hpp"
 #include "../include/Props/Starman.hpp"
-#include "Coin.hpp"
+#include "../include/Props/Coin.hpp"
 
-#include "Enemy.hpp"
+#include "../include/Enemies/Enemy.hpp"
 #include "../include/Enemies/Goomba.hpp"
 #include "../include/Enemies/Flower.hpp"
 #include "../include/Enemies/FlyKoopa.hpp"

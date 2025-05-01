@@ -5,8 +5,8 @@
 #ifndef COMMONBLOCK_HPP
 #define COMMONBLOCK_HPP
 
-#include "Block.hpp"
 #include "../Props/Props.hpp"
+#include "Block.hpp"
 
 class CommonBlock : public Block{
 public:

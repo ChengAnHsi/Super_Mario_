@@ -5,12 +5,13 @@
 #ifndef MARIO_HPP
 #define MARIO_HPP
 
+#include <string>
+
 #include "AnimatedCharacter.hpp"
-#include "BlockManager.hpp"
-#include "Manager/PhaseResourceManger.hpp"
 #include "CollisionState.hpp"
 
-#include <string>
+#include "Manager/BlockManager.hpp"
+#include "Manager/PhaseResourceManger.hpp"
 
 enum class MarioState {
     Stand,

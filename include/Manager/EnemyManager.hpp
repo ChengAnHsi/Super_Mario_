@@ -6,8 +6,8 @@
 #define ENEMYMANAGER_HPP
 
 #include "../BackgroundImage.hpp"
-#include "../../PTSD/include/Util/Renderer.hpp"
-#include "Enemy.hpp"
+//#include "../../PTSD/include/Util/Renderer.hpp"
+#include "../Enemies/Enemy.hpp"
 #include "../Mario.hpp"
 
 class EnemyManager {

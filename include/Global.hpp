@@ -1,4 +1,3 @@
-
 //
 // Created by loedd on 2025/3/7.
 //
@@ -6,8 +5,9 @@
 #ifndef GLOBAL_HPP
 #define GLOBAL_HPP
 
-
 #pragma once
+
+#include <vector>
 
 constexpr float BLOCK_SIZE = 48.0f;
 constexpr float BLOCK_MAGNIFICATION = 3.0f;

@@ -2,8 +2,8 @@
 // Created by 112590007 on 2025/4/25.
 //
 
-#include "../../include/Coin.hpp"
-#include "../../include/Global.hpp"
+#include "Props/Coin.hpp"
+#include "../include/Global.hpp"
 
 void Coin::SpawnProps() {
     state = PropsState::Spawning;

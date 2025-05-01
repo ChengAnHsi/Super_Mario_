@@ -1,5 +1,5 @@
 #include "../../include/Enemies/FlyKoopa.hpp"
-#include "../../include/BlockManager.hpp"
+#include "Manager/BlockManager.hpp"
 #include "../../include/Global.hpp"
 
 FlyKoopa::FlyKoopa() {

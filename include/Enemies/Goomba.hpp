@@ -9,6 +9,7 @@
 #include "../Blocks/Block.hpp"
 #include "../CollisionState.hpp"
 #include "../Mario.hpp"
+
 class Goomba : public Enemy{
 public:
     Goomba() = default;

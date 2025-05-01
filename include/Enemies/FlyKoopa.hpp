@@ -1,4 +1,3 @@
-// FlyKoopa.hpp
 #ifndef FLYKOOPA_HPP
 #define FLYKOOPA_HPP
 

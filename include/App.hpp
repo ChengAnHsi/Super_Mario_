@@ -3,13 +3,15 @@
 
 #include "pch.hpp" // IWYU pragma: export
 
-#include "Renderer.hpp"
 #include "Util/SFX.hpp"
 #include "Util/BGM.hpp"
-#include "Manager/PhaseResourceManger.hpp"
-#include "BlockManager.hpp"
+
+#include "Renderer.hpp"
 #include "AnimatedCharacter.hpp"
 #include "Mario.hpp"
+
+#include "Manager/PhaseResourceManger.hpp"
+#include "Manager/BlockManager.hpp"
 #include "Manager/EnemyManager.hpp"
 #include "Manager/PropsManager.hpp"
 

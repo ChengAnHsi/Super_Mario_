@@ -1,6 +1,6 @@
 #include "AnimatedImage.hpp"
-#include "BlockManager.hpp"
-#include "../../include/Manager/PhaseResourceManger.hpp"
+#include "Manager/BlockManager.hpp"
+#include "Manager/PhaseResourceManger.hpp"
 #include "App.hpp"
 #include "Global.hpp"
 #include "Util/Logger.hpp"

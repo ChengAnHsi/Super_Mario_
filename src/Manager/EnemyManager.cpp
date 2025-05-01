@@ -1,15 +1,18 @@
 //
 // Created by 112590007 on 2025/3/14.
 //
-#include "../../include/Manager/EnemyManager.hpp"
-#include "../../include/Global.hpp"
-#include "../../include/App.hpp"
-#include "../../include/Enemies/Flower.hpp"
-#include "../../include/Enemies/FlyKoopa.hpp"
-#include "../../include/Enemies/Koopa.hpp"
+
 #include <iostream>
 
-#include "../../include/Enemies/Goomba.hpp"
+#include "../include/Global.hpp"
+#include "../include/App.hpp"
+
+#include "../include/Enemies/Flower.hpp"
+#include "../include/Enemies/FlyKoopa.hpp"
+#include "../include/Enemies/Koopa.hpp"
+#include "../include/Enemies/Goomba.hpp"
+
+#include "../include/Manager/EnemyManager.hpp"
 
 EnemyManager::EnemyManager() {
     size_t imgidx_size = imgidx.size();

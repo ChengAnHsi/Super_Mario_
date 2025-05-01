@@ -1,4 +1,4 @@
-#include <../../include/Enemy.hpp>
+#include <Enemies/Enemy.hpp>
 
 float Enemy::GetMoveVelocity(){
     return move_velocity;
