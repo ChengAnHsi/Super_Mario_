@@ -260,13 +260,15 @@ bool Mario::GravityAndCollision(const float delta) {
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
-            if(is_grow && block->GetBlockType() == Block::TYPE::CommonBlock) {
-                block->AfterCollisionEvents();
-            }
             if (block->GetBlockType() == Block::TYPE::MysteryBlock) {
-                if (block->GetInsidePropType() == Block::PROP_TYPE::Coin && block->GetCollisionTime() > 0) coin += 1;
+                if (block->GetInsidePropType() == Block::PROP_TYPE::Coin && block->GetCollisionTime() > 0) IncreaseCoin(1);
+            }
+
+            if(is_grow || block->GetBlockType() != Block::TYPE::CommonBlock){
                 block->AfterCollisionEvents();
             }
+
+            block->TriggerJumpAnimation();
 
             // 固定在方塊下方開始下墜
             mario_y = block->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;

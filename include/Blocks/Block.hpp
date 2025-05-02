@@ -7,6 +7,11 @@
 
 #include "AnimatedImage.hpp"
 
+enum class BlockState {
+    Idle,
+    Bouncing
+};
+
 class Block : public BackgroundImage {
 
 public:
@@ -28,6 +33,9 @@ public:
     Block() = default;
     virtual ~Block() = default;
 
+    void TriggerJumpAnimation();
+    void Update(float dt);
+
     virtual void AfterCollisionEvents() = 0;
 
     bool GetBroken();
@@ -43,6 +51,12 @@ protected:
     TYPE Blocktype;
     PROP_TYPE inside_prop_type;
     int collision_time = 1;
+
+    // animation
+    BlockState state = BlockState::Idle;
+    float velocityY = 0.0f;
+    float remaining_distance = 0.0f;
+    bool is_goingup = true;
 private:
 
     // TODO block up and down animation

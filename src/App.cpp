@@ -82,6 +82,9 @@ void App::Update() {
         // update all activated props animation
         m_PM->UpdatePropsAnimation();
 
+        // update all activated blocks animation
+        m_BM->UpdateBlocksAnimation();
+
         // Add this line to check for collisions with enemies
         m_EM->CheckMarioCollisions(m_Mario);
     }

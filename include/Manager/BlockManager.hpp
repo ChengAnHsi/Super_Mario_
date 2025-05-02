@@ -33,6 +33,8 @@ public:
         RESOURCE_DIR"/Blocks/Overworld/platform3.png" // 15
     };
 
+    void UpdateBlocksAnimation();
+
     std::vector<int> GetX(int phase);
     std::vector<int> GetY(int phase);
     std::vector<int> Getidx(int phase);
