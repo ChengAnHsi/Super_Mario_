@@ -25,7 +25,7 @@ public:
     float GetMoveVelocity();
     bool GetOverworld();
     void SetOverworld(bool is_overworld);
-
+    void SetMoveVelocity(float veclocityX);
     virtual void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) = 0;
     virtual void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) = 0;
     virtual void ClearCollisionBoxes() = 0;

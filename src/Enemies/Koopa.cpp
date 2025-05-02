@@ -2,6 +2,9 @@
 #include "Global.hpp"
 #include "Mario.hpp"
 #include "App.hpp"
+#include "Enemies/Enemy.hpp"
+// Fixed Koopa.cpp with improved collision detection
+
 bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     if (is_dead || !GetVisible() || mario->is_dead) {
         return false; // No collision if already dead or not visible
@@ -31,47 +34,49 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     bool collision_y = (mario_bottom < koopa_top) && (mario_top > koopa_bottom);
 
     if (collision_x && collision_y) {
-        // Calculate the vertical velocity direction
-        bool mario_moving_down = mario->velocityY <= 0;
-
-        // Calculate vertical overlap percentage to determine stomping
+        // Calculate vertical overlap to determine if it's a stomp
+        float vertical_distance = mario_bottom - koopa_top;
+        float horizontal_overlap = std::min(mario_right, koopa_right) - std::max(mario_left, koopa_left);
         float vertical_overlap = std::min(mario_top, koopa_top) - std::max(mario_bottom, koopa_bottom);
-        float mario_height = mario_top - mario_bottom;
-        float overlap_percentage = vertical_overlap / mario_height;
 
-        // Check if Mario is above Koopa (stepping on it)
-        float overlap_threshold = 12.0f; // Allow a slightly larger overlap
+        // Better stomp detection - check if Mario is coming from above and moving downward
+        bool is_stomping = mario->velocityY <= 0 && // Mario is moving down
+                          vertical_distance > -16.0f && // Small tolerance for better gameplay feel
+                          vertical_distance < 5.0f && // Not too far below the top
+                          horizontal_overlap > koopa_size.x * 0.3f; // Significant horizontal overlap
 
-        if ((mario_bottom <= koopa_top + overlap_threshold) &&
-            mario_moving_down &&
-            overlap_percentage < 0.5f) {
-
-            // Mario is stepping on Koopa from above
+        if (is_stomping) {
+            // Mario is stomping Koopa from above
             if (!is_shell) {
-                // If Koopa is not already a shell, turn it into a shell
+                // First stomp: Turn into shell and stop
                 TurnToShell();
                 mario->OnKillJump(); // Make Mario bounce
                 mario->IncreaseScore(score); // Increase Mario's score
+
+                // Ensure Koopa shell stays on ground
+                GravityAndCollision(1.0f);
             } else {
-                // If Koopa is already a shell, check if it's moving
+                // Koopa is already a shell
                 if (shell_is_moving) {
-                    // Stop the shell if it's moving
+                    // Stop the moving shell
                     shell_is_moving = false;
+                    SetMoving(false);
                     mario->OnKillJump(); // Make Mario bounce
                 } else {
-                    // Kick the shell if it's stationary
+                    // Kick the stationary shell
                     return KickShell(mario);
                 }
             }
             return true;
         } else {
-            // Side or bottom collision - Mario gets hurt if not invincible
+            // Side or bottom collision
             if (!is_shell || (is_shell && shell_is_moving)) {
-                if (!mario->is_dead && mario->GetLive() > 0) {
+                // Koopa hurts Mario if active or shell is moving
+                if (!mario->is_dead && mario->GetLive() > 0 && !mario->IsInvincible) {
                     mario->Die();
                 }
             } else if (is_shell && !shell_is_moving) {
-                // Kick the shell if it's stationary
+                // Kick the stationary shell from the side
                 return KickShell(mario);
             }
         }
@@ -92,7 +97,16 @@ void Koopa::TurnToShell() {
             SetImage(AnimationUnderWorldDead, 1000, 0);
         }
 
-        // Play a sound effect for shell transformation
+        // Stop the movement
+        SetMoving(false);
+
+        // Reset velocity to prevent floating
+        velocityY = 0.0f;
+
+        // Apply a small downward force to ensure the shell lands properly
+        GravityAndCollision(1.0f);
+
+        // Play sound effect
         std::shared_ptr<Util::SFX> shell_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.mp3");
         if (shell_sfx) {
             shell_sfx->SetVolume(200);
@@ -106,6 +120,10 @@ bool Koopa::KickShell(std::shared_ptr<Mario> mario) {
 
     shell_is_moving = true;
     shell_timer = 0.0f;
+    SetMoving(true); // Ensure the shell starts moving
+
+    // Increased shell movement speed for better gameplay feel
+    SetMoveVelocity(GetMoveVelocity() * 1.5f);
 
     // Determine shell's movement direction based on Mario's position
     glm::vec2 mario_pos = mario->GetPosition();
@@ -124,7 +142,14 @@ bool Koopa::KickShell(std::shared_ptr<Mario> mario) {
 
     return true;
 }
+
+
 void Koopa::Action(const float distance) {
+    // If in shell mode and not moving, don't perform any movement
+    if (is_shell && !shell_is_moving) {
+        return;
+    }
+
     float Koopa_x = GetPosition().x;
     float Koopa_y = GetPosition().y;
     glm::vec2 Koopa_size = m_Drawable->GetSize();
@@ -328,48 +353,78 @@ bool Koopa::GravityAndCollision(const float delta) {
 }
 
 void Koopa::UpdateAnimation() {
-    //float distance = move_velocity * delta;
+    // If koopa is a shell and not moving, increment the shell timer
+    if (is_shell && !shell_is_moving) {
+        shell_timer += delta_time;
 
-    // facing left
+        // After a certain time (5 seconds), change shell appearance and prepare to revive
+        if (shell_timer >= 500.0f && shell_timer < 800.0f) {
+            // Change to shell0 (blinking shell) to indicate it's about to revive
+            if (GetOverworld() == true) {
+                SetImage({RESOURCE_DIR"/Entities/shell0.png"}, 1000, 0);
+            } else {
+                SetImage({RESOURCE_DIR"/Entities/Underworld/shell0.png"}, 1000, 0);
+            }
+        }
+        // After 8 seconds, revive the Koopa
+        else if (shell_timer >= 800.0f) {
+            is_shell = false;
+            shell_timer = 0.0f;
+            SetMoving(true);
+
+            // Reset to walking animation
+            if (GetOverworld() == true) {
+                SetImage(AnimationRun, 500, 0);
+            } else {
+                SetImage(AnimationUnderWorldRun, 500, 0);
+            }
+            is_set_runanimation = true;
+        }
+    }
+
+    // Update the facing direction
     if (isFacingRight == false) {
         m_Transform.scale = glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
-        //distance *= -1;
-    }
-    // facing right
-    if (isFacingRight == true)  {
+    } else {
         m_Transform.scale = glm::vec2{-KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
     }
-
-	//Action(move_velocity);
 }
 
 void Koopa::OnUpdate(const float delta) {
-    float distance = GetMoveVelocity() * delta;
+    // Update delta_time for animation timing
+    delta_time = delta;
 
-    // facing left
-    if (isFacingRight == false) {
-        //m_Transform.scale = glm::vec2{-Koopa_MAGNIFICATION, Koopa_MAGNIFICATION};
-        distance *= -1;
-    }
-    // facing right
-    if (isFacingRight == true)  {
-        //m_Transform.scale = glm::vec2{Koopa_MAGNIFICATION, Koopa_MAGNIFICATION};
-    }
+    // Apply gravity regardless of state to prevent floating
+    bool in_air = GravityAndCollision(3 * delta);
 
-    GravityAndCollision(3 * delta);
-
+    // Update animation (shell revival timing, sprite flipping)
     UpdateAnimation();
 
+    // If koopa is in shell state but not moving, skip movement calculations
+    if (is_shell && !shell_is_moving) {
+        return;
+    }
+
+    float distance = GetMoveVelocity() * delta;
+
+    // Adjust distance based on facing direction
+    if (isFacingRight == false) {
+        distance *= -1;
+    }
+
+    // Move the koopa/shell
     Action(distance);
 }
 
 void Koopa::Move(){
     if (!GetMoving()) return;
+
     OnUpdate(1);
-    if (is_set_runanimation == false) {
+
+    if (!is_shell && is_set_runanimation == false) {
         if (GetOverworld() == true) {
             SetImage(AnimationRun, 500, 0);
-        }else {
+        } else {
             SetImage(AnimationUnderWorldRun, 500, 0);
         }
         is_set_runanimation = true;
@@ -379,9 +434,10 @@ void Koopa::Move(){
 void Koopa::SetLive(const int live) {
     this->live = live;
     if (live == 0) {
+        is_dead = true;
         if (GetOverworld() == true) {
             SetImage(AnimationDead, 1000, 0);
-        }else {
+        } else {
             SetImage(AnimationUnderWorldDead, 1000, 0);
         }
     }

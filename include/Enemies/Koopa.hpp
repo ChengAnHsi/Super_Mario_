@@ -33,7 +33,6 @@ public:
     void ClearCollisionBoxes() override;
     void ClearCollisionBlocks() override;
     bool CheckMarioCollision(std::shared_ptr<Mario> mario);
-    // TODO 被擊倒動畫
     void TurnToShell();
     bool KickShell(std::shared_ptr<Mario> mario);
 private:
@@ -41,20 +40,18 @@ private:
     int live = 1;
     // 被擊倒的分數
     int score = 100;
-
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
 
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
-    float shell_timer = 0.0f;
+    float shell_timer = 0.0f;  // Timer for shell state management
     bool isFacingRight = false;
     float delta_time = 1.0f;
     float velocityY = 0.0f; // 角色在 Y 軸的速度
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
-    bool is_shell = false;
-    bool shell_is_moving = false;
-    // TODO: dead update
+    bool is_shell = false;  // Flag to track if Koopa is in shell state
+    bool shell_is_moving = false;  // Flag to track if shell is moving
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/koopa0.png",RESOURCE_DIR"/Entities/koopa1.png"};
     std::vector<std::string> AnimationUnderWorldRun = {RESOURCE_DIR"/Entities/Underworld/koopa0.png",RESOURCE_DIR"/Entities/Underworld/koopa1.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/shell1.png"};
@@ -64,4 +61,3 @@ private:
     bool is_set_runanimation = false;
 };
 #endif //KOOPA_HPP
-

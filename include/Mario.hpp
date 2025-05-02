@@ -61,13 +61,14 @@ public:
     bool is_dying = false; // Transitional state between alive and dead
     void Die(); // Handle Mario's death sequence
     void UpdateDeadState(float delta); // Update function for when Mario is dead
+    bool IsInvincible = false;
 private:
     int coin = 0;
     int live = 3;
     int score = 0;
     bool is_left_key_down = false;
     bool is_right_key_down = false;
-    
+
     // track death state
     float death_timer = 0.0f;
     const float DEATH_PAUSE_TIME = 60.0f; // 1 second at 60fps
