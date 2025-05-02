@@ -19,7 +19,7 @@ public:
     void Move() override;
 
     // collision function
-    bool AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box);
+    bool AABBCollides(glm::vec2 Koopa_pos, std::shared_ptr<BackgroundImage> box);
     bool CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box);
     bool GravityAndCollision(float delta) override;
 
