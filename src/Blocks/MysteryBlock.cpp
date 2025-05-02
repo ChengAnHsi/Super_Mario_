@@ -14,20 +14,32 @@ void MysteryBlock::AfterCollisionEvents() {
         return ;
     }
 
-    if (isoverworld) {
-        SetImage({RESOURCE_DIR"/Blocks/Overworld/emptyBlock.png"}, 1000, 0);
-    }else {
-        SetImage({RESOURCE_DIR"/Blocks/Underworld/emptyBlock.png"}, 1000, 0);
-    }
-
-    if (iscollision == false && inside_prop) {
+    if (collision_time > 0) {
         inside_prop->SpawnProps();
-        iscollision = true;
+        collision_time -= 1;
+
+        if (collision_time == 0) {
+            iscollision = true;
+            if (isoverworld) {
+                SetImage({RESOURCE_DIR"/Blocks/Overworld/emptyBlock.png"}, 1000, 0);
+            }else {
+                SetImage({RESOURCE_DIR"/Blocks/Underworld/emptyBlock.png"}, 1000, 0);
+            }
+        }else {
+            inside_prop->SetState(Props::PropsState::Not_Activated);
+            inside_prop->SetVisible(true);
+        }
     }
 }
+
+void MysteryBlock::SetCollisionTime(int time) {
+    collision_time = time;
+}
+
 void MysteryBlock::SetProps(std::shared_ptr<Props> prop){
     inside_prop = prop;
 }
+
 std::shared_ptr<Props> MysteryBlock::GetProps() {
     return inside_prop;
 }

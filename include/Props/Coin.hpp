@@ -17,6 +17,7 @@ public:
 
 private:
     bool is_spawning = false;
+    bool is_goingup = false;
     PropsState state = PropsState::Not_Activated;
     float remaining_distance = BLOCK_SIZE;
     float velocityY = 0.0f; // 角色在 Y 軸的速度

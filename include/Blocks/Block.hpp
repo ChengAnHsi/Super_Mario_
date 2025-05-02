@@ -16,21 +16,33 @@ public:
         ImmovableBlock
     };
 
+    enum class PROP_TYPE{
+        None,
+        FireFlower,
+        MagicMushroom,
+        OneUpMushroom,
+        Starman,
+        Coin
+    };
+
     Block() = default;
     virtual ~Block() = default;
 
     virtual void AfterCollisionEvents() = 0;
 
     bool GetBroken();
-    TYPE GetBlocktype(){
-        return Blocktype;
-    };
+    int GetCollisionTime();
+    TYPE GetBlockType();
+    void SetInsidePropType(PROP_TYPE prop_type);
+    PROP_TYPE GetInsidePropType();
 
 protected:
     bool isoverworld = true;
     bool isbreak = false;
     bool iscollision = false;
     TYPE Blocktype;
+    PROP_TYPE inside_prop_type;
+    int collision_time = 1;
 private:
 
     // TODO block up and down animation

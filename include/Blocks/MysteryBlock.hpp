@@ -13,6 +13,7 @@ public:
 
     void AfterCollisionEvents() override;
 
+    void SetCollisionTime(int time);
     void SetProps(std::shared_ptr<Props> prop);
     std::shared_ptr<Props> GetProps();
 private:

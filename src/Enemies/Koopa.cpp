@@ -1,5 +1,4 @@
 #include "Enemies/Koopa.hpp"
-#include "Manager/BlockManager.hpp"
 #include "Global.hpp"
 
 void Koopa::Action(const float distance) {
