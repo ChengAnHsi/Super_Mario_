@@ -6,6 +6,7 @@
 
 ImmovableBlock::ImmovableBlock(){
     Blocktype = TYPE::ImmovableBlock;
+    iscollision = true;
 }
 
 void ImmovableBlock::AfterCollisionEvents() {

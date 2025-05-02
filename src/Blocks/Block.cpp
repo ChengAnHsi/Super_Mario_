@@ -15,7 +15,7 @@ void Block::TriggerJumpAnimation() {
 }
 
 void Block::Update(float dt) {
-    if (state == BlockState::Bouncing && iscollision == false) {
+    if (state == BlockState::Bouncing) {
         float move = velocityY * dt;
 
         if (is_goingup) {
