@@ -1,7 +1,129 @@
 #include "Enemies/Koopa.hpp"
-#include "Manager/BlockManager.hpp"
 #include "Global.hpp"
+#include "Mario.hpp"
+#include "App.hpp"
+bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
+    if (is_dead || !GetVisible() || mario->is_dead) {
+        return false; // No collision if already dead or not visible
+    }
 
+    glm::vec2 koopa_pos = GetPosition();
+    glm::vec2 koopa_size = m_Drawable->GetSize();
+    koopa_size *= KOOPA_MAGNIFICATION;
+
+    glm::vec2 mario_pos = mario->GetPosition();
+    glm::vec2 mario_size = mario->GetSize();
+    mario_size *= MARIO_MAGNIFICATION;
+
+    // Calculate bounding boxes
+    float koopa_left = koopa_pos.x - koopa_size.x / 2;
+    float koopa_right = koopa_pos.x + koopa_size.x / 2;
+    float koopa_top = koopa_pos.y + koopa_size.y / 2;
+    float koopa_bottom = koopa_pos.y - koopa_size.y / 2;
+
+    float mario_left = mario_pos.x - mario_size.x / 2;
+    float mario_right = mario_pos.x + mario_size.x / 2;
+    float mario_top = mario_pos.y + mario_size.y / 2;
+    float mario_bottom = mario_pos.y - mario_size.y / 2;
+
+    // Check for collision
+    bool collision_x = (mario_left < koopa_right) && (mario_right > koopa_left);
+    bool collision_y = (mario_bottom < koopa_top) && (mario_top > koopa_bottom);
+
+    if (collision_x && collision_y) {
+        // Calculate the vertical velocity direction
+        bool mario_moving_down = mario->velocityY <= 0;
+
+        // Calculate vertical overlap percentage to determine stomping
+        float vertical_overlap = std::min(mario_top, koopa_top) - std::max(mario_bottom, koopa_bottom);
+        float mario_height = mario_top - mario_bottom;
+        float overlap_percentage = vertical_overlap / mario_height;
+
+        // Check if Mario is above Koopa (stepping on it)
+        float overlap_threshold = 12.0f; // Allow a slightly larger overlap
+
+        if ((mario_bottom <= koopa_top + overlap_threshold) &&
+            mario_moving_down &&
+            overlap_percentage < 0.5f) {
+
+            // Mario is stepping on Koopa from above
+            if (!is_shell) {
+                // If Koopa is not already a shell, turn it into a shell
+                TurnToShell();
+                mario->OnKillJump(); // Make Mario bounce
+                mario->IncreaseScore(score); // Increase Mario's score
+            } else {
+                // If Koopa is already a shell, check if it's moving
+                if (shell_is_moving) {
+                    // Stop the shell if it's moving
+                    shell_is_moving = false;
+                    mario->OnKillJump(); // Make Mario bounce
+                } else {
+                    // Kick the shell if it's stationary
+                    return KickShell(mario);
+                }
+            }
+            return true;
+        } else {
+            // Side or bottom collision - Mario gets hurt if not invincible
+            if (!is_shell || (is_shell && shell_is_moving)) {
+                if (!mario->is_dead && mario->GetLive() > 0) {
+                    mario->Die();
+                }
+            } else if (is_shell && !shell_is_moving) {
+                // Kick the shell if it's stationary
+                return KickShell(mario);
+            }
+        }
+    }
+    return false;
+}
+
+void Koopa::TurnToShell() {
+    if (!is_shell) {
+        is_shell = true;
+        shell_is_moving = false;
+        shell_timer = 0.0f;
+
+        // Change appearance to shell
+        if (GetOverworld() == true) {
+            SetImage(AnimationDead, 1000, 0);
+        } else {
+            SetImage(AnimationUnderWorldDead, 1000, 0);
+        }
+
+        // Play a sound effect for shell transformation
+        std::shared_ptr<Util::SFX> shell_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.mp3");
+        if (shell_sfx) {
+            shell_sfx->SetVolume(200);
+            shell_sfx->Play();
+        }
+    }
+}
+
+bool Koopa::KickShell(std::shared_ptr<Mario> mario) {
+    if (!is_shell) return false;
+
+    shell_is_moving = true;
+    shell_timer = 0.0f;
+
+    // Determine shell's movement direction based on Mario's position
+    glm::vec2 mario_pos = mario->GetPosition();
+    glm::vec2 koopa_pos = GetPosition();
+
+    // If Mario is on the right of the shell, shell moves left
+    // If Mario is on the left of the shell, shell moves right
+    isFacingRight = (mario_pos.x < koopa_pos.x);
+
+    // Play a sound effect for shell kick
+    std::shared_ptr<Util::SFX> kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
+    if (kick_sfx) {
+        kick_sfx->SetVolume(200);
+        kick_sfx->Play();
+    }
+
+    return true;
+}
 void Koopa::Action(const float distance) {
     float Koopa_x = GetPosition().x;
     float Koopa_y = GetPosition().y;

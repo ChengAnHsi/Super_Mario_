@@ -2,7 +2,7 @@
 #include "Global.hpp"
 
 Flower::Flower() {
-    this -> SetZIndex(-10);
+    this -> SetZIndex(-20);
     // Default constructor will calculate the range after SetPosition is called
 }
 

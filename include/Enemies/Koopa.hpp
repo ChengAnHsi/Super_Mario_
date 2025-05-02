@@ -8,7 +8,7 @@
 #include "Enemy.hpp"
 #include "Blocks/Block.hpp"
 #include "CollisionState.hpp"
-
+#include "Mario.hpp"
 class Koopa : public Enemy{
 public:
     Koopa() = default;
@@ -32,9 +32,12 @@ public:
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) override;
     void ClearCollisionBoxes() override;
     void ClearCollisionBlocks() override;
+    bool CheckMarioCollision(std::shared_ptr<Mario> mario);
     // TODO 被擊倒動畫
-
+    void TurnToShell();
+    bool KickShell(std::shared_ptr<Mario> mario);
 private:
+
     int live = 1;
     // 被擊倒的分數
     int score = 100;
@@ -44,17 +47,18 @@ private:
 
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
-
+    float shell_timer = 0.0f;
     bool isFacingRight = false;
     float delta_time = 1.0f;
     float velocityY = 0.0f; // 角色在 Y 軸的速度
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
-
+    bool is_shell = false;
+    bool shell_is_moving = false;
     // TODO: dead update
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/koopa0.png",RESOURCE_DIR"/Entities/koopa1.png"};
     std::vector<std::string> AnimationUnderWorldRun = {RESOURCE_DIR"/Entities/Underworld/koopa0.png",RESOURCE_DIR"/Entities/Underworld/koopa1.png"};
-    std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/shell0.png",RESOURCE_DIR"/Entities/shell1.png"};
-    std::vector<std::string> AnimationUnderWorldDead = {RESOURCE_DIR"/Entities/Underworld/shell0.png",RESOURCE_DIR"/Entities/Underworld/shell1.png"};
+    std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/shell1.png"};
+    std::vector<std::string> AnimationUnderWorldDead = {RESOURCE_DIR"/Entities/Underworld/shell1.png"};
 
     bool is_dead = false;
     bool is_set_runanimation = false;

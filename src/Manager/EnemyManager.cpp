@@ -37,7 +37,7 @@ EnemyManager::EnemyManager() {
                 if (m_PositionX[i] < 80) {
                     flight_height = 2.0f;
                 } else if (m_PositionX[i] > 100) {
-                    flight_height = 4.0f;
+                    flight_height = 100.0f;
                 }
 
                 flykoopa->SetFlightHeight(flight_height);
@@ -144,6 +144,9 @@ void EnemyManager::CheckMarioCollisions(std::shared_ptr<Mario> mario) {
         // Dynamic cast to check if the enemy is a Goomba
         if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
             goomba->CheckMarioCollision(mario);
+        }
+        if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
+            koopa->CheckMarioCollision(mario);
         }
     }
 }
