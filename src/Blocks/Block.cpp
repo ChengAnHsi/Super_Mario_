@@ -9,7 +9,7 @@ void Block::TriggerJumpAnimation() {
     if (state == BlockState::Idle && iscollision == false) {
         state = BlockState::Bouncing;
         velocityY = 10.0f;
-        remaining_distance = BLOCK_SIZE * 0.5f; // 上升距離可微調
+        remaining_distance = BLOCK_SIZE * 0.5f;
         is_goingup = true;
     }
 }

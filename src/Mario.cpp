@@ -109,7 +109,6 @@ void Mario::OnRun(const float distance) {
             }
             if (AABBCollides({next_x, mario_y}, collectible)) {
                 IncreaseCoin(1);
-
                 collectible->SetVisible(false);
             }
         }
@@ -278,8 +277,38 @@ bool Mario::GravityAndCollision(const float delta) {
     }
     if (Y_state == CollisionState::Top) {
         velocityY = 0;
+        // todo immovable block cannot got coin
+        // check collect collectible
+        for (const auto& collectible : collision_collectibles) {
+            // collectible had already been collected
+            if (collectible->GetVisible() == false) {
+                continue;
+            }
+            glm::vec2 a = {mario_x, mario_y + 2 * BLOCK_SIZE};
+            glm::vec2 b = collectible->m_Transform.translation;
+            glm::vec2 b_size = collectible->GetSize();
+            b_size.x *= collectible->GetScale().x;
+            b_size.y *= collectible->GetScale().y;
+
+            float aleft = a.x - mario_size.x / 2;
+            float aright = a.x + mario_size.x / 2;
+            float atop = a.y + mario_size.y / 2;
+            float abottom = a.y - mario_size.y / 2;
+
+            float bleft = b.x - b_size.x / 2;
+            float bright = b.x + b_size.x / 2;
+            float btop = b.y + b_size.y / 2;
+            float bbottom = b.y - b_size.y / 2;
+            bool collisionX = (aleft < bright) && (aright > bleft);
+            bool collisionY = (abottom < btop) && (atop > bbottom);
+            if (collisionX && collisionY) {
+                IncreaseCoin(1);
+                collectible->SetVisible(false);
+            }
+        }
         return true;
     }
+
     this->SetPosition({ mario_x, mario_y });
 
     // 如果沒有碰撞，表示在滯空狀態
@@ -304,7 +333,7 @@ void Mario::UpdateAnimation() {
         // }
         state = MarioState::Jump;
     } else {
-        // 在地面上依據移動與否決定站立或跑步
+        // Standing or running on the ground depending on whether you are moving or not
         if (direction != 0) {
             if(state != MarioState::Run) {
                 this->SetPlaying(true);
@@ -351,10 +380,10 @@ void Mario::Die() {
         collision_enabled = false; // Disable collisions
 
         // Play death sound
-        // TODO find this sound
-        // std::shared_ptr<Util::SFX> death_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/mario_die.mp3");
-        // death_sfx->SetVolume(70);
-        // death_sfx->Play();
+        // todo check this sound
+        std::shared_ptr<Util::SFX> death_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Music/gameover.mp3");
+        death_sfx->SetVolume(70);
+        death_sfx->Play();
 
         // Set death animation
         this->SetImages(AnimationDead, 1000, 0);
@@ -399,11 +428,11 @@ float Mario::OnUpdate(const float delta) {
     // update moving
     const int direction = is_right_key_down - is_left_key_down;
     const float distance = direction * run_velocity * delta;
+
     OnRun(distance);
 
     isJumping = GravityAndCollision(3 * delta);
 
-    // 每幀更新動畫圖片狀態
     UpdateAnimation();
 
     return distance;
@@ -411,6 +440,9 @@ float Mario::OnUpdate(const float delta) {
 
 float Mario::Move() {
     if (is_dying) {
+        // clear key down state
+        is_left_key_down = false;
+        is_right_key_down = false;
         UpdateDeadState(1.0f);
         return 0.0f; // No camera movement when dead
     }

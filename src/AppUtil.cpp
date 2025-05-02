@@ -61,78 +61,109 @@ void App::ResetPhase() {
 
     size_t imgidx_size = tmpidx.size();
     int propidx = 0;
+
     for (size_t i = 0; i < imgidx_size; i++) {
-        bool setprop = false;
-        if (propsx[propidx] == tmpx[i] && propsy[propidx] == tmpy[i]) {
-            setprop = true;
-        }
+        bool hasProp = (propsx[propidx] == tmpx[i] && propsy[propidx] == tmpy[i]);
 
-        std::shared_ptr<Props> tempp;
-        if (setprop) {
-            int prop_imgidx = 0;
-            prop_imgidx = propsidx[propidx];
-            propidx += 1;
+        std::shared_ptr<Block> block;
+        std::shared_ptr<Props> prop;
 
-            auto temp = std::make_shared<MysteryBlock>();
+        // Block with props
+        if (hasProp) {
+            int prop_imgidx = propsidx[propidx++];
+            auto mysteryBlock = std::make_shared<MysteryBlock>();
 
-            if (prop_imgidx == 0) {
-                tempp = std::make_shared<OneUpMushroom>();
-                tempp->SetImage(m_PM->propsImagePaths[prop_imgidx]);
-                temp->SetInsidePropType(Block::PROP_TYPE::OneUpMushroom);
-            }else if (prop_imgidx == 1) {
-                tempp = std::make_shared<MagicMushroom>();
-                tempp->SetImage(m_PM->propsImagePaths[prop_imgidx]);
-                temp->SetInsidePropType(Block::PROP_TYPE::MagicMushroom);
-            }else if (prop_imgidx == 2) {
-                tempp = std::make_shared<Starman>();
-                tempp->SetImage({m_PM->propsImagePaths[prop_imgidx], m_PM->propsImagePaths[prop_imgidx+1], m_PM->propsImagePaths[prop_imgidx+2], m_PM->propsImagePaths[prop_imgidx+3], m_PM->propsImagePaths[prop_imgidx+4], m_PM->propsImagePaths[prop_imgidx+5]}, 200, 0);
-                temp->SetInsidePropType(Block::PROP_TYPE::Starman);
-            }else if (prop_imgidx == 8) {
-                tempp = std::make_shared<FireFlower>();
-                tempp->SetImage({m_PM->propsImagePaths[prop_imgidx], m_PM->propsImagePaths[prop_imgidx+1], m_PM->propsImagePaths[prop_imgidx+2], m_PM->propsImagePaths[prop_imgidx+3], m_PM->propsImagePaths[prop_imgidx+4], m_PM->propsImagePaths[prop_imgidx+5]}, 1000, 0);
-                temp->SetInsidePropType(Block::PROP_TYPE::FireFlower);
-            }else if(prop_imgidx == 16) {
-                tempp = std::make_shared<Coin>();
-                tempp->SetImage({m_PM->propsImagePaths[prop_imgidx], m_PM->propsImagePaths[prop_imgidx+1], m_PM->propsImagePaths[prop_imgidx+2], m_PM->propsImagePaths[prop_imgidx+3]}, 200, 0);
-                temp->SetInsidePropType(Block::PROP_TYPE::Coin);
+            switch (prop_imgidx) {
+                case 0:
+                    prop = std::make_shared<OneUpMushroom>();
+                    prop->SetImage(m_PM->propsImagePaths[prop_imgidx]);
+                    mysteryBlock->SetInsidePropType(Block::PROP_TYPE::OneUpMushroom);
+                    break;
+
+                case 1:
+                    prop = std::make_shared<MagicMushroom>();
+                    prop->SetImage(m_PM->propsImagePaths[prop_imgidx]);
+                    mysteryBlock->SetInsidePropType(Block::PROP_TYPE::MagicMushroom);
+                    break;
+
+                case 2:
+                    prop = std::make_shared<Starman>();
+                    prop->SetImage({
+                        m_PM->propsImagePaths[prop_imgidx],
+                        m_PM->propsImagePaths[prop_imgidx+1],
+                        m_PM->propsImagePaths[prop_imgidx+2],
+                        m_PM->propsImagePaths[prop_imgidx+3],
+                        m_PM->propsImagePaths[prop_imgidx+4],
+                        m_PM->propsImagePaths[prop_imgidx+5]
+                    }, 200, 0);
+                    mysteryBlock->SetInsidePropType(Block::PROP_TYPE::Starman);
+                    break;
+
+                case 8:
+                    prop = std::make_shared<FireFlower>();
+                    prop->SetImage({
+                        m_PM->propsImagePaths[prop_imgidx],
+                        m_PM->propsImagePaths[prop_imgidx+1],
+                        m_PM->propsImagePaths[prop_imgidx+2],
+                        m_PM->propsImagePaths[prop_imgidx+3],
+                        m_PM->propsImagePaths[prop_imgidx+4],
+                        m_PM->propsImagePaths[prop_imgidx+5]
+                    }, 1000, 0);
+                    mysteryBlock->SetInsidePropType(Block::PROP_TYPE::FireFlower);
+                    break;
+
+                case 16: {
+                    prop = std::make_shared<Coin>();
+                    prop->SetImage({
+                        m_PM->propsImagePaths[prop_imgidx],
+                        m_PM->propsImagePaths[prop_imgidx+1],
+                        m_PM->propsImagePaths[prop_imgidx+2],
+                        m_PM->propsImagePaths[prop_imgidx+3]
+                    }, 200, 0);
+                    mysteryBlock->SetInsidePropType(Block::PROP_TYPE::Coin);
+                    break;
+                }
+
+                default:
+                    continue; // Unsupported item type
             }
-            tempp->SetScale(PROP_MAGNIFICATION, PROP_MAGNIFICATION);
-            tempp->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
-            // test props position visible or not
-            tempp->SetZIndex(-30);
-            props.push_back(tempp);
 
+            prop->SetScale(PROP_MAGNIFICATION, PROP_MAGNIFICATION);
+            prop->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            prop->SetZIndex(-30);
+            props.push_back(prop);
 
-            temp->SetProps(tempp);
+            mysteryBlock->SetProps(prop);
 
-            // TODO set coin(collision) 7 times {29,6}, {73,6}
-            if (m_Phase == Phase::Level1_2 && ((tmpx[i] == 29 || tmpx[i] == 73) && tmpy[i] == 6)) temp->SetCollisionTime(7);
-            blocks.push_back(temp);
-            blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
+            // Special case: Level 1-2 specific coordinates coin can be triggered 7 times
+            if (m_Phase == Phase::Level1_2 &&
+                ((tmpx[i] == 29 || tmpx[i] == 73) && tmpy[i] == 6)) {
+                mysteryBlock->SetCollisionTime(7);
+            }
+
+            block = mysteryBlock;
         }
 
-        if(!setprop) {
-            if(tmpidx[i] == 6 || tmpidx[i] == 9) {
-                // mysteryblock but will not goto here
-                // auto temp = std::make_shared<MysteryBlock>();
-                // blocks.push_back(temp);
-                // blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
-            }else if(tmpidx[i] == 0 || tmpidx[i] == 1) {
-                // TODO prop drop if common block
-                auto temp = std::make_shared<CommonBlock>();
-                blocks.push_back(temp);
-                blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
-                blocks.back()->SetInsidePropType(Block::PROP_TYPE::None);
-            }else {
-                blocks.push_back(std::make_shared<ImmovableBlock>());
-                blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
-                blocks.back()->SetInsidePropType(Block::PROP_TYPE::None);
+        // Block without prop
+        if (!hasProp) {
+            if (tmpidx[i] == 0 || tmpidx[i] == 1) {
+                auto commonBlock = std::make_shared<CommonBlock>();
+                commonBlock->SetInsidePropType(Block::PROP_TYPE::None);
+                block = commonBlock;
+            } else {
+                auto immovableBlock = std::make_shared<ImmovableBlock>();
+                immovableBlock->SetInsidePropType(Block::PROP_TYPE::None);
+                block = immovableBlock;
             }
         }
 
-        blocks.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        blocks.back()->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        // Shared Block Settings
+        block->SetImage(m_BM->imagePaths[tmpidx[i]]);
+        block->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        block->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        blocks.push_back(block);
     }
+
     m_BM->SetBlocks(blocks);
     m_PM->SetProps(props);
     m_Mario->AddCollisionBlocks(blocks);

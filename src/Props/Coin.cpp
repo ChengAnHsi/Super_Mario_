@@ -7,7 +7,7 @@
 
 void Coin::SpawnProps() {
     state = PropsState::Spawning;
-    remaining_distance = BLOCK_SIZE * 4.0f;
+    remaining_distance = BLOCK_SIZE * 3.5f;
     velocityY = 18.0f; // 向上速度
     is_goingup = true;
     SetVisible(true);
@@ -24,15 +24,16 @@ void Coin::Update(float dt) {
 
             if (remaining_distance <= 0.0f) {
                 is_goingup = false;
-                remaining_distance = BLOCK_SIZE * 4.0f;
+                remaining_distance = BLOCK_SIZE * 3.5f;
             }
         }else {
             float actual_move = std::min(move, remaining_distance);
             SetPosition(GetPosition().x, GetPosition().y - actual_move);
             remaining_distance -= actual_move;
 
-            if (remaining_distance <= 0.0f) {
+            if (remaining_distance <= BLOCK_SIZE * 1.5f) {
                 state = PropsState::Active;
+                SetPosition(GetPosition().x, GetPosition().y - remaining_distance);
             }
         }
     } else if (state == PropsState::Active) {
