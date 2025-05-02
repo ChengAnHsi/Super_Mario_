@@ -10,7 +10,6 @@ CommonBlock::CommonBlock()
     Blocktype = TYPE::CommonBlock;
 }
 void CommonBlock::AfterCollisionEvents() {
-    // TODO check props pos
     if(isbreak == true) {
         return ;
     }
@@ -23,7 +22,5 @@ void CommonBlock::AfterCollisionEvents() {
     break_sfx->Play();
 
     collision_time -= 1;
-    if (collision_time == 0) {
-        iscollision = true;
-    }
+    if (collision_time == 0) iscollision = true;
 }

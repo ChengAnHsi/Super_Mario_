@@ -25,7 +25,6 @@ void Coin::Update(float dt) {
             if (remaining_distance <= 0.0f) {
                 is_goingup = false;
                 remaining_distance = BLOCK_SIZE * 4.0f;
-                velocityY = 18.0f;
             }
         }else {
             float actual_move = std::min(move, remaining_distance);
@@ -34,8 +33,6 @@ void Coin::Update(float dt) {
 
             if (remaining_distance <= 0.0f) {
                 state = PropsState::Active;
-                // 初始化正常下落速度，反向
-                velocityY = -300.0f;
             }
         }
     } else if (state == PropsState::Active) {

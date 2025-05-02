@@ -4,10 +4,16 @@
 
 #include "Blocks/ImmovableBlock.hpp"
 
-ImmovableBlock::ImmovableBlock()
-{
+ImmovableBlock::ImmovableBlock(){
     Blocktype = TYPE::ImmovableBlock;
+    iscollision = true;
 }
+
 void ImmovableBlock::AfterCollisionEvents() {
-    // nothing to do
+    if(iscollision == true) {
+        return ;
+    }
+
+    collision_time -= 1;
+    if (collision_time == 0) iscollision = true;
 }

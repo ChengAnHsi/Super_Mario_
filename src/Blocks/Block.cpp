@@ -3,6 +3,42 @@
 //
 
 #include "Blocks/Block.hpp"
+#include "Global.hpp"
+
+void Block::TriggerJumpAnimation() {
+    if (state == BlockState::Idle && iscollision == false) {
+        state = BlockState::Bouncing;
+        velocityY = 10.0f;
+        remaining_distance = BLOCK_SIZE * 0.5f; // 上升距離可微調
+        is_goingup = true;
+    }
+}
+
+void Block::Update(float dt) {
+    if (state == BlockState::Bouncing) {
+        float move = velocityY * dt;
+
+        if (is_goingup) {
+            float actual_move = std::min(move, remaining_distance);
+            SetPosition(GetPosition().x, GetPosition().y + actual_move);
+            remaining_distance -= actual_move;
+
+            if (remaining_distance <= 0.0f) {
+                is_goingup = false;
+                remaining_distance = BLOCK_SIZE * 0.5f;
+            }
+        } else {
+            float actual_move = std::min(move, remaining_distance);
+            SetPosition(GetPosition().x, GetPosition().y - actual_move);
+            remaining_distance -= actual_move;
+
+            if (remaining_distance <= 0.0f) {
+                state = BlockState::Idle;
+                // animation end，位置回復
+            }
+        }
+    }
+}
 
 bool Block::GetBroken() {
     return isbreak;

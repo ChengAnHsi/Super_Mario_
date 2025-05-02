@@ -23,6 +23,12 @@ BlockManager::BlockManager() {
     }
 }
 
+void BlockManager::UpdateBlocksAnimation() {
+    for (const auto & block : m_Blocks) {
+        block->Update(1.0f);
+    }
+}
+
 std::vector<std::shared_ptr<Util::GameObject>> BlockManager::GetChildren() {
     std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
     for (auto block : m_Blocks) {
