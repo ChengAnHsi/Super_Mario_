@@ -14,6 +14,10 @@ void Props::AfterCollisionEvents() {}
 
 void Props::UpdateAnimation(){}
 
+void Props::SetState(PropsState props_state) {
+    state = props_state;
+}
+
 void Props::AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) {
     for (const auto& box : boxes) {
         collision_boxes.push_back(box);

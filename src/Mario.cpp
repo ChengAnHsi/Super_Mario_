@@ -5,6 +5,7 @@
 #include "Mario.hpp"
 #include "Global.hpp"
 #include "App.hpp"
+#include "Blocks/MysteryBlock.hpp"
 
 #include "Util/Input.hpp"
 #include "Util/Keycode.hpp"
@@ -259,8 +260,11 @@ bool Mario::GravityAndCollision(const float delta) {
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
-            // TODO need to check common block, but has prop(solution: change has prop block to mystery block)
-            if((is_grow && block->GetBlocktype() == Block::TYPE::CommonBlock) || block->GetBlocktype() == Block::TYPE::MysteryBlock) {
+            if(is_grow && block->GetBlockType() == Block::TYPE::CommonBlock) {
+                block->AfterCollisionEvents();
+            }
+            if (block->GetBlockType() == Block::TYPE::MysteryBlock) {
+                if (block->GetInsidePropType() == Block::PROP_TYPE::Coin && block->GetCollisionTime() > 0) coin += 1;
                 block->AfterCollisionEvents();
             }
 

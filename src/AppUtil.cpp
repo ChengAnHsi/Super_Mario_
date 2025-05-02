@@ -73,21 +73,28 @@ void App::ResetPhase() {
             prop_imgidx = propsidx[propidx];
             propidx += 1;
 
+            auto temp = std::make_shared<MysteryBlock>();
+
             if (prop_imgidx == 0) {
                 tempp = std::make_shared<OneUpMushroom>();
                 tempp->SetImage(m_PM->propsImagePaths[prop_imgidx]);
+                temp->SetInsidePropType(Block::PROP_TYPE::OneUpMushroom);
             }else if (prop_imgidx == 1) {
                 tempp = std::make_shared<MagicMushroom>();
                 tempp->SetImage(m_PM->propsImagePaths[prop_imgidx]);
+                temp->SetInsidePropType(Block::PROP_TYPE::MagicMushroom);
             }else if (prop_imgidx == 2) {
                 tempp = std::make_shared<Starman>();
                 tempp->SetImage({m_PM->propsImagePaths[prop_imgidx], m_PM->propsImagePaths[prop_imgidx+1], m_PM->propsImagePaths[prop_imgidx+2], m_PM->propsImagePaths[prop_imgidx+3], m_PM->propsImagePaths[prop_imgidx+4], m_PM->propsImagePaths[prop_imgidx+5]}, 200, 0);
+                temp->SetInsidePropType(Block::PROP_TYPE::Starman);
             }else if (prop_imgidx == 8) {
                 tempp = std::make_shared<FireFlower>();
                 tempp->SetImage({m_PM->propsImagePaths[prop_imgidx], m_PM->propsImagePaths[prop_imgidx+1], m_PM->propsImagePaths[prop_imgidx+2], m_PM->propsImagePaths[prop_imgidx+3], m_PM->propsImagePaths[prop_imgidx+4], m_PM->propsImagePaths[prop_imgidx+5]}, 1000, 0);
+                temp->SetInsidePropType(Block::PROP_TYPE::FireFlower);
             }else if(prop_imgidx == 16) {
                 tempp = std::make_shared<Coin>();
                 tempp->SetImage({m_PM->propsImagePaths[prop_imgidx], m_PM->propsImagePaths[prop_imgidx+1], m_PM->propsImagePaths[prop_imgidx+2], m_PM->propsImagePaths[prop_imgidx+3]}, 200, 0);
+                temp->SetInsidePropType(Block::PROP_TYPE::Coin);
             }
             tempp->SetScale(PROP_MAGNIFICATION, PROP_MAGNIFICATION);
             tempp->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
@@ -95,8 +102,11 @@ void App::ResetPhase() {
             tempp->SetZIndex(-30);
             props.push_back(tempp);
 
-            auto temp = std::make_shared<MysteryBlock>();
+
             temp->SetProps(tempp);
+
+            // TODO set coin(collision) 7 times {29,6}, {73,6}
+            if (m_Phase == Phase::Level1_2 && ((tmpx[i] == 29 || tmpx[i] == 73) && tmpy[i] == 6)) temp->SetCollisionTime(7);
             blocks.push_back(temp);
             blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
         }
@@ -112,9 +122,11 @@ void App::ResetPhase() {
                 auto temp = std::make_shared<CommonBlock>();
                 blocks.push_back(temp);
                 blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
+                blocks.back()->SetInsidePropType(Block::PROP_TYPE::None);
             }else {
                 blocks.push_back(std::make_shared<ImmovableBlock>());
                 blocks.back()->SetImage(m_BM->imagePaths[tmpidx[i]]);
+                blocks.back()->SetInsidePropType(Block::PROP_TYPE::None);
             }
         }
 
@@ -183,7 +195,6 @@ void App::ResetPhase() {
 }
 
 void App::NextPhase(bool is_nextphase) {
-    LOG_DEBUG("Validating the task {}", static_cast<int>(m_Phase));
     if(is_nextphase) {
         switch (m_Phase) {
             case Phase::Start:

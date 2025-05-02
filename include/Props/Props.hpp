@@ -25,6 +25,8 @@ public:
     virtual void Update(float dt) = 0;
     virtual void AfterCollisionEvents();
 
+    void SetState(PropsState props_state);
+
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
     void ClearCollisionBoxes();
