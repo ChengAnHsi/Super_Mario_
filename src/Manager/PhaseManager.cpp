@@ -9,9 +9,9 @@
 PhaseResourceManger::PhaseResourceManger() {
     last_update = std::chrono::steady_clock::now();
 
-    m_MarioText = std::make_shared<TaskText>();
-    m_MarioText->SetPosition(-250, 300);
-    m_MarioText->SetTxtIdx(1, 0);
+    m_ScoreText = std::make_shared<TaskText>();
+    m_ScoreText->SetPosition(-250, 300);
+    m_ScoreText->SetTxtIdx(1, 0);
 
     m_MoneyText = std::make_shared<TaskText>();
     m_MoneyText->SetPosition(-70, 285);
@@ -172,7 +172,7 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
 }
 
 void PhaseResourceManger::ResetPosition(float dis) const {
-    m_MarioText->m_Transform.translation.x += dis;
+    m_ScoreText->m_Transform.translation.x += dis;
     m_MoneyText->m_Transform.translation.x += dis;
     m_WorldText->m_Transform.translation.x += dis;
     m_TimeText->m_Transform.translation.x += dis;
@@ -213,4 +213,8 @@ void PhaseResourceManger::SetCoin(const int coin) const {
 
 std::vector<std::shared_ptr<BackgroundImage>> PhaseResourceManger::GetCollectibleCoins() {
     return m_CollectibleCoins;
+}
+
+void PhaseResourceManger::SetScore(const int score) const {
+    m_ScoreText->SetTxtIdx(1, score);
 }

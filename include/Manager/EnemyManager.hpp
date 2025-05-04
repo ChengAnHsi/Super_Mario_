@@ -58,7 +58,7 @@ public:
     void SetEnemyMoving();
     void SetAllEnemyCollisionBoxs(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void SetAllEnemyCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
-    void CheckMarioCollisions(std::shared_ptr<Mario> mario);
+    bool CheckMarioCollisions(std::shared_ptr<Mario> mario);
 private:
     // map 1-1
     std::vector<float> tmp_x = {22,40,51,52.5,80,82,97,98.5,107,114,115.5,124,125.5,128,129.5,174,175.5};

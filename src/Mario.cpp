@@ -240,6 +240,9 @@ bool Mario::GravityAndCollision(const float delta) {
             collectible->SetVisible(false);
         }
     }
+
+    bool collision_top_block = false;
+
     for (const auto &block : collision_blocks) {
         // block had already destroyed
         if(block->GetBroken() == true) {
@@ -258,6 +261,7 @@ bool Mario::GravityAndCollision(const float delta) {
             this->SetPosition({ mario_x, mario_y });
             return false;  // 碰撞到地面，不在滯空狀態
         }
+
         if(Y_state == CollisionState::Top) {
             block->TriggerJumpAnimation();
 
@@ -269,6 +273,7 @@ bool Mario::GravityAndCollision(const float delta) {
                 block->AfterCollisionEvents();
             }
 
+            if(block->GetBlockType() != Block::TYPE::ImmovableBlock) collision_top_block = true;
             // 固定在方塊下方開始下墜
             mario_y = block->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
             this->SetPosition({ mario_x, mario_y });
@@ -277,33 +282,35 @@ bool Mario::GravityAndCollision(const float delta) {
     }
     if (Y_state == CollisionState::Top) {
         velocityY = 0;
-        // todo immovable block cannot got coin
-        // check collect collectible
-        for (const auto& collectible : collision_collectibles) {
-            // collectible had already been collected
-            if (collectible->GetVisible() == false) {
-                continue;
-            }
-            glm::vec2 a = {mario_x, mario_y + 2 * BLOCK_SIZE};
-            glm::vec2 b = collectible->m_Transform.translation;
-            glm::vec2 b_size = collectible->GetSize();
-            b_size.x *= collectible->GetScale().x;
-            b_size.y *= collectible->GetScale().y;
 
-            float aleft = a.x - mario_size.x / 2;
-            float aright = a.x + mario_size.x / 2;
-            float atop = a.y + mario_size.y / 2;
-            float abottom = a.y - mario_size.y / 2;
+        if(collision_top_block) {
+            // check collect collectible
+            for (const auto& collectible : collision_collectibles) {
+                // collectible had already been collected
+                if (collectible->GetVisible() == false) {
+                    continue;
+                }
+                glm::vec2 a = {mario_x, mario_y + 2 * BLOCK_SIZE};
+                glm::vec2 b = collectible->m_Transform.translation;
+                glm::vec2 b_size = collectible->GetSize();
+                b_size.x *= collectible->GetScale().x;
+                b_size.y *= collectible->GetScale().y;
 
-            float bleft = b.x - b_size.x / 2;
-            float bright = b.x + b_size.x / 2;
-            float btop = b.y + b_size.y / 2;
-            float bbottom = b.y - b_size.y / 2;
-            bool collisionX = (aleft < bright) && (aright > bleft);
-            bool collisionY = (abottom < btop) && (atop > bbottom);
-            if (collisionX && collisionY) {
-                IncreaseCoin(1);
-                collectible->SetVisible(false);
+                float aleft = a.x - mario_size.x / 2;
+                float aright = a.x + mario_size.x / 2;
+                float atop = a.y + mario_size.y / 2;
+                float abottom = a.y - mario_size.y / 2;
+
+                float bleft = b.x - b_size.x / 2;
+                float bright = b.x + b_size.x / 2;
+                float btop = b.y + b_size.y / 2;
+                float bbottom = b.y - b_size.y / 2;
+                bool collisionX = (aleft < bright) && (aright > bleft);
+                bool collisionY = (abottom < btop) && (atop > bbottom);
+                if (collisionX && collisionY) {
+                    IncreaseCoin(1);
+                    collectible->SetVisible(false);
+                }
             }
         }
         return true;
@@ -361,8 +368,9 @@ void Mario::UpdateAnimation() {
         }
     }
 }
+
 void Mario::Die() {
-    if (is_dead) return; // Already dead
+    if (is_dead || is_dying) return; // Already dead
 
     if (is_grow) {
         // If Mario is grown, shrink him and play powerdown sound
@@ -391,7 +399,7 @@ void Mario::Die() {
 }
 
 void Mario::UpdateDeadState(float delta) {
-    if (!is_dying) return; // 確認是否正在死亡過程
+    if (!is_dying) return;
 
     death_timer += delta;
 
@@ -399,9 +407,11 @@ void Mario::UpdateDeadState(float delta) {
         // Just wait during the pause time - freeze position
         return;
     }
-    if (death_timer <= DEATH_PAUSE_TIME + DEATH_JUMP_DURATION) {
+
+    if(GetPosition().y >= -360.0f){
         // flying
         if (death_timer == DEATH_PAUSE_TIME + 1) {
+            // setting death jump velocity after freeze
             velocityY = DEATH_JUMP_VELOCITY;
         }
 
@@ -410,19 +420,8 @@ void Mario::UpdateDeadState(float delta) {
         float mario_x = GetPosition().x;
         float mario_y = GetPosition().y + velocityY * (delta / 60.0f);
         this->SetPosition({mario_x, mario_y});
-
-    } else {
-        // after dying
-        is_dying = false;
-        SetLive(GetLive() - 1);
-
-        // Game Over
-        if (GetLive() < 0) {
-            is_dead = true;
-        }
     }
 }
-
 
 float Mario::OnUpdate(const float delta) {
     // update moving

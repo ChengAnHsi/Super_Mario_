@@ -64,19 +64,17 @@ void App::Update() {
         m_EM->SetEnemyMoving();
     }
 
-    if(m_PRM->GetTime() == 0) {
-        m_Mario->Die();
-        if (m_Mario->GetLive() > 0) {
-            // reset phase
-            NextPhase(false);
-        }
-    }
+    if(m_PRM->GetTime() == 0) m_Mario->Die();
 
     // Calculate how far the camera should move to the right
     float dis = 0.0f;
     if(m_Phase != Phase::Start) {
         dis = m_Mario->Move();
-        // when mario move show coins he got
+
+        // show scores
+        m_PRM->SetScore(m_Mario->GetScore());
+
+        // show coins
         m_PRM->SetCoin(m_Mario->GetCoin());
 
         // update all activated props animation
@@ -85,7 +83,7 @@ void App::Update() {
         // update all activated blocks animation
         m_BM->UpdateBlocksAnimation();
 
-        // Add this line to check for collisions with enemies
+        // check for collisions with enemies
         m_EM->CheckMarioCollisions(m_Mario);
     }
 
@@ -105,12 +103,14 @@ void App::Update() {
 
     // lower than ground
     if(m_Mario->GetPosition().y < -360) {
-        if (m_Mario->is_dying == false) {
-            m_Mario->Die();
-            if (m_Mario->GetLive() > 0) {
-                // reset phase
-                NextPhase(false);
-            }
+        m_Mario->is_dying = false;
+        m_Mario->SetLive(m_Mario->GetLive() - 1);
+        if (m_Mario->GetLive() > 0) {
+            // reset phase
+            NextPhase(false);
+        }else {
+            // game over
+            m_Mario->is_dead = true;
         }
     }
 

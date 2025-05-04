@@ -56,8 +56,8 @@ public:
     void ClearCollisionBoxes();
     void ClearCollectibles();
     void ClearCollisionBlocks();
-    float velocityY = 0.0f;      // 角色在 Y 軸的速度
-    bool is_dead = false;
+    float velocityY = 0.0f; // Y axis speed
+    bool is_dead = false; // game over or not
     bool is_dying = false; // Transitional state between alive and dead
     void Die(); // Handle Mario's death sequence
     void UpdateDeadState(float delta); // Update function for when Mario is dead
@@ -108,7 +108,6 @@ private:
     std::vector<std::string> AnimationStandGrow = {RESOURCE_DIR"/Entities/mario_grown_stand.png"};
 
     bool is_grow = false;
-
 };
 #endif //MARIO_HPP
 

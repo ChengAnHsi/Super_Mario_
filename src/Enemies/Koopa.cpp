@@ -6,7 +6,7 @@
 
 // Fixed Koopa.cpp with improved collision detection
 bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
-    if (is_dead || !GetVisible() || mario->is_dead) {
+    if (is_dead || !GetVisible() || mario->is_dying) {
         return false; // No collision if already dead or not visible
     }
 
@@ -76,52 +76,48 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
                     stomp_sfx->SetVolume(200);
                     stomp_sfx->Play();
                 }
-                return true;
-            } else {
-                // Koopa is already a shell
-                if (shell_is_moving) {
-                    // Stop the moving shell
-                    shell_is_moving = false;
-                    SetMoving(false);
-                    mario->OnKillJump(); // Make Mario bounce
-
-                    // Play stop shell sound effect
-                    std::shared_ptr<Util::SFX> stop_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/stomp.wav");
-                    if (stop_sfx) {
-                        stop_sfx->SetVolume(200);
-                        stop_sfx->Play();
-                    }
-                } else {
-                    // Kick the stationary shell when stomping on it
-                    KickShell(mario);
-                    mario->OnKillJump(); // Make Mario bounce
-                }
-                return true;
+                return false;
             }
+            // Koopa is already a shell
+            if (shell_is_moving) {
+                // Stop the moving shell
+                shell_is_moving = false;
+                SetMoving(false);
+                mario->OnKillJump(); // Make Mario bounce
+
+                // Play stop shell sound effect
+                std::shared_ptr<Util::SFX> stop_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/stomp.wav");
+                if (stop_sfx) {
+                    stop_sfx->SetVolume(200);
+                    stop_sfx->Play();
+                }
+            } else {
+                // Kick the stationary shell when stomping on it
+                KickShell(mario);
+                mario->OnKillJump(); // Make Mario bounce
+            }
+            return false;
         }
         // SIDE OR BOTTOM COLLISION
-        else {
-            // Left or right side collision (min_index 0 or 1) or bottom collision (min_index 3)
-            if (!is_shell || (is_shell && shell_is_moving)) {
-                // Only hurt Mario if not invincible and not coming from above
-                if (!mario->IsInvincible && mario->GetLive() > 0) {
-                    mario->Die();
-                }
-            } else if (is_shell && !shell_is_moving) {
-                // Special handling for side collision with stationary shell
-                if (min_index == 0 || min_index == 1) {
-                    // Kick the stationary shell from the side
-                    return KickShell(mario);
-                } else if (min_index == 3) {
-                    // Bottom collision (Mario from top) with stationary shell - Mario doesn't get hurt
-                    // Just allow Mario to stand/walk on top of the shell
-                    return true;
-                } else {
-                    // Other collisions with stationary shell - Mario gets hurt
-                    if (!mario->IsInvincible && mario->GetLive() > 0) {
-                        mario->Die();
-                    }
-                }
+        // Left or right side collision (min_index 0 or 1) or bottom collision (min_index 3)
+        if (!is_shell || (is_shell && shell_is_moving)) {
+            // Only hurt Mario if not invincible and not coming from above
+            if (!mario->IsInvincible && mario->GetLive() > 0) {
+                mario->Die();
+            }
+        } else if (is_shell && !shell_is_moving) {
+            // Special handling for side collision with stationary shell
+            if (min_index == 0 || min_index == 1) {
+                // Kick the stationary shell from the side
+                return KickShell(mario);
+            } if (min_index == 3) {
+                // Bottom collision (Mario from top) with stationary shell - Mario doesn't get hurt
+                // Just allow Mario to stand/walk on top of the shell
+                return true;
+            }
+            // Other collisions with stationary shell - Mario gets hurt
+            if (!mario->IsInvincible && mario->GetLive() > 0) {
+                mario->Die();
             }
         }
         return true;
@@ -254,7 +250,6 @@ void Koopa::Action(const float distance) {
 }
 
 bool Koopa::AABBCollides(glm::vec2 Koopa_pos, std::shared_ptr<BackgroundImage> box) {
-
     glm::vec2 a = Koopa_pos;
     glm::vec2 Koopa_size = this->m_Drawable->GetSize();
     Koopa_size *= KOOPA_MAGNIFICATION;

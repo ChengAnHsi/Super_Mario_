@@ -4,7 +4,7 @@
 #include "Util/SFX.hpp"
 
 bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
-    if (is_dead || !GetVisible() || mario->is_dead) {
+    if (is_dead || !GetVisible() || mario->is_dying) {
         return false; // No collision if already dead or not visible
     }
 
@@ -47,22 +47,20 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         // 3. The vertical overlap is small compared to Mario's height
         float overlap_threshold = 12.0f; // Allow a slightly larger overlap
 
-        if ((mario_bottom <= goomba_top + overlap_threshold) &&
-            mario_moving_down &&
-            overlap_percentage < 0.5f) {
-
+        if (mario_bottom <= goomba_top + overlap_threshold && mario_moving_down && overlap_percentage < 0.5f) {
             // Mario is stepping on Goomba from above
             KillGoomba();
             // Make Mario bounce with a small jump
             mario->OnKillJump();
             // Increase Mario's score
             mario->IncreaseScore(score);
-            return true;
+            return false;
         }
 
         // Collision from the side or bottom - Mario gets hurt if not invincible
-        if (!mario->is_dead && mario->GetLive() > 0) {
+        if (!mario->is_dying && mario->GetLive() > 0) {
             mario->Die(); // Call our new Die method instead
+            return true;
         }
     }
     return false;
