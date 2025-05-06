@@ -4,13 +4,16 @@
 #include "BackgroundImage.hpp"
 #include "Blocks/Block.hpp"
 #include "CollisionState.hpp"
+#include "Mario.hpp"
 
 class Props : public BackgroundImage {
 public:
     enum class PropsState {
         Not_Activated,
         Spawning,
-        Active
+        Moving,
+        Active,
+        After_Activated
     };
 
     Props() = default;
@@ -23,9 +26,11 @@ public:
 
     virtual void SpawnProps() = 0;
     virtual void Update(float dt) = 0;
-    virtual void AfterCollisionEvents();
+    bool CheckCollisionWithMario(std::shared_ptr<Mario> mario) const;
+    virtual void AfterCollisionEvents(std::shared_ptr<Mario> mario);
 
     void SetState(PropsState props_state);
+    PropsState GetState() const;
 
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);

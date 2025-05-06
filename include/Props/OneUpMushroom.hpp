@@ -12,7 +12,7 @@ public:
     OneUpMushroom() = default;
     void SpawnProps() override;
     void Update(float dt) override;
-    void AfterCollisionEvents() override;
+    void AfterCollisionEvents(std::shared_ptr<Mario> mario) override;
 
     void UpdateAnimation() override;
 

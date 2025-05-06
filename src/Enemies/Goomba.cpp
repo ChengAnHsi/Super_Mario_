@@ -152,8 +152,11 @@ bool Goomba::AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage>
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
+
     b_size.x *= box->GetScale().x;
     b_size.y *= box->GetScale().y;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
 
     X_state = CollisionState::None;
     float aleft = a.x - goomba_size.x / 2;
@@ -191,8 +194,11 @@ bool Goomba::CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage>
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
+
     b_size.x *= box->GetScale().x;
     b_size.y *= box->GetScale().y;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
 
     Y_state = CollisionState::None;
     float aleft = a.x - goomba_size.x / 2;

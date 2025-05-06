@@ -1,8 +1,11 @@
 #include "Props/FireFlower.hpp"
 #include "Global.hpp"
 
-void FireFlower::AfterCollisionEvents(){
-
+void FireFlower::AfterCollisionEvents(std::shared_ptr<Mario> mario){
+    if(state == PropsState::After_Activated) return;
+    if(state == PropsState::Active) SetVisible(false);
+    // todo mario state change, if state is flower then add point
+    state = PropsState::After_Activated;
 }
 
 void FireFlower::SpawnProps() {
@@ -21,12 +24,12 @@ void FireFlower::Update(float dt) {
 
         if (remaining_distance <= 0.0f) {
             // 浮出完成，進入正常狀態
-            state = PropsState::Active;
+            state = PropsState::Moving;
 
             // 初始化正常下落速度，反向
             velocityY = -300.0f;
         }
-    } else if (state == PropsState::Active) {
+    } else if (state == PropsState::Moving) {
         Move();
     }
 }
@@ -103,8 +106,11 @@ bool FireFlower::AABBCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundImag
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
+
     b_size.x *= box->GetScale().x;
     b_size.y *= box->GetScale().y;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
 
     X_state = CollisionState::None;
     float aleft = a.x - prop_size.x / 2;
@@ -142,8 +148,11 @@ bool FireFlower::CCDDCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundImag
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
+
     b_size.x *= box->GetScale().x;
     b_size.y *= box->GetScale().y;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
 
     Y_state = CollisionState::None;
     float aleft = a.x - prop_size.x / 2;
@@ -253,6 +262,6 @@ void FireFlower::OnUpdate(const float delta) {
 }
 
 void FireFlower::Move(){
-    if (state != PropsState::Active) return;
+    if (state != PropsState::Moving) return;
     OnUpdate(1);
 }

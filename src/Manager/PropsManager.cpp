@@ -20,6 +20,15 @@ void PropsManager::UpdatePropsAnimation() const {
     }
 }
 
+void PropsManager::CheckCollisionWithMario(std::shared_ptr<Mario> mario) {
+    for (auto& prop : m_props) {
+        if (prop->GetState() == Props::PropsState::Moving && prop->CheckCollisionWithMario(mario)) {
+            prop->SetState(Props::PropsState::Active);
+            prop->AfterCollisionEvents(mario);
+        }
+    }
+}
+
 void PropsManager::AddAllPropsCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) const {
     for (const auto & prop : m_props) {
         prop->AddCollisionBlocks(blocks);

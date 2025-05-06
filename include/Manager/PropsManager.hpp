@@ -6,7 +6,7 @@
 #define PROPSMANAGER_HPP
 
 #include "Props/Props.hpp"
-#include "../PTSD/include/Util/Renderer.hpp"
+#include "Mario.hpp"
 
 class PropsManager {
 public:
@@ -38,6 +38,7 @@ public:
     };
 
     void UpdatePropsAnimation() const;
+    void CheckCollisionWithMario(std::shared_ptr<Mario> mario);
     void AddAllPropsCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) const;
     void AddAllPropsCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) const;
 

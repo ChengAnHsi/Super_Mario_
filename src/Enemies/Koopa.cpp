@@ -256,8 +256,11 @@ bool Koopa::AABBCollides(glm::vec2 Koopa_pos, std::shared_ptr<BackgroundImage> b
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
+
     b_size.x *= box->GetScale().x;
     b_size.y *= box->GetScale().y;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
 
     X_state = CollisionState::None;
     float aleft = a.x - Koopa_size.x / 2;
@@ -296,8 +299,11 @@ bool Koopa::CCDDCollides(glm::vec2 Koopa_pos, std::shared_ptr<BackgroundImage> b
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
+
     b_size.x *= box->GetScale().x;
     b_size.y *= box->GetScale().y;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
 
     Y_state = CollisionState::None;
     float aleft = a.x - Koopa_size.x / 2;

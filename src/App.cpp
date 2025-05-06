@@ -80,6 +80,9 @@ void App::Update() {
         // update all activated props animation
         m_PM->UpdatePropsAnimation();
 
+        // check props and mario collision
+        m_PM->CheckCollisionWithMario(m_Mario);
+
         // update all activated blocks animation
         m_BM->UpdateBlocksAnimation();
 

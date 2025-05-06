@@ -126,8 +126,11 @@ bool Mario::AABBCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> b
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
+
     b_size.x *= box->GetScale().x;
     b_size.y *= box->GetScale().y;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
 
     X_state = CollisionState::None;
     float aleft = a.x - mario_size.x / 2;
@@ -163,8 +166,11 @@ bool Mario::CCDDCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> b
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
+
     b_size.x *= box->GetScale().x;
     b_size.y *= box->GetScale().y;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
 
     Y_state = CollisionState::None;
     float aleft = a.x - mario_size.x / 2;
@@ -369,6 +375,28 @@ void Mario::UpdateAnimation() {
     }
 }
 
+void Mario::SetGrowingAnimation() {
+    if (is_grow) return;
+
+    is_grow = true;
+    is_growing = true;
+
+    // TODO set image not in floor
+    this->SetImages(this->AnimationGrow, 200, 0);
+
+    std::shared_ptr<Util::SFX> grow_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Temp/Sound/mushroomeat.wav");
+    grow_sfx->SetVolume(70);
+    grow_sfx->Play();
+}
+
+void Mario::UpdateGrowingState() {
+    if (is_grow == false) return;
+
+    if(this->IfAnimationEnds()) {
+        is_growing = false;
+    }
+}
+
 void Mario::Die() {
     if (is_dead || is_dying) return; // Already dead
 
@@ -385,11 +413,10 @@ void Mario::Die() {
         // Mario dies
         is_dying = true;
         death_timer = 0.0f;
-        collision_enabled = false; // Disable collisions
+        //collision_enabled = false; // Disable collisions
 
         // Play death sound
-        // todo check this sound
-        std::shared_ptr<Util::SFX> death_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Music/gameover.mp3");
+        std::shared_ptr<Util::SFX> death_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Temp/Sound/death.wav");
         death_sfx->SetVolume(70);
         death_sfx->Play();
 
@@ -445,11 +472,21 @@ float Mario::Move() {
         UpdateDeadState(1.0f);
         return 0.0f; // No camera movement when dead
     }
+    if (is_growing) {
+        // clear key down state
+        is_left_key_down = false;
+        is_right_key_down = false;
+        UpdateGrowingState();
+        return 0.0f; // 阻止移動與其他輸入處理
+    }
 
     if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
         is_grow = not is_grow;
-        // TODO fix animation not correct
-        this->SetImages(this->AnimationGrow, 1000, 0);
+        if(is_grow) {
+            SetGrowingAnimation();
+        }else {
+            SetImages(AnimationStand, 1000, 0);
+        }
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
         is_left_key_down = true;

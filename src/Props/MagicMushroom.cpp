@@ -1,8 +1,14 @@
 #include "Props/MagicMushroom.hpp"
 #include "Global.hpp"
 
-void MagicMushroom::AfterCollisionEvents(){
-
+void MagicMushroom::AfterCollisionEvents(std::shared_ptr<Mario> mario){
+    if(state == PropsState::After_Activated) return;
+    if(state == PropsState::Active) {
+        SetVisible(false);
+        // todo if state is grow then add point
+        mario->SetGrowingAnimation();
+        state = PropsState::After_Activated;
+    }
 }
 
 void MagicMushroom::SpawnProps() {
@@ -21,12 +27,12 @@ void MagicMushroom::Update(float dt) {
 
         if (remaining_distance <= 0.0f) {
             // 浮出完成，進入正常狀態
-            state = PropsState::Active;
+            state = PropsState::Moving;
 
             // 初始化正常下落速度，反向
             velocityY = -300.0f;
         }
-    } else if (state == PropsState::Active) {
+    } else if (state == PropsState::Moving) {
         Move();
     }
 }
@@ -37,12 +43,6 @@ void MagicMushroom::Action(const float distance) {
 
     const float step = BLOCK_SIZE / 4.0f;
     float remaining_distance = distance;
-    float step_distance = std::min(step, std::abs(distance));
-
-    // go left or right
-    if (!isFacingRight){
-        step_distance *= -1;
-    }
 
     bool collision = false;
     while (std::abs(remaining_distance) > 0.0f) {
@@ -101,8 +101,11 @@ bool MagicMushroom::AABBCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundI
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
+
     b_size.x *= box->GetScale().x;
     b_size.y *= box->GetScale().y;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
 
     X_state = CollisionState::None;
     float aleft = a.x - prop_size.x / 2;
@@ -140,8 +143,11 @@ bool MagicMushroom::CCDDCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundI
 
     glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
+
     b_size.x *= box->GetScale().x;
     b_size.y *= box->GetScale().y;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
 
     Y_state = CollisionState::None;
     float aleft = a.x - prop_size.x / 2;
@@ -263,6 +269,6 @@ void MagicMushroom::OnUpdate(const float delta) {
 }
 
 void MagicMushroom::Move(){
-    if (state != PropsState::Active) return;
+    if (state != PropsState::Moving) return;
     OnUpdate(1);
 }

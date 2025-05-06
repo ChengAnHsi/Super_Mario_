@@ -14,7 +14,7 @@ public:
 
     void SpawnProps() override;
     void Update(float dt) override;
-    void AfterCollisionEvents() override;
+    void AfterCollisionEvents(std::shared_ptr<Mario> mario) override;
 
     // move function
     void Action(float distance) override;

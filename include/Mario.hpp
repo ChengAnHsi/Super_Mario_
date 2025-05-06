@@ -41,7 +41,10 @@ public:
     bool CCDDCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> box);
     bool GravityAndCollision(float delta);
 
+    // animation
     void UpdateAnimation();
+    void SetGrowingAnimation();
+    void UpdateGrowingState();
 
     // getter and setter
     void IncreaseCoin(int coin);
@@ -50,6 +53,7 @@ public:
     [[nodiscard]] int GetLive() const;
     void IncreaseScore(int score);
     [[nodiscard]] int GetScore() const;
+
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
     void AddCollectibles(std::vector<std::shared_ptr<BackgroundImage>> collectibles);
@@ -74,7 +78,7 @@ private:
     const float DEATH_PAUSE_TIME = 60.0f; // 1 second at 60fps
     const float DEATH_JUMP_DURATION = 120.0f;
     const float DEATH_JUMP_VELOCITY = 300.0f;
-    bool collision_enabled = true;
+    //bool collision_enabled = true;
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
     std::vector<std::shared_ptr<BackgroundImage>> collision_collectibles;
@@ -85,6 +89,8 @@ private:
 
     bool isJumping = false;
     bool isRunning = false;
+    bool is_grow = false;
+    bool is_growing = false;
     float delta_time = 1.0f;
     float run_velocity = 5.0f;
     float jump_velocity = 12.7f;
@@ -106,8 +112,6 @@ private:
     std::vector<std::string> AnimationRunGrow = {RESOURCE_DIR"/Entities/mario_grown0.png",RESOURCE_DIR"/Entities/mario_grown1.png",RESOURCE_DIR"/Entities/mario_grown2.png"};
     std::vector<std::string> AnimationJumpGrow = {RESOURCE_DIR"/Entities/mario_grown_Jump.png"};
     std::vector<std::string> AnimationStandGrow = {RESOURCE_DIR"/Entities/mario_grown_stand.png"};
-
-    bool is_grow = false;
 };
 #endif //MARIO_HPP
 
