@@ -34,19 +34,10 @@ bool Flower::CheckMarioCollision(std::shared_ptr<Mario> mario){
     bool collision_y = (mario_bottom < flower_top) && (mario_top > flower_bottom);
 
     if (collision_x && collision_y) {
-        // Calculate the vertical velocity direction
-        bool mario_moving_down = mario->velocityY <= 0;
-
-        // Calculate vertical overlap percentage to determine stomping
-        float vertical_overlap = std::min(mario_top, flower_top) - std::max(mario_bottom, flower_bottom);
-        float mario_height = mario_top - mario_bottom;
-        float overlap_percentage = vertical_overlap / mario_height;
-
-        float overlap_threshold = 12.0f; // Allow a slightly larger overlap
-
-        // Collision from the side or bottom - Mario gets hurt if not invincible
-        if (!mario->is_dying && mario->GetLive() > 0) {
-            mario->Die(); // Call our new Die method instead
+        // If collision happens, Mario gets hurt regardless of direction
+        // No special handling for stomping from above - Piranha Plants can't be killed this way
+        if (!mario->is_dying && mario->GetLive() > 0 && !mario->IsTemporarilyInvincible) {
+            mario->Die(); // Call Mario's Die method
             return true;
         }
     }
@@ -56,7 +47,7 @@ bool Flower::CheckMarioCollision(std::shared_ptr<Mario> mario){
 void Flower::UpdateYMovementRange() {
     // Apply your algorithm here
     if (m_Drawable != nullptr) {
-        min_y_position = GetPosition().y - (m_Drawable->GetSize().y*3.2);
+        min_y_position = GetPosition().y - (m_Drawable->GetSize().y*5.2);
         max_y_position = GetPosition().y - (m_Drawable->GetSize().y*0.1);
     }
 }
@@ -73,7 +64,7 @@ void Flower::Action(const float distance) {
     glm::vec2 Flower_size = m_Drawable->GetSize();
     Flower_size *= FLOWER_MAGNIFICATION;
 
-    const float step = BLOCK_SIZE / 32.0f;
+    const float step = BLOCK_SIZE / 48.0f;
     float remaining_distance = distance;
     float step_distance = std::min(step, std::abs(distance));
 

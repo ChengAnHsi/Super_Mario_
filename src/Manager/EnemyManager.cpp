@@ -130,6 +130,10 @@ void EnemyManager::SetupEnemyCollisions() {
             goomba->ClearEnemies();
             goomba->AddEnemies(m_Enemies);
         }
+        if (std::shared_ptr<Koopa> koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
+            koopa->ClearEnemies();
+            koopa->AddEnemies(m_Enemies);
+        }
     }
 }
 std::vector<std::shared_ptr<Enemy>> EnemyManager::GetEnemies(){
@@ -151,12 +155,15 @@ void EnemyManager::SetAllEnemyCollisionBlocks(std::vector<std::shared_ptr<Block>
 bool EnemyManager::CheckMarioCollisions(std::shared_ptr<Mario> mario) {
     bool is_collision = false;
     for (const auto& enemy : m_Enemies) {
-        // Dynamic cast to check if the enemy is a Goomba
+        // Check collisions for different enemy types
         if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
             is_collision = goomba->CheckMarioCollision(mario);
         }
-        if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
+        else if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
             is_collision = koopa->CheckMarioCollision(mario);
+        }
+        else if (auto flower = std::dynamic_pointer_cast<Flower>(enemy)) {
+            is_collision = flower->CheckMarioCollision(mario);
         }
 
         if(is_collision) return true;

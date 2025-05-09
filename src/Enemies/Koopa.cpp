@@ -18,23 +18,27 @@ void Koopa::ClearEnemies() {
     other_enemies.clear();
 }
 
-// Fixed Koopa.cpp with improved collision detection
-bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy){
+// In Koopa.cpp
+
+bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy) {
     // Don't check collision with self or if either enemy is dead or not visible
     if (this == enemy.get() || is_dead || !GetVisible()) {
         return false;
     }
 
+    // Check if the other enemy is dead
+    bool other_enemy_dead = false;
     if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
-        if (goomba->IsDead()) {
-            return false;
-        }
+        other_enemy_dead = goomba->IsDead();
     } else if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
-        if (koopa->IsDead()) {
-            return false;
-        }
+        other_enemy_dead = koopa->IsDead();
     }
 
+    if (other_enemy_dead) {
+        return false;
+    }
+
+    // Get positions and sizes
     glm::vec2 this_pos = GetPosition();
     glm::vec2 this_size = m_Drawable->GetSize();
     this_size *= KOOPA_MAGNIFICATION;
@@ -48,20 +52,21 @@ bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy){
         enemy_size *= KOOPA_MAGNIFICATION;
     }
 
-    float this_left = this_pos.x - this_size.x / 2;
-    float this_right = this_pos.x + this_size.x / 2;
-    float this_top = this_pos.y + this_size.y / 2;
-    float this_bottom = this_pos.y - this_size.y / 2;
+    // Calculate bounding boxes with smaller EPSILON for more precise detection
+    float EPSILON = 0.01f;
+    float this_left = this_pos.x - this_size.x / 2 + EPSILON;
+    float this_right = this_pos.x + this_size.x / 2 - EPSILON;
+    float this_top = this_pos.y + this_size.y / 2 - EPSILON;
+    float this_bottom = this_pos.y - this_size.y / 2 + EPSILON;
 
-    float enemy_left = enemy_pos.x - enemy_size.x / 2;
-    float enemy_right = enemy_pos.x + enemy_size.x / 2;
-    float enemy_top = enemy_pos.y + enemy_size.y / 2;
-    float enemy_bottom = enemy_pos.y - enemy_size.y / 2;
+    float enemy_left = enemy_pos.x - enemy_size.x / 2 + EPSILON;
+    float enemy_right = enemy_pos.x + enemy_size.x / 2 - EPSILON;
+    float enemy_top = enemy_pos.y + enemy_size.y / 2 - EPSILON;
+    float enemy_bottom = enemy_pos.y - enemy_size.y / 2 + EPSILON;
 
     // Check for collision
-    float EPSILON = 0.01f;  // Small error tolerance
-    bool collision_x = (this_left < enemy_right - EPSILON) && (this_right > enemy_left + EPSILON);
-    bool collision_y = (this_bottom < enemy_top - EPSILON) && (this_top > enemy_bottom + EPSILON);
+    bool collision_x = (this_left < enemy_right) && (this_right > enemy_left);
+    bool collision_y = (this_bottom < enemy_top) && (this_top > enemy_bottom);
 
     if (collision_x && collision_y) {
         // Collision handling based on state
@@ -71,15 +76,33 @@ bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy){
             return true;
         } else if (auto other_koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
             // Handle Koopa-Koopa collision
-            if (other_koopa->is_shell && other_koopa->shell_is_moving && this->is_shell && this->shell_is_moving) {
-                // Both are moving shells - should bounce off each other
-                BounceOffShell(other_koopa);
+            if (other_koopa->is_shell && other_koopa->shell_is_moving) {
+                if (this->is_shell && this->shell_is_moving) {
+                    // Both are moving shells - should bounce off each other
+                    BounceOffShell(other_koopa);
+                } else {
+                    // This koopa gets killed by the moving shell
+                    this->SetLive(0);
+                    this->SetScale(KOOPA_MAGNIFICATION, -KOOPA_MAGNIFICATION);
+                    this->velocityY = 200.0f;
+                }
+                return true;
+            } else {
+                // Regular Koopa collision - reverse direction for both
+                isFacingRight = !isFacingRight;
+                if (!other_koopa->IsDead()) {
+                    other_koopa->isFacingRight = !other_koopa->isFacingRight;
+                }
                 return true;
             }
+        } else {
+            // Regular enemy collision - reverse direction
+            isFacingRight = !isFacingRight;
+            return true;
         }
     }
 
-    return collision_x && collision_y;
+    return false;
 }
 bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     if (is_dead || !GetVisible() || mario->is_dying) {
@@ -106,7 +129,7 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     float mario_bottom = mario_pos.y - mario_size.y / 2;
 
     // Check for collision
-    float EPSILON = 0.01f;  // Small error tolerance for floating point comparison
+    float EPSILON = 1.0f;  // Small error tolerance for floating point comparison
     bool collision_x = (mario_left < koopa_right - EPSILON) && (mario_right > koopa_left + EPSILON);
     bool collision_y = (mario_bottom < koopa_top - EPSILON) && (mario_top > koopa_bottom + EPSILON);
 
@@ -191,9 +214,12 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
                 // Just allow Mario to stand/walk on top of the shell
                 return true;
             }
-            // Other collisions with stationary shell - Mario gets hurt
-            if (!mario->IsInvincible && mario->GetLive() > 0) {
-                mario->Die();
+            if (!mario->is_dying && mario->GetLive() > 0) {
+                // Mario shrunk after a collision
+                if (mario->IsTemporarilyInvincible == false) {
+                    mario->Die(); // Call our new Die method instead
+                    return true;
+                }
             }
         }
         return true;
@@ -215,6 +241,7 @@ void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
             // Apply death animation - flip upside down
             goomba->SetScale(GOOMBA_MAGNIFICATION, -GOOMBA_MAGNIFICATION);
 
+            // Apply upward velocity for "death jump"
             goomba->velocityY = 200.0f;
 
             // Play sound effect for killing enemy
@@ -228,7 +255,8 @@ void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
     else if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
         // Don't kill a shell that's already moving
         if (koopa->is_shell && koopa->shell_is_moving) {
-            // Instead, bounce off each other (handled in BounceOffShell)
+            // Instead, handle shell vs shell collision
+            BounceOffShell(koopa);
             return;
         }
 
@@ -258,11 +286,15 @@ void Koopa::BounceOffShell(std::shared_ptr<Koopa> other_koopa) {
 
     // Reset shell timer to keep shells moving
     this->shell_timer = 0.0f;
-    other_koopa->shell_timer = 0.0f;
+    other_koopa->shell_timer = 0.0f; 
 
     // Ensure both shells are still moving
     this->shell_is_moving = true;
     other_koopa->shell_is_moving = true;
+
+    // Make sure movement is enabled
+    this->SetMoving(true);
+    other_koopa->SetMoving(true);
 
     // Play collision sound effect
     std::shared_ptr<Util::SFX> bounce_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/bump.wav");
@@ -348,38 +380,81 @@ void Koopa::Action(const float distance) {
     bool collision = false;
     while (std::abs(remaining_distance) > 0.0f) {
         float step_distance = (remaining_distance > 0.0f) ? std::min(step, remaining_distance)
-                                                          : std::max(-step, remaining_distance);
-        float next_x = Koopa_x + step_distance;  // 計算下一幀位置
+                                                         : std::max(-step, remaining_distance);
+        float next_x = Koopa_x + step_distance;  // Calculate next position
 
+        // Check wall and block collisions (existing code)
         for (const auto& box : collision_boxes) {
-            // box had already destroyed
+            // Skip invisible boxes
             if (box->GetVisible() == false) {
                 continue;
             }
             AABBCollides({next_x, Koopa_y}, box);
-            // check next step will collision or not
             if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
                 collision = true;
                 break;
             }
         }
-        // if next step will collision, then do not move
+
         if (collision) {
             break;
         }
+
         for (const auto& block : collision_blocks) {
-            // box had already destroyed
+            // Skip invisible blocks
             if (block->GetVisible() == false) {
                 continue;
             }
             AABBCollides({next_x, Koopa_y}, block);
-            // check next step will collision or not
             if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
                 collision = true;
                 break;
             }
         }
-        // if next step will collision, then do not move
+
+        if (collision) {
+            break;
+        }
+
+        // Check enemy collisions
+        for (const auto& enemy : other_enemies) {
+            // Skip self or invisible/dead enemies
+            if (this == enemy.get() || !enemy->GetVisible()) {
+                continue;
+            }
+
+            // If enemy is a Goomba and it's dead, skip collision check
+            if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
+                if (goomba->IsDead()) {
+                    continue;
+                }
+            }
+
+            // If enemy is a Koopa and it's dead, skip collision check
+            if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
+                if (koopa->IsDead()) {
+                    continue;
+                }
+            }
+
+            // Temporarily set position to check if next step would cause collision
+            glm::vec2 original_pos = GetPosition();
+            SetPosition(next_x, Koopa_y);
+
+            bool would_collide = CheckEnemyCollision(enemy);
+
+            // Reset position
+            SetPosition(original_pos.x, original_pos.y);
+
+            if (would_collide) {
+                // No need to set collision flag if we're a moving shell
+                if (!(is_shell && shell_is_moving)) {
+                    collision = true;
+                }
+                break;
+            }
+        }
+
         if (collision) {
             break;
         }
@@ -389,9 +464,8 @@ void Koopa::Action(const float distance) {
         remaining_distance -= step_distance;
     }
 
-    // 如果發生碰撞，反轉方向
     if (collision) {
-        isFacingRight = not isFacingRight;
+        isFacingRight = !isFacingRight;
     }
 }
 
