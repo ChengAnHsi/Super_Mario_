@@ -21,6 +21,7 @@ void PropsManager::UpdatePropsAnimation() const {
 }
 
 void PropsManager::CheckCollisionWithMario(std::shared_ptr<Mario> mario) {
+    if (mario->is_dying || mario->is_dead) return;
     for (auto& prop : m_props) {
         if (prop->GetState() == Props::PropsState::Moving && prop->CheckCollisionWithMario(mario)) {
             prop->SetState(Props::PropsState::Active);
