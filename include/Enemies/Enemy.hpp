@@ -26,16 +26,17 @@ public:
     bool GetOverworld();
     void SetOverworld(bool is_overworld);
     void SetMoveVelocity(float veclocityX);
+    bool GetFacingRight();
+    void SetFacingRight(bool facingRight);
     virtual void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) = 0;
     virtual void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) = 0;
     virtual void ClearCollisionBoxes() = 0;
     virtual void ClearCollisionBlocks() = 0;
-
+protected:
+    bool isFacingRight = false;
 private:
     bool isMoving = false;
-    bool isFacingRight = false;
     float move_velocity = 2.0f;
-
     bool isOverWorld = true;
 };
 #endif //ENEMY_HPP

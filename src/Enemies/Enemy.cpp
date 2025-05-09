@@ -15,3 +15,11 @@ bool Enemy::GetOverworld() {
 void Enemy::SetOverworld(bool is_overworld) {
     isOverWorld = is_overworld;
 }
+
+bool Enemy::GetFacingRight() {
+    return isFacingRight;
+}
+
+void Enemy::SetFacingRight(bool facingRight) {
+    isFacingRight = facingRight;
+}
