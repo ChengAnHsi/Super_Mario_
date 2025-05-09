@@ -258,6 +258,7 @@ bool Mario::GravityAndCollision(const float delta) {
     }
 
     bool collision_top_block = false;
+    glm::vec2 top_block_pos;
 
     for (const auto &block : collision_blocks) {
         // block had already destroyed
@@ -289,7 +290,10 @@ bool Mario::GravityAndCollision(const float delta) {
                 block->AfterCollisionEvents();
             }
 
-            if(block->GetBlockType() != Block::TYPE::ImmovableBlock) collision_top_block = true;
+            if(block->GetBlockType() != Block::TYPE::ImmovableBlock) {
+                collision_top_block = true;
+                top_block_pos = block->GetPosition();
+            }
             // 固定在方塊下方開始下墜
             mario_y = block->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
             this->SetPosition({ mario_x, mario_y });
@@ -306,16 +310,17 @@ bool Mario::GravityAndCollision(const float delta) {
                 if (collectible->GetVisible() == false) {
                     continue;
                 }
-                glm::vec2 a = {mario_x, mario_y + 2 * BLOCK_SIZE};
+                // todo mario size get thin to avoid collision more
+                glm::vec2 a = {top_block_pos.x, top_block_pos.y + BLOCK_SIZE};
                 glm::vec2 b = collectible->m_Transform.translation;
                 glm::vec2 b_size = collectible->GetSize();
                 b_size.x *= collectible->GetScale().x;
                 b_size.y *= collectible->GetScale().y;
 
-                float aleft = a.x - mario_size.x / 2;
-                float aright = a.x + mario_size.x / 2;
-                float atop = a.y + mario_size.y / 2;
-                float abottom = a.y - mario_size.y / 2;
+                float aleft = a.x - BLOCK_SIZE / 2;
+                float aright = a.x + BLOCK_SIZE / 2;
+                float atop = a.y + BLOCK_SIZE / 2;
+                float abottom = a.y - BLOCK_SIZE / 2;
 
                 float bleft = b.x - b_size.x / 2;
                 float bright = b.x + b_size.x / 2;

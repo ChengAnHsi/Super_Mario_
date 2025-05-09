@@ -116,7 +116,7 @@ private:
          RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",RESOURCE_DIR"/Entities/mario_grown_stand_small.png", RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",
      RESOURCE_DIR"/Entities/mario_grown_stand.png", RESOURCE_DIR"/Entities/mario_grown_stand_small.png", RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",
      RESOURCE_DIR"/Entities/mario_grown_stand.png"};
-    // mario_grown_transparent
+    // todo: mario_grown_transparent?
     // s l s l s l s l s
     std::vector<std::string> AnimationShrink = {RESOURCE_DIR"/Entities/mario_grown_stand_small.png",RESOURCE_DIR"/Entities/mario_grown_stand.png",
              RESOURCE_DIR"/Entities/mario_grown_stand_small.png",RESOURCE_DIR"/Entities/mario_grown_stand.png", RESOURCE_DIR"/Entities/mario_grown_stand_small.png",
