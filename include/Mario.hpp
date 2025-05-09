@@ -54,6 +54,7 @@ public:
     void IncreaseScore(int score);
     [[nodiscard]] int GetScore() const;
     void SetGrow(bool is_grow);
+    bool GetGrowing();
 
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);

@@ -310,7 +310,7 @@ bool Mario::GravityAndCollision(const float delta) {
                 if (collectible->GetVisible() == false) {
                     continue;
                 }
-                // todo mario size get thin to avoid collision more
+
                 glm::vec2 a = {top_block_pos.x, top_block_pos.y + BLOCK_SIZE};
                 glm::vec2 b = collectible->m_Transform.translation;
                 glm::vec2 b_size = collectible->GetSize();
@@ -415,16 +415,16 @@ void Mario::UpdateGrowingState() {
     if (is_grow == false) return;
 
     if(IfAnimationEnds()) {
-        is_growing = false;
         this->SetImages(this->AnimationStandGrow, 100, 0);
         this->SetLooping(true);
+        is_growing = false;
     }
 }
 
 void Mario::Die() {
     if (is_dead || is_dying) return; // Already dead
 
-    if (is_grow) {
+    if (is_grow && is_growing == false) {
         // If Mario is grown, shrink him and play powerdown sound
         is_grow = false;
 
@@ -436,7 +436,7 @@ void Mario::Die() {
 
         IsTemporarilyInvincible = true;
         invincible_timer = 0.0f;
-    } else {
+    } else if (is_growing == false){
         // Mario dies
         is_dying = true;
         death_timer = 0.0f;
@@ -548,6 +548,10 @@ float Mario::Move() {
 
 void Mario::SetGrow(bool is_grow) {
     this->is_grow = is_grow;
+}
+
+bool Mario::GetGrowing() {
+    return is_growing;
 }
 
 void Mario::IncreaseCoin(const int coin) {
