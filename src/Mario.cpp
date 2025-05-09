@@ -532,6 +532,10 @@ float Mario::Move() {
     return OnUpdate(1);
 }
 
+void Mario::SetGrow(bool is_grow) {
+    this->is_grow = is_grow;
+}
+
 void Mario::IncreaseCoin(const int coin) {
     this->coin += coin;
     std::shared_ptr<Util::SFX> coin_sfx = std::make_shared<Util::SFX >(RESOURCE_DIR"/Sound/Effects/coin.mp3");
