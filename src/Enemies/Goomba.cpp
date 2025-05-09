@@ -119,8 +119,11 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
 
         // Collision from the side or bottom - Mario gets hurt if not invincible
         if (!mario->is_dying && mario->GetLive() > 0) {
-            mario->Die(); // Call our new Die method instead
-            return true;
+            // Mario shrunk after a collision
+            if (mario->IsTemporarilyInvincible == false) {
+                mario->Die(); // Call our new Die method instead
+                return true;
+            }
         }
     }
     return false;

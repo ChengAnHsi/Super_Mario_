@@ -67,6 +67,8 @@ public:
     void Die(); // Handle Mario's death sequence
     void UpdateDeadState(float delta); // Update function for when Mario is dead
     bool IsInvincible = false;
+    bool IsTemporarilyInvincible = false;
+
 private:
     int coin = 0;
     int live = 3;
@@ -75,10 +77,14 @@ private:
     bool is_right_key_down = false;
 
     // track death state
-    float death_timer = 0.0f;
+    float death_timer = 0.0f; // Time to start jumping
     const float DEATH_PAUSE_TIME = 60.0f; // 1 second at 60fps
     const float DEATH_JUMP_DURATION = 120.0f;
     const float DEATH_JUMP_VELOCITY = 300.0f;
+
+    // track invincible state
+    float invincible_timer = 0.0f; // The countdown ends when the invincibility time (3 sec) ends
+    const float INVINCIBLE_PAUSE_TIME = 60.0f; // 1 second at 60fps
 
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
@@ -110,7 +116,12 @@ private:
          RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",RESOURCE_DIR"/Entities/mario_grown_stand_small.png", RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",
      RESOURCE_DIR"/Entities/mario_grown_stand.png", RESOURCE_DIR"/Entities/mario_grown_stand_small.png", RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",
      RESOURCE_DIR"/Entities/mario_grown_stand.png"};
-
+    // mario_grown_transparent
+    // s l s l s l s l s
+    std::vector<std::string> AnimationShrink = {RESOURCE_DIR"/Entities/mario_grown_stand_small.png",RESOURCE_DIR"/Entities/mario_grown_stand.png",
+             RESOURCE_DIR"/Entities/mario_grown_stand_small.png",RESOURCE_DIR"/Entities/mario_grown_stand.png", RESOURCE_DIR"/Entities/mario_grown_stand_small.png",
+         RESOURCE_DIR"/Entities/mario_grown_stand.png", RESOURCE_DIR"/Entities/mario_grown_stand_small.png", RESOURCE_DIR"/Entities/mario_grown_stand.png",
+         RESOURCE_DIR"/Entities/mario_stand.png"};
     std::vector<std::string> AnimationRunGrow = {RESOURCE_DIR"/Entities/mario_grown0.png",RESOURCE_DIR"/Entities/mario_grown1.png",RESOURCE_DIR"/Entities/mario_grown2.png"};
     std::vector<std::string> AnimationJumpGrow = {RESOURCE_DIR"/Entities/mario_grown_Jump.png"};
     std::vector<std::string> AnimationStandGrow = {RESOURCE_DIR"/Entities/mario_grown_stand.png"};
