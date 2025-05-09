@@ -335,6 +335,24 @@ bool Goomba::GravityAndCollision(const float delta) {
     goomba_y += velocityY * (delta / 60.0f);
 
     bool collision = false;
+    if (is_dead) {
+        float Goomba_x = this->GetPosition().x;
+        float Goomba_y = this->GetPosition().y;
+
+        // Update vertical velocity (apply gravity)
+        velocityY += GRAVITY * (delta / 60.0f);
+        Goomba_y += velocityY * (delta / 60.0f);
+
+        // Set new position
+        this->SetPosition(Goomba_x, Goomba_y);
+
+        // If fallen below screen, make invisible
+        if (Goomba_y < -50) {
+            SetVisible(false);
+        }
+
+        return true; // Always in air when dead
+    }
     for (const auto &box : collision_boxes){
         // box had already destroyed
         if(box->GetVisible() == false) {

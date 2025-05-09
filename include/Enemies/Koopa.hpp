@@ -39,7 +39,8 @@ public:
     void TurnToShell();
     bool KickShell(std::shared_ptr<Mario> mario);
     bool IsDead() const { return is_dead; }
-
+    void KillEnemy(std::shared_ptr<Enemy> enemy);
+    void BounceOffShell(std::shared_ptr<Koopa> other_koopa);
 private:
 
     int live = 1;
@@ -47,7 +48,7 @@ private:
     int score = 100;
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
-
+    std::vector<std::shared_ptr<Enemy>> other_enemies;
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
     float shell_timer = 0.0f;  // Timer for shell state management

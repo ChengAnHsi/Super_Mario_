@@ -5,6 +5,53 @@ Flower::Flower() {
     this -> SetZIndex(-20);
     // Default constructor will calculate the range after SetPosition is called
 }
+bool Flower::CheckMarioCollision(std::shared_ptr<Mario> mario){
+    if (is_dead || !GetVisible() || mario->is_dying) {
+        return false; // No collision if already dead or not visible
+    }
+
+    glm::vec2 flower_pos = GetPosition();
+    glm::vec2 flower_size = m_Drawable->GetSize();
+    flower_size *= FLOWER_MAGNIFICATION;
+
+    glm::vec2 mario_pos = mario->GetPosition();
+    glm::vec2 mario_size = mario->GetSize();
+    mario_size *= MARIO_MAGNIFICATION;
+
+    // Calculate bounding boxes
+    float flower_left = flower_pos.x - flower_size.x / 2;
+    float flower_right = flower_pos.x + flower_size.x / 2;
+    float flower_top = flower_pos.y + flower_size.y / 2;
+    float flower_bottom = flower_pos.y - flower_size.y / 2;
+
+    float mario_left = mario_pos.x - mario_size.x / 2;
+    float mario_right = mario_pos.x + mario_size.x / 2;
+    float mario_top = mario_pos.y + mario_size.y / 2;
+    float mario_bottom = mario_pos.y - mario_size.y / 2;
+
+    // Check for collision
+    bool collision_x = (mario_left < flower_right) && (mario_right > flower_left);
+    bool collision_y = (mario_bottom < flower_top) && (mario_top > flower_bottom);
+
+    if (collision_x && collision_y) {
+        // Calculate the vertical velocity direction
+        bool mario_moving_down = mario->velocityY <= 0;
+
+        // Calculate vertical overlap percentage to determine stomping
+        float vertical_overlap = std::min(mario_top, flower_top) - std::max(mario_bottom, flower_bottom);
+        float mario_height = mario_top - mario_bottom;
+        float overlap_percentage = vertical_overlap / mario_height;
+
+        float overlap_threshold = 12.0f; // Allow a slightly larger overlap
+
+        // Collision from the side or bottom - Mario gets hurt if not invincible
+        if (!mario->is_dying && mario->GetLive() > 0) {
+            mario->Die(); // Call our new Die method instead
+            return true;
+        }
+    }
+    return false;
+}
 
 void Flower::UpdateYMovementRange() {
     // Apply your algorithm here

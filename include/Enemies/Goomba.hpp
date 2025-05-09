@@ -41,6 +41,7 @@ public:
     bool IsDead() const { return is_dead; }
     // TODO 被擊倒動畫
     bool is_dead = false;
+    float velocityY = 0.0f;
 private:
     int live = 1;
     // 被擊倒的分數
@@ -54,7 +55,7 @@ private:
 
     bool isFacingRight = false;
     float delta_time = 1.0f;
-    float velocityY = 0.0f; // 角色在 Y 軸的速度
+     // 角色在 Y 軸的速度
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
 
     // TODO: dead update

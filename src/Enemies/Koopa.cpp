@@ -4,6 +4,20 @@
 #include "App.hpp"
 #include "Enemies/Enemy.hpp"
 #include "Enemies/Goomba.hpp"
+void Koopa::AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies) {
+    other_enemies.clear();
+    for (const auto& enemy : enemies) {
+        // Don't add self to the list
+        if (this != enemy.get()) {
+            other_enemies.push_back(enemy);
+        }
+    }
+}
+
+void Koopa::ClearEnemies() {
+    other_enemies.clear();
+}
+
 // Fixed Koopa.cpp with improved collision detection
 bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy){
     // Don't check collision with self or if either enemy is dead or not visible
@@ -23,12 +37,12 @@ bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy){
 
     glm::vec2 this_pos = GetPosition();
     glm::vec2 this_size = m_Drawable->GetSize();
-    this_size *= GOOMBA_MAGNIFICATION;
+    this_size *= KOOPA_MAGNIFICATION;
 
     glm::vec2 enemy_pos = enemy->GetPosition();
     glm::vec2 enemy_size = enemy->GetSize();
 
-    if (dynamic_cast<Koopa*>(enemy.get())) {
+    if (dynamic_cast<Goomba*>(enemy.get())) {
         enemy_size *= GOOMBA_MAGNIFICATION;
     } else if (dynamic_cast<Koopa*>(enemy.get())) {
         enemy_size *= KOOPA_MAGNIFICATION;
@@ -49,9 +63,24 @@ bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy){
     bool collision_x = (this_left < enemy_right - EPSILON) && (this_right > enemy_left + EPSILON);
     bool collision_y = (this_bottom < enemy_top - EPSILON) && (this_top > enemy_bottom + EPSILON);
 
+    if (collision_x && collision_y) {
+        // Collision handling based on state
+        if (is_shell && shell_is_moving) {
+            // Shell is moving - should kill other enemies
+            KillEnemy(enemy);
+            return true;
+        } else if (auto other_koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
+            // Handle Koopa-Koopa collision
+            if (other_koopa->is_shell && other_koopa->shell_is_moving && this->is_shell && this->shell_is_moving) {
+                // Both are moving shells - should bounce off each other
+                BounceOffShell(other_koopa);
+                return true;
+            }
+        }
+    }
+
     return collision_x && collision_y;
 }
-
 bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     if (is_dead || !GetVisible() || mario->is_dying) {
         return false; // No collision if already dead or not visible
@@ -171,7 +200,77 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     }
     return false;
 }
+void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
+    // Check if the enemy is already dead or not visible
+    if (!enemy->GetVisible()) {
+        return;
+    }
 
+    // Handle different enemy types
+    if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
+        // Kill the Goomba if it's not already dead
+        if (!goomba->IsDead()) {
+            goomba->SetLive(0);
+
+            // Apply death animation - flip upside down
+            goomba->SetScale(GOOMBA_MAGNIFICATION, -GOOMBA_MAGNIFICATION);
+
+            goomba->velocityY = 200.0f;
+
+            // Play sound effect for killing enemy
+            std::shared_ptr<Util::SFX> kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
+            if (kick_sfx) {
+                kick_sfx->SetVolume(200);
+                kick_sfx->Play();
+            }
+        }
+    }
+    else if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
+        // Don't kill a shell that's already moving
+        if (koopa->is_shell && koopa->shell_is_moving) {
+            // Instead, bounce off each other (handled in BounceOffShell)
+            return;
+        }
+
+        // Kill the Koopa if it's not already dead
+        if (!koopa->IsDead()) {
+            koopa->SetLive(0);
+
+            // Apply death animation - flip upside down
+            koopa->SetScale(KOOPA_MAGNIFICATION, -KOOPA_MAGNIFICATION);
+
+            // Apply upward velocity for "death jump"
+            koopa->velocityY = 200.0f;
+
+            // Play sound effect for killing enemy
+            std::shared_ptr<Util::SFX> kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
+            if (kick_sfx) {
+                kick_sfx->SetVolume(200);
+                kick_sfx->Play();
+            }
+        }
+    }
+}
+void Koopa::BounceOffShell(std::shared_ptr<Koopa> other_koopa) {
+    // Reverse direction for both shells
+    this->isFacingRight = !this->isFacingRight;
+    other_koopa->isFacingRight = !other_koopa->isFacingRight;
+
+    // Reset shell timer to keep shells moving
+    this->shell_timer = 0.0f;
+    other_koopa->shell_timer = 0.0f;
+
+    // Ensure both shells are still moving
+    this->shell_is_moving = true;
+    other_koopa->shell_is_moving = true;
+
+    // Play collision sound effect
+    std::shared_ptr<Util::SFX> bounce_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/bump.wav");
+    if (bounce_sfx) {
+        bounce_sfx->SetVolume(200);
+        bounce_sfx->Play();
+    }
+}
 bool Koopa::KickShell(std::shared_ptr<Mario> mario) {
     if (!is_shell) return false;
 
