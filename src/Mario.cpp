@@ -3,6 +3,9 @@
 //
 
 #include "Mario.hpp"
+
+#include <iostream>
+
 #include "Global.hpp"
 #include "App.hpp"
 #include "Blocks/MysteryBlock.hpp"
@@ -11,8 +14,10 @@
 #include "Util/Keycode.hpp"
 
 void Mario::OnJump() {
+    if (is_growing) return;
     if (!isJumping) {
         velocityY = JUMP_VELOCITY;
+        isJumping = true;
         state = MarioState::Jump;
         if(is_grow) {
             this->SetImages(AnimationJumpGrow, 100, 0);
@@ -26,8 +31,10 @@ void Mario::OnJump() {
 }
 
 void Mario::OnSmallJump() {
+    if (is_growing) return;
     if (!isJumping) {
         velocityY = SMALL_JUMP_VELOCITY;
+        isJumping = true;
         state = MarioState::Jump;
         if(is_grow) {
             this->SetImages(AnimationJumpGrow, 100, 0);
@@ -41,7 +48,9 @@ void Mario::OnSmallJump() {
 }
 
 void Mario::OnKillJump() {
+    if (is_growing) return;
     velocityY = SMALL_JUMP_VELOCITY;
+    isJumping = true;
     state = MarioState::Jump;
     if(is_grow) {
         this->SetImages(AnimationJumpGrow, 100, 0);
@@ -200,6 +209,7 @@ bool Mario::CCDDCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> b
 }
 
 bool Mario::GravityAndCollision(const float delta) {
+    if (is_growing) return isJumping;
     glm::vec2 mario_size = this->m_Drawable->GetSize();
     mario_size *= MARIO_MAGNIFICATION;
     float mario_x = this->GetPosition().x;
@@ -329,6 +339,7 @@ bool Mario::GravityAndCollision(const float delta) {
 }
 
 void Mario::UpdateAnimation() {
+    if (is_growing) return;
     const int direction = is_right_key_down - is_left_key_down;
     // facing left
     if (direction == -1) {
@@ -384,9 +395,11 @@ void Mario::SetGrowingAnimation() {
     float mario_x = this->GetPosition().x;
     float mario_y = this->GetPosition().y;
 
-    this->SetPosition({mario_x, mario_y + 16});
-    
+    float height_offset = (32.0f - 16.0f) / 2.0f * MARIO_MAGNIFICATION;
+    this->SetPosition({mario_x, mario_y + height_offset});
+
     this->SetImages(this->AnimationGrow, 200, 0);
+    this->SetLooping(false);
 
     std::shared_ptr<Util::SFX> grow_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Temp/Sound/mushroomeat.wav");
     grow_sfx->SetVolume(70);
@@ -396,9 +409,10 @@ void Mario::SetGrowingAnimation() {
 void Mario::UpdateGrowingState() {
     if (is_grow == false) return;
 
-    if(this->IfAnimationEnds()) {
+    if(IfAnimationEnds()) {
         is_growing = false;
-        this->SetImages(this->AnimationStandGrow, 1000, 0);
+        this->SetImages(this->AnimationStandGrow, 100, 0);
+        this->SetLooping(true);
     }
 }
 
@@ -413,7 +427,7 @@ void Mario::Die() {
         powerdown_sfx->SetVolume(70);
         powerdown_sfx->Play();
 
-        this->SetImages(this->AnimationStand, 1000, 0);
+        this->SetImages(this->AnimationStand, 100, 0);
     } else {
         // Mario dies
         is_dying = true;
@@ -426,7 +440,7 @@ void Mario::Die() {
         death_sfx->Play();
 
         // Set death animation
-        this->SetImages(AnimationDead, 1000, 0);
+        this->SetImages(AnimationDead, 100, 0);
     }
 }
 
@@ -490,7 +504,7 @@ float Mario::Move() {
         if(is_grow) {
             SetGrowingAnimation();
         }else {
-            SetImages(AnimationStand, 1000, 0);
+            SetImages(AnimationStand, 100, 0);
         }
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {

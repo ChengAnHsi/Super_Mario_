@@ -78,7 +78,7 @@ private:
     const float DEATH_PAUSE_TIME = 60.0f; // 1 second at 60fps
     const float DEATH_JUMP_DURATION = 120.0f;
     const float DEATH_JUMP_VELOCITY = 300.0f;
-    //bool collision_enabled = true;
+
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
     std::vector<std::shared_ptr<BackgroundImage>> collision_collectibles;
@@ -96,19 +96,20 @@ private:
     float jump_velocity = 12.7f;
 
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
-    float JUMP_VELOCITY = 360.0f; // 跳躍初速度
-    float SMALL_JUMP_VELOCITY = 250.0f; // 小跳躍初速度
-    float MAX_JUMP_VELOCITY = 55.0f; // 最高跳躍值
+    float JUMP_VELOCITY = 360.0f;
+    float SMALL_JUMP_VELOCITY = 250.0f;
 
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/mario0.png",RESOURCE_DIR"/Entities/mario1.png",RESOURCE_DIR"/Entities/mario2.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/marioDead.png"};
     std::vector<std::string> AnimationJump = {RESOURCE_DIR"/Entities/mario_Jump.png"};
     std::vector<std::string> AnimationStand = {RESOURCE_DIR"/Entities/mario_stand.png"};
 
-    std::vector<std::string> AnimationGrow = {RESOURCE_DIR"/Entities/mario_grown_squat.png",RESOURCE_DIR"/Entities/mario_grown_stand2.png",
-        RESOURCE_DIR"/Entities/mario_grown_squat.png",RESOURCE_DIR"/Entities/mario_grown_stand2.png", RESOURCE_DIR"/Entities/mario_grown_squat.png",
-    RESOURCE_DIR"/Entities/mario_grown_stand.png",RESOURCE_DIR"/Entities/mario_grown_squat.png", RESOURCE_DIR"/Entities/mario_grown_stand2.png",
-    RESOURCE_DIR"/Entities/mario_grown_squat.png",RESOURCE_DIR"/Entities/mario_grown_stand.png"};
+    // m s m s m l s m l
+    std::vector<std::string> AnimationGrow = {RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",RESOURCE_DIR"/Entities/mario_grown_stand_small.png",
+         RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",RESOURCE_DIR"/Entities/mario_grown_stand_small.png", RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",
+     RESOURCE_DIR"/Entities/mario_grown_stand.png", RESOURCE_DIR"/Entities/mario_grown_stand_small.png", RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",
+     RESOURCE_DIR"/Entities/mario_grown_stand.png"};
+
     std::vector<std::string> AnimationRunGrow = {RESOURCE_DIR"/Entities/mario_grown0.png",RESOURCE_DIR"/Entities/mario_grown1.png",RESOURCE_DIR"/Entities/mario_grown2.png"};
     std::vector<std::string> AnimationJumpGrow = {RESOURCE_DIR"/Entities/mario_grown_Jump.png"};
     std::vector<std::string> AnimationStandGrow = {RESOURCE_DIR"/Entities/mario_grown_stand.png"};
