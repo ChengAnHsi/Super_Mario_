@@ -29,6 +29,7 @@ void App::Start() {
     m_Coin->SetImages(coinImages, 1000, 0);
     m_Coin->SetPosition({-135.f, 285.f});
     m_Coin->SetZIndex(5);
+    m_Coin->SetPlaying(false);
     m_Coin->m_Transform.scale = glm::vec2(MARIO_MAGNIFICATION, MARIO_MAGNIFICATION);
     m_Root.AddChild(m_Coin);
 

@@ -428,11 +428,13 @@ void Mario::Die() {
         powerdown_sfx->Play();
 
         this->SetImages(this->AnimationStand, 100, 0);
+
+        IsTemporarilyInvincible = true;
+        invincible_timer = 0.0f;
     } else {
         // Mario dies
         is_dying = true;
         death_timer = 0.0f;
-        //collision_enabled = false; // Disable collisions
 
         // Play death sound
         std::shared_ptr<Util::SFX> death_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Temp/Sound/death.wav");
@@ -458,10 +460,10 @@ void Mario::UpdateDeadState(float delta) {
         // flying
         if (death_timer == DEATH_PAUSE_TIME + 1) {
             // setting death jump velocity after freeze
-            velocityY = DEATH_JUMP_VELOCITY;
+            velocityY = DEATH_JUMP_VELOCITY * 1.5f;
         }
 
-        velocityY += GRAVITY * (delta / 60.0f);
+        velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
 
         float mario_x = GetPosition().x;
         float mario_y = GetPosition().y + velocityY * (delta / 60.0f);
@@ -498,6 +500,13 @@ float Mario::Move() {
         UpdateGrowingState();
         return 0.0f; // 阻止移動與其他輸入處理
     }
+    if (IsTemporarilyInvincible) {
+        invincible_timer += delta_time;
+        // 3sec
+        if (invincible_timer >= 180.0f) {
+            IsTemporarilyInvincible = false;
+        }
+    }
 
     if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
         is_grow = not is_grow;
@@ -530,6 +539,10 @@ float Mario::Move() {
         SetPosition({-20.0f, 0.0f});
     }
     return OnUpdate(1);
+}
+
+void Mario::SetGrow(bool is_grow) {
+    this->is_grow = is_grow;
 }
 
 void Mario::IncreaseCoin(const int coin) {
