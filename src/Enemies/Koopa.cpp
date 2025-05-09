@@ -3,8 +3,55 @@
 #include "Mario.hpp"
 #include "App.hpp"
 #include "Enemies/Enemy.hpp"
-
+#include "Enemies/Goomba.hpp"
 // Fixed Koopa.cpp with improved collision detection
+bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy){
+    // Don't check collision with self or if either enemy is dead or not visible
+    if (this == enemy.get() || is_dead || !GetVisible()) {
+        return false;
+    }
+
+    if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
+        if (goomba->IsDead()) {
+            return false;
+        }
+    } else if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
+        if (koopa->IsDead()) {
+            return false;
+        }
+    }
+
+    glm::vec2 this_pos = GetPosition();
+    glm::vec2 this_size = m_Drawable->GetSize();
+    this_size *= GOOMBA_MAGNIFICATION;
+
+    glm::vec2 enemy_pos = enemy->GetPosition();
+    glm::vec2 enemy_size = enemy->GetSize();
+
+    if (dynamic_cast<Koopa*>(enemy.get())) {
+        enemy_size *= GOOMBA_MAGNIFICATION;
+    } else if (dynamic_cast<Koopa*>(enemy.get())) {
+        enemy_size *= KOOPA_MAGNIFICATION;
+    }
+
+    float this_left = this_pos.x - this_size.x / 2;
+    float this_right = this_pos.x + this_size.x / 2;
+    float this_top = this_pos.y + this_size.y / 2;
+    float this_bottom = this_pos.y - this_size.y / 2;
+
+    float enemy_left = enemy_pos.x - enemy_size.x / 2;
+    float enemy_right = enemy_pos.x + enemy_size.x / 2;
+    float enemy_top = enemy_pos.y + enemy_size.y / 2;
+    float enemy_bottom = enemy_pos.y - enemy_size.y / 2;
+
+    // Check for collision
+    float EPSILON = 0.01f;  // Small error tolerance
+    bool collision_x = (this_left < enemy_right - EPSILON) && (this_right > enemy_left + EPSILON);
+    bool collision_y = (this_bottom < enemy_top - EPSILON) && (this_top > enemy_bottom + EPSILON);
+
+    return collision_x && collision_y;
+}
+
 bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     if (is_dead || !GetVisible() || mario->is_dying) {
         return false; // No collision if already dead or not visible

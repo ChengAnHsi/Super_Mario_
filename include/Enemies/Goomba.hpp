@@ -34,6 +34,9 @@ public:
     void ClearCollisionBoxes() override;
     void ClearCollisionBlocks() override;
     bool CheckMarioCollision(std::shared_ptr<Mario> mario);
+    bool CheckEnemyCollision(std::shared_ptr<Enemy> enemy);
+    void AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies);
+    void ClearEnemies();
     void KillGoomba();
     bool IsDead() const { return is_dead; }
     // TODO 被擊倒動畫
@@ -45,7 +48,7 @@ private:
 
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
-
+    std::vector<std::shared_ptr<Enemy>> other_enemies;
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
 

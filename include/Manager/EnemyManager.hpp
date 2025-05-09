@@ -14,6 +14,7 @@ public:
     EnemyManager();
     [[nodiscard]] std::vector<std::shared_ptr<Enemy>> GetEnemies() const {
         return m_Enemies;
+
     }
 
     std::vector<std::string> imageFiles = {
@@ -56,6 +57,7 @@ public:
     }
     std::vector<std::shared_ptr<Enemy>> GetEnemies();
     void SetEnemyMoving();
+    void SetupEnemyCollisions();
     void SetAllEnemyCollisionBoxs(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void SetAllEnemyCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
     bool CheckMarioCollisions(std::shared_ptr<Mario> mario);

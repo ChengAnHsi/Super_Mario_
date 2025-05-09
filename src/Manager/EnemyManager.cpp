@@ -22,6 +22,7 @@ EnemyManager::EnemyManager() {
 
         if(imgidx[i] == 2 || imgidx[i] == 5){
             m_Enemies.push_back(std::make_shared<Goomba>());
+
         }
         else if(imgidx[i] == 0 || imgidx[i] == 8){
             m_Enemies.push_back(std::make_shared<Flower>());
@@ -123,7 +124,14 @@ void EnemyManager::SetEnemies(std::vector<std::shared_ptr<Enemy>> enemies){
         }
     }
 }
-
+void EnemyManager::SetupEnemyCollisions() {
+    for (const auto& enemy : m_Enemies) {
+        if (std::shared_ptr<Goomba> goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
+            goomba->ClearEnemies();
+            goomba->AddEnemies(m_Enemies);
+        }
+    }
+}
 std::vector<std::shared_ptr<Enemy>> EnemyManager::GetEnemies(){
     return m_Enemies;
 }
@@ -155,3 +163,4 @@ bool EnemyManager::CheckMarioCollisions(std::shared_ptr<Mario> mario) {
     }
     return false;
 }
+

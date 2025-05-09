@@ -263,6 +263,7 @@ void App::NextPhase(bool is_nextphase) {
             m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
             m_PM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
             m_PM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
+            m_EM->SetupEnemyCollisions();
             break;
         case Phase::Level1_2:
             ResetPhase();
@@ -276,6 +277,7 @@ void App::NextPhase(bool is_nextphase) {
             m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
             m_PM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
             m_PM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
+            m_EM->SetupEnemyCollisions();
             break;
         case Phase::Level1_3:
             ResetPhase();
@@ -289,6 +291,7 @@ void App::NextPhase(bool is_nextphase) {
             m_EM->SetAllEnemyCollisionBoxs(m_PRM->GetCollisionBoxes());
             m_PM->AddAllPropsCollisionBlocks(m_BM->GetBlocks());
             m_PM->AddAllPropsCollisionBoxes(m_PRM->GetCollisionBoxes());
+            m_EM->SetupEnemyCollisions();
             break;
         default:
             break;

@@ -33,8 +33,13 @@ public:
     void ClearCollisionBoxes() override;
     void ClearCollisionBlocks() override;
     bool CheckMarioCollision(std::shared_ptr<Mario> mario);
+    bool CheckEnemyCollision(std::shared_ptr<Enemy> enemy);
+    void AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies);
+    void ClearEnemies();
     void TurnToShell();
     bool KickShell(std::shared_ptr<Mario> mario);
+    bool IsDead() const { return is_dead; }
+
 private:
 
     int live = 1;

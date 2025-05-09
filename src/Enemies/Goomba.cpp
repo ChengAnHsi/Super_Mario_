@@ -2,7 +2,67 @@
 #include "Global.hpp"
 #include "Mario.hpp"
 #include "Util/SFX.hpp"
+#include "Enemies/Koopa.hpp"
+bool Goomba::CheckEnemyCollision(std::shared_ptr<Enemy> enemy) {
+    // Don't check collision with self or if either enemy is dead or not visible
+    if (this == enemy.get() || is_dead || !GetVisible()) {
+        return false;
+    }
 
+    if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
+        if (goomba->IsDead()) {
+            return false;
+        }
+    } else if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
+        if (koopa->IsDead()) {
+            return false;
+        }
+    }
+
+    glm::vec2 this_pos = GetPosition();
+    glm::vec2 this_size = m_Drawable->GetSize();
+    this_size *= GOOMBA_MAGNIFICATION;
+
+    glm::vec2 enemy_pos = enemy->GetPosition();
+    glm::vec2 enemy_size = enemy->GetSize();
+
+    if (dynamic_cast<Goomba*>(enemy.get())) {
+        enemy_size *= GOOMBA_MAGNIFICATION;
+    } else if (dynamic_cast<Koopa*>(enemy.get())) {
+        enemy_size *= KOOPA_MAGNIFICATION;
+    }
+
+    float this_left = this_pos.x - this_size.x / 2;
+    float this_right = this_pos.x + this_size.x / 2;
+    float this_top = this_pos.y + this_size.y / 2;
+    float this_bottom = this_pos.y - this_size.y / 2;
+
+    float enemy_left = enemy_pos.x - enemy_size.x / 2;
+    float enemy_right = enemy_pos.x + enemy_size.x / 2;
+    float enemy_top = enemy_pos.y + enemy_size.y / 2;
+    float enemy_bottom = enemy_pos.y - enemy_size.y / 2;
+
+    // Check for collision
+    float EPSILON = 0.01f;  // Small error tolerance
+    bool collision_x = (this_left < enemy_right - EPSILON) && (this_right > enemy_left + EPSILON);
+    bool collision_y = (this_bottom < enemy_top - EPSILON) && (this_top > enemy_bottom + EPSILON);
+
+    return collision_x && collision_y;
+}
+
+// Add these methods to manage enemy references
+void Goomba::AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies) {
+    for (const auto& enemy : enemies) {
+        // Don't add self to the list
+        if (this != enemy.get()) {
+            other_enemies.push_back(enemy);
+        }
+    }
+}
+
+void Goomba::ClearEnemies() {
+    other_enemies.clear();
+}
 bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     if (is_dead || !GetVisible() || mario->is_dying) {
         return false; // No collision if already dead or not visible
@@ -101,6 +161,7 @@ void Goomba::Action(const float distance) {
                                                           : std::max(-step, remaining_distance);
         float next_x = goomba_x + step_distance;  // 計算下一幀位置
 
+        // Check collision with walls and blocks (existing code)
         for (const auto& box : collision_boxes) {
             // box had already destroyed
             if (box->GetVisible() == false) {
@@ -129,7 +190,42 @@ void Goomba::Action(const float distance) {
                 break;
             }
         }
-        // if next step will collision, then do not move
+
+        for (const auto& enemy : other_enemies) {
+            // Skip enemies that are not visible or are dead
+            if (!enemy->GetVisible()) {
+                continue;
+            }
+
+            // If enemy is a Goomba and it's dead, skip collision check
+            if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
+                if (goomba->IsDead()) {
+                    continue;
+                }
+            }
+
+            // If enemy is a Koopa and it's dead, skip collision check
+            if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
+                if (koopa->IsDead()) {
+                    continue;
+                }
+            }
+
+            // Temporarily set position to check if next step would cause collision
+            glm::vec2 original_pos = GetPosition();
+            SetPosition(next_x, goomba_y);
+
+            bool would_collide = CheckEnemyCollision(enemy);
+
+            // Reset position
+            SetPosition(original_pos.x, original_pos.y);
+
+            if (would_collide) {
+                collision = true;
+                break;
+            }
+        }
+
         if (collision) {
             break;
         }
@@ -139,9 +235,8 @@ void Goomba::Action(const float distance) {
         remaining_distance -= step_distance;
     }
 
-    // 如果發生碰撞，反轉方向
     if (collision) {
-        isFacingRight = not isFacingRight;
+        isFacingRight = !isFacingRight;
     }
 }
 
