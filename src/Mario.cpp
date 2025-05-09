@@ -381,7 +381,11 @@ void Mario::SetGrowingAnimation() {
     is_grow = true;
     is_growing = true;
 
-    // TODO set image not in floor
+    float mario_x = this->GetPosition().x;
+    float mario_y = this->GetPosition().y;
+
+    this->SetPosition({mario_x, mario_y + 16});
+    
     this->SetImages(this->AnimationGrow, 200, 0);
 
     std::shared_ptr<Util::SFX> grow_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Temp/Sound/mushroomeat.wav");
@@ -394,6 +398,7 @@ void Mario::UpdateGrowingState() {
 
     if(this->IfAnimationEnds()) {
         is_growing = false;
+        this->SetImages(this->AnimationStandGrow, 1000, 0);
     }
 }
 
