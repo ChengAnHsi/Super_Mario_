@@ -52,7 +52,6 @@ private:
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
     float shell_timer = 0.0f;  // Timer for shell state management
-    bool isFacingRight = false;
     float delta_time = 1.0f;
     float velocityY = 0.0f; // 角色在 Y 軸的速度
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位

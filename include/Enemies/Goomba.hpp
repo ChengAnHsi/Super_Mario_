@@ -53,7 +53,6 @@ private:
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
 
-    bool isFacingRight = false;
     float delta_time = 1.0f;
      // 角色在 Y 軸的速度
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
@@ -63,7 +62,6 @@ private:
     std::vector<std::string> AnimationUnderWorldRun = {RESOURCE_DIR"/Entities/Underworld/goomba0.png",RESOURCE_DIR"/Entities/Underworld/goomba1.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/Overworld/goombaDead.png"};
     std::vector<std::string> AnimationUnderWorldDead = {RESOURCE_DIR"/Entities/Underworld/goombaDead.png"};
-
 
     float death_timer = 0.0f;
     const float DEATH_ANIMATION_TIME = 80.0f;
