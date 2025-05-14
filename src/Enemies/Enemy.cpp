@@ -15,3 +15,7 @@ bool Enemy::GetOverworld() {
 void Enemy::SetOverworld(bool is_overworld) {
     isOverWorld = is_overworld;
 }
+
+bool Enemy::IsDead(){
+    return  is_daed;
+}

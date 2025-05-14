@@ -127,11 +127,9 @@ void EnemyManager::SetEnemies(std::vector<std::shared_ptr<Enemy>> enemies){
 void EnemyManager::SetupEnemyCollisions() {
     for (const auto& enemy : m_Enemies) {
         if (std::shared_ptr<Goomba> goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
-            goomba->ClearEnemies();
             goomba->AddEnemies(m_Enemies);
         }
         if (std::shared_ptr<Koopa> koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
-            koopa->ClearEnemies();
             koopa->AddEnemies(m_Enemies);
         }
     }

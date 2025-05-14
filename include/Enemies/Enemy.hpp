@@ -30,10 +30,11 @@ public:
     virtual void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) = 0;
     virtual void ClearCollisionBoxes() = 0;
     virtual void ClearCollisionBlocks() = 0;
-
+    virtual bool IsDead() =0;
 private:
     bool isMoving = false;
     bool isFacingRight = false;
+    bool is_dead =
     float move_velocity = 2.0f;
 
     bool isOverWorld = true;

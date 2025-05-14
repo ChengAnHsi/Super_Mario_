@@ -13,13 +13,10 @@ void Koopa::AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies) {
         }
     }
 }
-
 void Koopa::ClearEnemies() {
+
     other_enemies.clear();
 }
-
-// In Koopa.cpp
-
 bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy) {
     // Don't check collision with self or if either enemy is dead or not visible
     if (this == enemy.get() || is_dead || !GetVisible()) {
@@ -286,7 +283,7 @@ void Koopa::BounceOffShell(std::shared_ptr<Koopa> other_koopa) {
 
     // Reset shell timer to keep shells moving
     this->shell_timer = 0.0f;
-    other_koopa->shell_timer = 0.0f; 
+    other_koopa->shell_timer = 0.0f;
 
     // Ensure both shells are still moving
     this->shell_is_moving = true;
