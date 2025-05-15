@@ -251,6 +251,7 @@ void App::NextPhase(bool is_nextphase) {
         }
     }else {
         m_Mario->SetGrow(false);
+        m_Mario->SetInvincible(false);
     }
     switch (m_Phase) {
         case Phase::Level1_1:

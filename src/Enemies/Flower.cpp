@@ -36,7 +36,7 @@ bool Flower::CheckMarioCollision(std::shared_ptr<Mario> mario){
     if (collision_x && collision_y) {
         // If collision happens, Mario gets hurt regardless of direction
         // No special handling for stomping from above - Piranha Plants can't be killed this way
-        if (!mario->is_dying && mario->GetLive() > 0 && !mario->IsTemporarilyInvincible) {
+        if (!mario->is_dying && mario->GetLive() > 0 && !mario->is_temporarily_invincible) {
             mario->Die(); // Call Mario's Die method
             return true;
         }

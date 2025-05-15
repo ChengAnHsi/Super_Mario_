@@ -3,8 +3,12 @@
 
 void Starman::AfterCollisionEvents(std::shared_ptr<Mario> mario){
     if(state == PropsState::After_Activated) return;
-    if(state == PropsState::Active) SetVisible(false);
-    // todo no enemy mode, after ?? sec state change to after_activated
+    if(state == PropsState::Active) {
+        SetVisible(false);
+        mario->SetInvincible(true);
+        // todo no enemy mode, after ?? sec state change to after_activated
+        state = PropsState::After_Activated;
+    }
 }
 
 void Starman::SpawnProps() {

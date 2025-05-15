@@ -20,9 +20,17 @@ void Mario::OnJump() {
         isJumping = true;
         state = MarioState::Jump;
         if(is_grow) {
+            // todo: update animation
+            if(is_invincible) {
+            }else {
+            }
             this->SetImages(AnimationJumpGrow, 100, 0);
         }else {
-            this->SetImages(AnimationJump, 100, 0);
+            if(is_invincible) {
+                this->SetImages(AnimationJumpInvincible, 100, 0);
+            }else {
+                this->SetImages(AnimationJump, 100, 0);
+            }
         }
         std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/jump.mp3");
         jump_sfx->SetVolume(25);
@@ -37,9 +45,17 @@ void Mario::OnSmallJump() {
         isJumping = true;
         state = MarioState::Jump;
         if(is_grow) {
+            // todo: update animation
+            if(is_invincible) {
+            }else {
+            }
             this->SetImages(AnimationJumpGrow, 100, 0);
         }else {
-            this->SetImages(AnimationJump, 100, 0);
+            if(is_invincible) {
+                this->SetImages(AnimationJumpInvincible, 100, 0);
+            }else {
+                this->SetImages(AnimationJump, 100, 0);
+            }
         }
         std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/jump.mp3");
         jump_sfx->SetVolume(25);
@@ -53,9 +69,17 @@ void Mario::OnKillJump() {
     isJumping = true;
     state = MarioState::Jump;
     if(is_grow) {
+        // todo: update animation
+        if(is_invincible) {
+        }else {
+        }
         this->SetImages(AnimationJumpGrow, 100, 0);
     }else {
-        this->SetImages(AnimationJump, 100, 0);
+        if(is_invincible) {
+            this->SetImages(AnimationJumpInvincible, 100, 0);
+        }else {
+            this->SetImages(AnimationJump, 100, 0);
+        }
     }
 }
 
@@ -370,7 +394,11 @@ void Mario::UpdateAnimation() {
                 if(is_grow) {
                     this->SetImages(AnimationRunGrow, 100, 0);
                 }else {
-                    this->SetImages(AnimationRun, 100, 0);
+                    if(is_invincible) {
+                        this->SetImages(AnimationRunInvincible, 100, 0);
+                    }else {
+                        this->SetImages(AnimationRun, 100, 0);
+                    }
                 }
             }
             isRunning = true;
@@ -382,7 +410,11 @@ void Mario::UpdateAnimation() {
                 if (is_grow) {
                     this->SetImages(AnimationStandGrow, 100, 0);
                 }else {
-                    this->SetImages(AnimationStand, 100, 0);
+                    if(is_invincible) {
+                        this->SetImages(AnimationStandInvincible, 100, 0);
+                    }else {
+                        this->SetImages(AnimationStand, 100, 0);
+                    }
                 }
             }
             isRunning = false;
@@ -403,6 +435,10 @@ void Mario::SetGrowingAnimation() {
     float height_offset = (32.0f - 16.0f) / 2.0f * MARIO_MAGNIFICATION;
     this->SetPosition({mario_x, mario_y + height_offset});
 
+    // todo: update animation
+    if(is_invincible) {
+    }else {
+    }
     this->SetImages(this->AnimationGrow, 200, 0);
     this->SetLooping(false);
 
@@ -415,6 +451,10 @@ void Mario::UpdateGrowingState() {
     if (is_grow == false) return;
 
     if(IfAnimationEnds()) {
+        // todo: update animation
+        if(is_invincible) {
+        }else {
+        }
         this->SetImages(this->AnimationStandGrow, 100, 0);
         this->SetLooping(true);
         is_growing = false;
@@ -434,7 +474,7 @@ void Mario::Die() {
 
         this->SetImages(this->AnimationStand, 100, 0);
 
-        IsTemporarilyInvincible = true;
+        is_temporarily_invincible = true;
         invincible_timer = 0.0f;
     } else if (is_growing == false){
         // Mario dies
@@ -505,21 +545,23 @@ float Mario::Move() {
         UpdateGrowingState();
         return 0.0f; // 阻止移動與其他輸入處理
     }
-    if (IsTemporarilyInvincible) {
+    if (is_temporarily_invincible) {
         invincible_timer += delta_time;
         // 3sec
         if (invincible_timer >= 180.0f) {
-            IsTemporarilyInvincible = false;
+            is_temporarily_invincible = false;
+        }
+    }
+    if (is_invincible) {
+        invincible_timer += delta_time;
+        // 30sec
+        if (invincible_timer >= 1800.0f) {
+            is_invincible = false;
         }
     }
 
     if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
-        is_grow = not is_grow;
-        if(is_grow) {
-            SetGrowingAnimation();
-        }else {
-            SetImages(AnimationStand, 100, 0);
-        }
+        if(is_grow) SetImages(AnimationSquatGrow, 100, 0);
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
         is_left_key_down = true;
@@ -540,9 +582,8 @@ float Mario::Move() {
         is_right_key_down = false;
     }
     // test locate to center
-    if (Util::Input::IsKeyDown(Util::Keycode::A)) {
-        SetPosition({-20.0f, 0.0f});
-    }
+    if (Util::Input::IsKeyDown(Util::Keycode::A)) SetPosition({-20.0f, 0.0f});
+
     return OnUpdate(1);
 }
 
@@ -552,6 +593,18 @@ void Mario::SetGrow(bool is_grow) {
 
 bool Mario::GetGrowing() {
     return is_growing;
+}
+
+void Mario::SetInvincible(bool is_invincible) {
+    this->is_invincible = is_invincible;
+    if(is_invincible) {
+        invincible_timer = 0.0f;
+        // todo update BGM    
+    }
+}
+
+bool Mario::GetInvincible() {
+    return is_invincible;
 }
 
 void Mario::IncreaseCoin(const int coin) {
