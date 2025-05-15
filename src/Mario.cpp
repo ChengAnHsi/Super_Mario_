@@ -20,11 +20,11 @@ void Mario::OnJump() {
         isJumping = true;
         state = MarioState::Jump;
         if(is_grow) {
-            // todo: update animation
             if(is_invincible) {
+                this->SetImages(AnimationJumpGrowInvincible, 100, 0);
             }else {
+                this->SetImages(AnimationJumpGrow, 100, 0);
             }
-            this->SetImages(AnimationJumpGrow, 100, 0);
         }else {
             if(is_invincible) {
                 this->SetImages(AnimationJumpInvincible, 100, 0);
@@ -45,11 +45,11 @@ void Mario::OnSmallJump() {
         isJumping = true;
         state = MarioState::Jump;
         if(is_grow) {
-            // todo: update animation
             if(is_invincible) {
+                this->SetImages(AnimationJumpGrowInvincible, 100, 0);
             }else {
+                this->SetImages(AnimationJumpGrow, 100, 0);
             }
-            this->SetImages(AnimationJumpGrow, 100, 0);
         }else {
             if(is_invincible) {
                 this->SetImages(AnimationJumpInvincible, 100, 0);
@@ -69,11 +69,11 @@ void Mario::OnKillJump() {
     isJumping = true;
     state = MarioState::Jump;
     if(is_grow) {
-        // todo: update animation
         if(is_invincible) {
+            this->SetImages(AnimationJumpGrowInvincible, 100, 0);
         }else {
+            this->SetImages(AnimationJumpGrow, 100, 0);
         }
-        this->SetImages(AnimationJumpGrow, 100, 0);
     }else {
         if(is_invincible) {
             this->SetImages(AnimationJumpInvincible, 100, 0);
@@ -385,42 +385,61 @@ void Mario::UpdateAnimation() {
         //     this->SetImages(AnimationJump);
         // }
         state = MarioState::Jump;
-    } else {
-        // Standing or running on the ground depending on whether you are moving or not
-        if (direction != 0) {
-            if(state != MarioState::Run) {
-                this->SetPlaying(true);
-                this->SetLooping(true);
-                if(is_grow) {
+        return;
+    }
+    // Standing or running on the ground depending on whether you are moving or not
+    if(is_down_key_down) {
+        state = MarioState::Squat;
+        if(is_grow) {
+            if(is_invincible){
+                SetImages(AnimationSquatGrowInvincible, 100, 0);
+            }else {
+                SetImages(AnimationSquatGrow, 100, 0);
+            }
+        }
+        return;
+    }
+    if (direction != 0) {
+        if(state != MarioState::Run) {
+            this->SetPlaying(true);
+            this->SetLooping(true);
+            if(is_grow) {
+                if(is_invincible) {
+                    this->SetImages(AnimationRunGrowInvincible, 25, 0);
+                }else {
                     this->SetImages(AnimationRunGrow, 100, 0);
+                }
+            }else {
+                if(is_invincible) {
+                    this->SetImages(AnimationRunInvincible, 25, 0);
                 }else {
-                    if(is_invincible) {
-                        this->SetImages(AnimationRunInvincible, 100, 0);
-                    }else {
-                        this->SetImages(AnimationRun, 100, 0);
-                    }
+                    this->SetImages(AnimationRun, 100, 0);
                 }
             }
-            isRunning = true;
-            state = MarioState::Run;
-        } else {
-            if(state != MarioState::Stand) {
-                this->SetPlaying(true);
-                this->SetLooping(true);
-                if (is_grow) {
-                    this->SetImages(AnimationStandGrow, 100, 0);
-                }else {
-                    if(is_invincible) {
-                        this->SetImages(AnimationStandInvincible, 100, 0);
-                    }else {
-                        this->SetImages(AnimationStand, 100, 0);
-                    }
-                }
+        }
+        isRunning = true;
+        state = MarioState::Run;
+        return;
+    }
+    if(state != MarioState::Stand) {
+        this->SetPlaying(true);
+        this->SetLooping(true);
+        if (is_grow) {
+            if(is_invincible) {
+                this->SetImages(AnimationStandGrowInvincible, 100, 0);
+            }else {
+                this->SetImages(AnimationStandGrow, 100, 0);
             }
-            isRunning = false;
-            state = MarioState::Stand;
+        }else {
+            if(is_invincible) {
+                this->SetImages(AnimationStandInvincible, 100, 0);
+            }else {
+                this->SetImages(AnimationStand, 100, 0);
+            }
         }
     }
+    isRunning = false;
+    state = MarioState::Stand;
 }
 
 void Mario::SetGrowingAnimation() {
@@ -435,11 +454,11 @@ void Mario::SetGrowingAnimation() {
     float height_offset = (32.0f - 16.0f) / 2.0f * MARIO_MAGNIFICATION;
     this->SetPosition({mario_x, mario_y + height_offset});
 
-    // todo: update animation
     if(is_invincible) {
+        this->SetImages(this->AnimationGrowInvincible, 200, 0);
     }else {
+        this->SetImages(this->AnimationGrow, 200, 0);
     }
-    this->SetImages(this->AnimationGrow, 200, 0);
     this->SetLooping(false);
 
     std::shared_ptr<Util::SFX> grow_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Temp/Sound/mushroomeat.wav");
@@ -451,11 +470,11 @@ void Mario::UpdateGrowingState() {
     if (is_grow == false) return;
 
     if(IfAnimationEnds()) {
-        // todo: update animation
         if(is_invincible) {
+            this->SetImages(this->AnimationStandGrowInvincible, 100, 0);
         }else {
+            this->SetImages(this->AnimationStandGrow, 100, 0);
         }
-        this->SetImages(this->AnimationStandGrow, 100, 0);
         this->SetLooping(true);
         is_growing = false;
     }
@@ -518,7 +537,8 @@ void Mario::UpdateDeadState(float delta) {
 
 float Mario::OnUpdate(const float delta) {
     // update moving
-    const int direction = is_right_key_down - is_left_key_down;
+    int direction = is_right_key_down - is_left_key_down;
+    if(is_down_key_down) direction = 0;
     const float distance = direction * run_velocity * delta;
 
     OnRun(distance);
@@ -560,8 +580,8 @@ float Mario::Move() {
         }
     }
 
-    if (Util::Input::IsKeyPressed(Util::Keycode::DOWN)) {
-        if(is_grow) SetImages(AnimationSquatGrow, 100, 0);
+    if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) && is_grow) {
+        is_down_key_down = true;
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
         is_left_key_down = true;
@@ -581,6 +601,9 @@ float Mario::Move() {
     if (Util::Input::IsKeyUp(Util::Keycode::RIGHT)) {
         is_right_key_down = false;
     }
+    if (Util::Input::IsKeyUp(Util::Keycode::DOWN)) {
+        is_down_key_down = false;
+    }
     // test locate to center
     if (Util::Input::IsKeyDown(Util::Keycode::A)) SetPosition({-20.0f, 0.0f});
 
@@ -599,7 +622,7 @@ void Mario::SetInvincible(bool is_invincible) {
     this->is_invincible = is_invincible;
     if(is_invincible) {
         invincible_timer = 0.0f;
-        // todo update BGM    
+        // todo update BGM
     }
 }
 
