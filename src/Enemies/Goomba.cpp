@@ -82,6 +82,21 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     bool collision_y = (mario_bottom < goomba_top) && (mario_top > goomba_bottom);
 
     if (collision_x && collision_y) {
+        if(mario->GetInvincible()) {
+            // todo check why goomba dead will got thin
+            SetLive(0);
+            // Apply death animation - flip upside down
+            SetScale(GOOMBA_MAGNIFICATION, -GOOMBA_MAGNIFICATION);
+            death_timer = 0.0f;
+            velocityY = DEATH_JUMP_VELOCITY * 1.5f;
+
+            std::shared_ptr<Util::SFX> kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
+            kick_sfx->SetVolume(200);
+            kick_sfx->Play();
+
+            mario->IncreaseScore(score);
+            return true;
+        }
         // Calculate the vertical velocity direction
         bool mario_moving_down = mario->velocityY <= 0;
 
@@ -415,6 +430,18 @@ void Goomba::UpdateAnimation() {
 void Goomba::OnUpdate(const float delta) {
     if (is_dead) {
         death_timer += delta;
+
+        // todo if mario invincible and kill goomba then need to do this part ------
+        if(GetPosition().y >= -360.0f){
+            // flying
+            velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
+
+            float enemy_x = GetPosition().x;
+            float enemy_y = GetPosition().y + velocityY * (delta / 60.0f);
+            SetPosition(enemy_x, enemy_y);
+        }
+        // end line ------
+
         if (death_timer >= DEATH_ANIMATION_TIME) {
             // After the animation time, make the Goomba disappear
             SetVisible(false);

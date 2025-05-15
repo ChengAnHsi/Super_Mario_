@@ -40,7 +40,7 @@ public:
     void KillGoomba();
     // TODO 被擊倒動畫
     bool is_dead = false;
-    float velocityY = 0.0f;
+    float velocityY = 0.0f; // 角色在 Y 軸的速度
 private:
     int live = 1;
     // 被擊倒的分數
@@ -53,8 +53,9 @@ private:
     CollisionState Y_state = CollisionState::None;
 
     float delta_time = 1.0f;
-     // 角色在 Y 軸的速度
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
+    const float DEATH_JUMP_DURATION = 120.0f;
+    const float DEATH_JUMP_VELOCITY = 300.0f;
 
     // TODO: dead update
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/Overworld/goomba0.png",RESOURCE_DIR"/Entities/Overworld/goomba1.png"};

@@ -112,6 +112,13 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
 
     if (!(collision_x && collision_y)) return false;
 
+    // todo kill koopa
+    if(mario->GetInvincible()) {
+    //     KillEnemy();
+    //     mario->IncreaseScore(score);
+    //     return true;
+    }
+
     // Determine collision side by finding minimum overlap
     float overlaps[4];
     overlaps[0] = koopa_right - mario_left;   // Mario collides from left side
