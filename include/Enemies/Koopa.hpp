@@ -38,7 +38,6 @@ public:
     void ClearEnemies();
     void TurnToShell();
     bool KickShell(std::shared_ptr<Mario> mario);
-    bool IsDead() const { return is_dead; }
     void KillEnemy(std::shared_ptr<Enemy> enemy);
     void BounceOffShell(std::shared_ptr<Koopa> other_koopa);
 private:

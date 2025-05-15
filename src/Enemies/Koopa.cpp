@@ -24,12 +24,7 @@ bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy) {
     }
 
     // Check if the other enemy is dead
-    bool other_enemy_dead = false;
-    if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
-        other_enemy_dead = goomba->IsDead();
-    } else if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
-        other_enemy_dead = koopa->IsDead();
-    }
+    bool other_enemy_dead = enemy->GetIsDead();
 
     if (other_enemy_dead) return false;
 
@@ -216,7 +211,7 @@ void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
     // Handle different enemy types
     if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
         // Kill the Goomba if it's not already dead
-        if (!goomba->IsDead()) {
+        if (!goomba->GetIsDead()) {
             goomba->SetLive(0);
 
             // Apply death animation - flip upside down
@@ -242,7 +237,7 @@ void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
         }
 
         // Kill the Koopa if it's not already dead
-        if (!koopa->IsDead()) {
+        if (!koopa->GetIsDead()) {
             koopa->SetLive(0);
 
             // Apply death animation - flip upside down
@@ -406,14 +401,14 @@ void Koopa::Action(const float distance) {
 
             // If enemy is a Goomba and it's dead, skip collision check
             if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
-                if (goomba->IsDead()) {
+                if (goomba->GetIsDead()) {
                     continue;
                 }
             }
 
             // If enemy is a Koopa and it's dead, skip collision check
             if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
-                if (koopa->IsDead()) {
+                if (koopa->GetIsDead()) {
                     continue;
                 }
             }

@@ -9,14 +9,8 @@ bool Goomba::CheckEnemyCollision(std::shared_ptr<Enemy> enemy) {
         return false;
     }
 
-    if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
-        if (goomba->IsDead()) {
-            return false;
-        }
-    } else if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
-        if (koopa->IsDead()) {
-            return false;
-        }
+    if(enemy->GetIsDead()) {
+        return false;
     }
 
     glm::vec2 this_pos = GetPosition();
@@ -26,11 +20,7 @@ bool Goomba::CheckEnemyCollision(std::shared_ptr<Enemy> enemy) {
     glm::vec2 enemy_pos = enemy->GetPosition();
     glm::vec2 enemy_size = enemy->GetSize();
 
-    if (dynamic_cast<Goomba*>(enemy.get())) {
-        enemy_size *= GOOMBA_MAGNIFICATION;
-    } else if (dynamic_cast<Koopa*>(enemy.get())) {
-        enemy_size *= KOOPA_MAGNIFICATION;
-    }
+    enemy_size *= ENEMY_MAGNIFICATION;
 
     float this_left = this_pos.x - this_size.x / 2;
     float this_right = this_pos.x + this_size.x / 2;
@@ -203,14 +193,14 @@ void Goomba::Action(const float distance) {
 
             // If enemy is a Goomba and it's dead, skip collision check
             if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
-                if (goomba->IsDead()) {
+                if (goomba->GetIsDead()) {
                     continue;
                 }
             }
 
             // If enemy is a Koopa and it's dead, skip collision check
             if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
-                if (koopa->IsDead()) {
+                if (koopa->GetIsDead()) {
                     continue;
                 }
             }

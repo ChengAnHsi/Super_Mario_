@@ -16,11 +16,10 @@ void Enemy::SetOverworld(bool is_overworld) {
     isOverWorld = is_overworld;
 }
 
-<<<<<<< HEAD
-bool Enemy::IsDead(){
-    return  is_daed;
+bool Enemy::GetIsDead(){
+    return is_dead;
 }
-=======
+
 bool Enemy::GetFacingRight() {
     return isFacingRight;
 }
@@ -28,4 +27,3 @@ bool Enemy::GetFacingRight() {
 void Enemy::SetFacingRight(bool facingRight) {
     isFacingRight = facingRight;
 }
->>>>>>> 7072fb60e9e9d5b0003810f6291ea186926f49e2

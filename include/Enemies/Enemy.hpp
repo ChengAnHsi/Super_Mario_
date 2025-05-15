@@ -24,6 +24,7 @@ public:
     void SetMoving(bool moving) {isMoving = moving;}
     float GetMoveVelocity();
     bool GetOverworld();
+    bool GetIsDead();
     void SetOverworld(bool is_overworld);
     void SetMoveVelocity(float veclocityX);
     bool GetFacingRight();
@@ -32,18 +33,11 @@ public:
     virtual void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) = 0;
     virtual void ClearCollisionBoxes() = 0;
     virtual void ClearCollisionBlocks() = 0;
-<<<<<<< HEAD
-    virtual bool IsDead() =0;
-private:
-    bool isMoving = false;
-    bool isFacingRight = false;
-    bool is_dead =
-=======
 protected:
     bool isFacingRight = false;
 private:
+    bool is_dead = false;
     bool isMoving = false;
->>>>>>> 7072fb60e9e9d5b0003810f6291ea186926f49e2
     float move_velocity = 2.0f;
     bool isOverWorld = true;
 };

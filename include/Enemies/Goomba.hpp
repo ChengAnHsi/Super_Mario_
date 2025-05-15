@@ -38,7 +38,6 @@ public:
     void AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies);
     void ClearEnemies();
     void KillGoomba();
-    bool IsDead() const { return is_dead; }
     // TODO 被擊倒動畫
     bool is_dead = false;
     float velocityY = 0.0f;
