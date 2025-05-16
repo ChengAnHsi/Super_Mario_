@@ -14,19 +14,20 @@ void MysteryBlock::AfterCollisionEvents() {
     }
 
     if (collision_time > 0) {
-        inside_prop->SpawnProps();
+        auto prop_to_spawn = GetProps();
+        prop_to_spawn->SpawnProps();
         collision_time -= 1;
 
         if (collision_time == 0) {
             iscollision = true;
             if (isoverworld) {
                 SetImage({RESOURCE_DIR"/Blocks/Overworld/emptyBlock.png"}, 1000, 0);
-            }else {
+            } else {
                 SetImage({RESOURCE_DIR"/Blocks/Underworld/emptyBlock.png"}, 1000, 0);
             }
-        }else {
-            inside_prop->SetState(Props::PropsState::Not_Activated);
-            inside_prop->SetVisible(true);
+        } else {
+            prop_to_spawn->SetState(Props::PropsState::Not_Activated);
+            prop_to_spawn->SetVisible(true);
         }
     }
 }
@@ -35,10 +36,26 @@ void MysteryBlock::SetCollisionTime(int time) {
     collision_time = time;
 }
 
-void MysteryBlock::SetProps(std::shared_ptr<Props> prop){
-    inside_prop = prop;
+void MysteryBlock::SetInsidePropType(PROP_TYPE prop_type, PROP_TYPE prop_type2){
+    inside_prop_type = prop_type;
+    inside_prop_type2 = prop_type2;
+}
+
+std::vector<Block::PROP_TYPE> MysteryBlock::GetInsidePropType(){
+    return {inside_prop_type, inside_prop_type2};
+}
+
+void MysteryBlock::SetProps(std::shared_ptr<Props> prop1, std::shared_ptr<Props> prop2, bool multipleProps) {
+    inside_prop1 = prop1;
+    inside_prop2 = prop2;
+    hasMultipleProps = multipleProps;
 }
 
 std::shared_ptr<Props> MysteryBlock::GetProps() {
-    return inside_prop;
+    //if (hasMultipleProps && mario->GetGrow()) {
+    if (hasMultipleProps) {
+        // return fire flower
+        return inside_prop2;
+    }
+    return inside_prop1;
 }

@@ -50,12 +50,4 @@ int Block::GetCollisionTime() {
 
 Block::TYPE Block::GetBlockType(){
     return Blocktype;
-};
-
-void Block::SetInsidePropType(PROP_TYPE prop_type){
-    inside_prop_type = prop_type;
-};
-
-Block::PROP_TYPE Block::GetInsidePropType(){
-    return inside_prop_type;
-};
+}

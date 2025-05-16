@@ -14,10 +14,16 @@ public:
     void AfterCollisionEvents() override;
 
     void SetCollisionTime(int time);
-    void SetProps(std::shared_ptr<Props> prop);
+    void SetInsidePropType(PROP_TYPE prop_type, PROP_TYPE prop_type2);
+    std::vector<PROP_TYPE> GetInsidePropType();
+    void SetProps(std::shared_ptr<Props> prop1, std::shared_ptr<Props> prop2, bool multipleProps = false);
     std::shared_ptr<Props> GetProps();
 private:
-    std::shared_ptr<Props> inside_prop;
+    std::shared_ptr<Props> inside_prop1;
+    std::shared_ptr<Props> inside_prop2;
+    PROP_TYPE inside_prop_type;
+    PROP_TYPE inside_prop_type2;
+    bool hasMultipleProps;
 };
 
 #endif //MYSTERYBLOCK_HPP

@@ -74,12 +74,10 @@ private:
         2,
         16,1,16,1,
         1,16,16,16,16};
-    // TODO two props in a block(flower and mushroom): 69,6 150,6 10,5
     //map 1-3
     std::vector<int> props_tmp_x3 = {59};
     std::vector<int> props_tmp_y3 = {4};
     std::vector<int> props_imgidx3 = {1};
-    // TODO: solve 2 props in same block
     std::vector<std::shared_ptr<Props>> m_props;
 };
 
