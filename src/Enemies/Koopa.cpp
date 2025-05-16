@@ -475,6 +475,7 @@ void Koopa::UpdateAnimation() {
 }
 
 void Koopa::OnUpdate(const float delta) {
+    if (!GetMoving()) return;
     delta_time = delta;
     if (GetPosition().y >= -360.0f && dead_state == DeadState::Hit) {
         velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
@@ -516,6 +517,7 @@ void Koopa::Move() {
 
 void Koopa::SetLive(const int live) {
     this->live = live;
+    is_dead = false;
     if (live == 0) {
         if (GetOverworld()) {
             SetImage(AnimationDead, 1000, 0);

@@ -140,7 +140,6 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
 void Goomba::KillGoomba() {
     if (GetLive() > 0) {
         SetLive(0); // This will trigger the death animation
-        is_dead = true; // Set the death flag
         //death_timer = 0.0f; // Reset the death timer
 
         // Play a sound effect for Goomba death
@@ -476,6 +475,7 @@ void Goomba::Move(){
 
 void Goomba::SetLive(int live){
     this->live = live;
+    is_dead = false;
     if (live == 0) {
         if (dead_state == DeadState::Trampled){
             // only trampled will got squashed

@@ -1,220 +1,54 @@
 #include "Enemies/FlyKoopa.hpp"
-#include <iostream>
-#include "Global.hpp"
-#include "Mario.hpp"
-#include "App.hpp"
 #include "Enemies/Enemy.hpp"
-#include "Enemies/Goomba.hpp"
-
-FlyKoopa::FlyKoopa() : Koopa() {
-    isFlying = true;
-    isShell = false;
-    isMovingShell = false;
-    isFacingRight = false;
-    isFacingUp = true;
-    live = 1;
-    velocityY = 0.0f;
-    velocityX = 0.0f;
-    m_Transform.scale = glm::vec2{isFacingRight ? -KOOPA_MAGNIFICATION : KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
-    this->SetZIndex(-20);
-    UpdateYMovementRange();
-    SetImage(AnimationFly, 500, 2); // Set initial flying animation
-    current_animation = AnimationState::Flying;
-}
-
-void FlyKoopa::UpdateYMovementRange() {
-    if (m_Drawable != nullptr) {
-        float basePos = GetPosition().y;
-        if (custom_flight_height > 0) {
-            float range = custom_flight_height * BLOCK_SIZE;
-            min_y_position = basePos - range / 2;
-            max_y_position = basePos + range / 2;
-        } else {
-            float range = default_flight_height * BLOCK_SIZE;
-            min_y_position = basePos - range / 2;
-            max_y_position = basePos + range / 2;
-        }
-    }
-}
-
-void FlyKoopa::Action(float distance) {
-    if (isFlying) {
-        SetImage(AnimationFly, 500, 2); // Set initial flying animation
-        float koopa_x = GetPosition().x;
-        float koopa_y = GetPosition().y;
-        const float step = BLOCK_SIZE / 48.0f;
-        float step_distance = std::min(step, std::abs(distance));
-        if (!isFacingUp) step_distance *= -1;
-        float next_y = koopa_y + step_distance;
-        if (next_y <= min_y_position) {
-            next_y = min_y_position;
-            isFacingUp = true;
-        } else if (next_y >= max_y_position) {
-            next_y = max_y_position;
-            isFacingUp = false;
-        }
-        Enemy::SetPosition(koopa_x, next_y);
-        return;
-    }
-    if (isShell && !isMovingShell) return;
-    Koopa::Action(distance);
-}
-
-void FlyKoopa::OnUpdate(float delta) {
-    delta_time = delta;
-    if (GetPosition().y >= -360.0f && dead_state == DeadState::Hit) {
-        velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
-        float enemy_x = GetPosition().x;
-        float enemy_y = GetPosition().y + velocityY * (delta / 60.0f);
-        SetPosition(enemy_x, enemy_y);
-        if (death_timer >= DEATH_ANIMATION_TIME) SetVisible(false);
-        return;
-    }
-    if (!isFlying) GravityAndCollision(3 * delta);
-    UpdateAnimation();
-    if (isShell && !isMovingShell) return;
-    if (isFlying) {
-        float distance = GetMoveVelocity() * delta;
-        Action(distance);
-    } else {
-        float distance = GetMoveVelocity() * delta;
-        if (!isFacingRight) distance *= -1;
-        if (isShell) distance *= 3;
-        Action(distance);
-    }
-}
-
-void FlyKoopa::Move() {
-    if (!GetMoving()) return;
-    OnUpdate(1);
-}
-
-bool FlyKoopa::GravityAndCollision(float delta) {
-    if (isFlying) return false;
-    return Koopa::GravityAndCollision(delta);
-}
-
-void FlyKoopa::SetFlightHeight(float height) {
-    custom_flight_height = height;
-    if (isFlying) UpdateYMovementRange();
-}
-
-void FlyKoopa::SetFlightRange(float min_y, float max_y) {
-    min_y_position = min_y;
-    max_y_position = max_y;
-    custom_flight_height = -1.0f;
-}
-
-void FlyKoopa::UpdateAnimation() {
-    if (isFlying) {
-        if (current_animation != AnimationState::Flying) {
-            SetImage(AnimationFly, 500, 0);
-            current_animation = AnimationState::Flying;
-        }
-    } else if (isShell) {
-        if (isMovingShell) {
-            if (current_animation != AnimationState::MovingShell) {
-                SetImage(AnimationMovingShell, 500, 0);
-                current_animation = AnimationState::MovingShell;
-            }
-        } else {
-            shell_timer += delta_time;
-            if (shell_timer >= 500.0f && shell_timer < 800.0f) {
-                SetImage({RESOURCE_DIR"/Entities/shell0.png"}, 1000, 0);
-            } else if (shell_timer >= 800.0f) {
-                isShell = false;
-                shell_timer = 0.0f;
-                SetMoving(true);
-                SetImage(AnimationRun, 500, 0);
-                current_animation = AnimationState::Walking;
-            }
-        }
-    } else {
-        if (current_animation != AnimationState::Walking) {
-            SetImage(AnimationRun, 500, 0);
-            current_animation = AnimationState::Walking;
-        }
-    }
-    m_Transform.scale = glm::vec2{isFacingRight ? -KOOPA_MAGNIFICATION : KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
-}
-
-bool FlyKoopa::AABBCollides(glm::vec2 flykoopa_pos, std::shared_ptr<BackgroundImage> box) {
-    return Koopa::AABBCollides(flykoopa_pos, box);
-}
-
-bool FlyKoopa::CCDDCollides(glm::vec2 flykoopa_pos, std::shared_ptr<BackgroundImage> box) {
-    return Koopa::CCDDCollides(flykoopa_pos, box);
-}
-
-bool FlyKoopa::DetectHole(float next_x, float y) {
-    float check_y = y - (m_Drawable->GetSize().y * KOOPA_MAGNIFICATION / 2) - 5.0f;
-    bool has_ground = false;
-    for (const auto &box : collision_boxes) {
-        if (!box->GetVisible()) continue;
-        glm::vec2 box_pos = box->GetTransform().translation;
-        glm::vec2 box_size = box->GetSize();
-        box_size.x *= box->GetScale().x;
-        box_size.y *= box->GetScale().y;
-        float box_left = box_pos.x - box_size.x / 2;
-        float box_right = box_pos.x + box_size.x / 2;
-        float box_top = box_pos.y + box_size.y / 2;
-        if (next_x >= box_left && next_x <= box_right &&
-            check_y >= box_top - 5.0f && check_y <= box_top + 5.0f) {
-            has_ground = true;
-            break;
-        }
-    }
-    if (!has_ground) {
-        for (const auto &block : collision_blocks) {
-            if (!block->GetVisible() || block->GetBroken()) continue;
-            glm::vec2 block_pos = block->GetTransform().translation;
-            glm::vec2 block_size = block->GetSize();
-            block_size.x *= block->GetScale().x;
-            block_size.y *= block->GetScale().y;
-            float block_left = block_pos.x - block_size.x / 2;
-            float block_right = block_pos.x + block_size.x / 2;
-            float block_top = block_pos.y + block_size.y / 2;
-            if (next_x >= block_left && next_x <= block_right &&
-                check_y >= block_top - 5.0f && check_y <= block_top + 5.0f) {
-                has_ground = true;
-                break;
-            }
-        }
-    }
-    return !has_ground;
-}
+#include "Global.hpp"
+#include "Util/SFX.hpp"
 
 bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     if (is_dead || !GetVisible() || mario->is_dying) return false;
+
     glm::vec2 koopa_pos = GetPosition();
     glm::vec2 koopa_size = m_Drawable->GetSize() * KOOPA_MAGNIFICATION;
     glm::vec2 mario_pos = mario->GetPosition();
     glm::vec2 mario_size = mario->GetSize() * MARIO_MAGNIFICATION;
+
     float koopa_left = koopa_pos.x - koopa_size.x / 2;
     float koopa_right = koopa_pos.x + koopa_size.x / 2;
     float koopa_top = koopa_pos.y + koopa_size.y / 2;
     float koopa_bottom = koopa_pos.y - koopa_size.y / 2;
+
     float mario_left = mario_pos.x - mario_size.x / 2;
     float mario_right = mario_pos.x + mario_size.x / 2;
     float mario_top = mario_pos.y + mario_size.y / 2;
     float mario_bottom = mario_pos.y - mario_size.y / 2;
+
     float EPSILON = 1.0f;
     bool collision_x = (mario_left < koopa_right - EPSILON) && (mario_right > koopa_left + EPSILON);
     bool collision_y = (mario_bottom < koopa_top - EPSILON) && (mario_top > koopa_bottom + EPSILON);
+
     if (!(collision_x && collision_y)) return false;
+
     if (mario->GetInvincible()) {
         SetLive(0);
         dead_state = DeadState::Hit;
         SetScale(ENEMY_MAGNIFICATION, -ENEMY_MAGNIFICATION);
-        death_timer = 0.0f;
-        velocityY = DEATH_JUMP_VELOCITY * 1.5f;
+         death_timer = 0.0f;
+         velocityY = DEATH_JUMP_VELOCITY * 1.5f;
+
         std::shared_ptr<Util::SFX> kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
         kick_sfx->SetVolume(200);
         kick_sfx->Play();
+
         mario->IncreaseScore(score);
         return true;
     }
-    float overlaps[4] = {koopa_right - mario_left, mario_right - koopa_left, koopa_top - mario_bottom, mario_top - koopa_bottom};
+
+    float overlaps[4] = {
+        koopa_right - mario_left,   // Mario from left
+        mario_right - koopa_left,   // Mario from right
+        koopa_top - mario_bottom,   // Mario from bottom (stomp)
+        mario_top - koopa_bottom    // Mario from top
+    };
+
     int min_index = 0;
     float min_overlap = overlaps[0];
     for (int i = 1; i < 4; i++) {
@@ -223,109 +57,498 @@ bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
             min_index = i;
         }
     }
+
     bool mario_moving_down = mario->velocityY <= 0;
     float horizontal_overlap = std::min(mario_right, koopa_right) - std::max(mario_left, koopa_left);
     float horizontal_percentage = horizontal_overlap / std::min(koopa_size.x, mario_size.x);
+
     if (min_index == 2 && mario_moving_down && horizontal_percentage > 0.4f) {
-        std::shared_ptr<Util::SFX> sound;
-        if (isFlying) {
-            ConvertToUnfly();
-            mario->OnKillJump();
-            mario->IncreaseScore(score);
-            sound = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/stomp.wav");
-        } else if (!isShell) {
-            ConvertToShell();
-            mario->OnKillJump();
-            mario->IncreaseScore(score);
-            sound = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/stomp.wav");
-        } else if (isMovingShell) {
-            isMovingShell = false;
-            SetMoving(false);
-            mario->OnKillJump();
-            sound = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/stomp.wav");
-        } else {
-            ActivateShell(mario_pos.x < koopa_pos.x);
-            mario->OnKillJump();
-            sound = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
-        }
-        if (sound) {
-            sound->SetVolume(200);
-            sound->Play();
-        }
+        mario->OnKillJump();
+        SetVisible(false);
+        is_dead = true;
+
+        inside_self->SetLive(1);
+        inside_self->SetVisible(true);
+        inside_self->SetPosition(GetPosition().x, GetPosition().y);
         return false;
     }
-    if ((!isShell || (isShell && isMovingShell)) && !mario->is_temporarily_invincible) {
-        if (mario->GetLive() > 0) mario->Die();
-    } else if (isShell && !isMovingShell) {
-        if (min_index == 0 || min_index == 1) {
-            ActivateShell(mario_pos.x < koopa_pos.x);
-            std::shared_ptr<Util::SFX> kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
-            if (kick_sfx) {
-                kick_sfx->SetVolume(200);
-                kick_sfx->Play();
-            }
-            return true;
+    if (mario->is_temporarily_invincible == false)  {
+        if (mario->GetLive() > 0) {
+            mario->Die();
         }
-    }
+     }
     return true;
 }
 
+void FlyKoopa::UpdateYMovementRange() {
+    if (m_Drawable != nullptr) {
+        float sprite_height = m_Drawable->GetSize().y;
+
+        if (custom_flight_height > 0) {
+            // Use custom flight height setting if available
+            float flight_distance = custom_flight_height * BLOCK_SIZE;
+            min_y_position = GetPosition().y - flight_distance;
+            max_y_position = GetPosition().y - (sprite_height * 0.1);
+        } else {
+            // Default calculation similar to Flower
+            min_y_position = GetPosition().y - (sprite_height * default_flight_height);
+            max_y_position = GetPosition().y - (sprite_height * 0.1);
+        }
+    }
+}
+
+void FlyKoopa::SetInsideKoopa(std::shared_ptr<Koopa> inside_koopa) {
+    inside_self = inside_koopa;
+}
+
+void FlyKoopa::SetFlightHeight(float height) {
+    // Set custom flight height in blocks
+    custom_flight_height = height;
+    UpdateYMovementRange();
+}
+
+void FlyKoopa::SetFlightRange(float min_y, float max_y) {
+    // Set explicit min and max y positions
+    min_y_position = min_y;
+    max_y_position = max_y;
+}
+
+bool FlyKoopa::DetectHole(float next_x, float y) {
+    // 檢查下一步是否會掉入坑洞（即下方沒有任何碰撞體）
+    float check_y = y - BLOCK_SIZE; // 檢查角色腳下一格
+    bool has_ground = false;
+
+    // 設置檢測範圍（寬度約為角色的一半）
+    float check_width = m_Drawable->GetSize().x * KOOPA_MAGNIFICATION * 0.4f;
+
+    // 檢查每個碰撞方塊
+    for (const auto& box : collision_boxes) {
+        if (!box->GetVisible()) continue;
+
+        glm::vec2 box_pos = box->GetTransform().translation;
+        glm::vec2 box_size = box->GetSize();
+        box_size.x *= box->GetScale().x;
+        box_size.y *= box->GetScale().y;
+
+        // 檢查方塊是否在角色下方且有重疊
+        if (box_pos.y < y &&
+            box_pos.y + box_size.y/2 >= check_y &&
+            box_pos.x - box_size.x/2 <= next_x + check_width &&
+            box_pos.x + box_size.x/2 >= next_x - check_width) {
+            has_ground = true;
+            break;
+        }
+    }
+
+    // 如果沒有找到地面，也檢查碰撞方塊
+    if (!has_ground) {
+        for (const auto& block : collision_blocks) {
+            if (block->GetBroken()) continue;
+
+            glm::vec2 block_pos = block->GetTransform().translation;
+            glm::vec2 block_size = block->GetSize();
+            block_size.x *= block->GetScale().x;
+            block_size.y *= block->GetScale().y;
+
+            if (block_pos.y < y &&
+                block_pos.y + block_size.y/2 >= check_y &&
+                block_pos.x - block_size.x/2 <= next_x + check_width &&
+                block_pos.x + block_size.x/2 >= next_x - check_width) {
+                has_ground = true;
+                break;
+            }
+        }
+    }
+
+    // 如果沒有地面，表示前方有坑洞
+    return !has_ground;
+}
+
+void FlyKoopa::Action(const float distance) {
+    float FlyKoopa_x = GetPosition().x;
+    float FlyKoopa_y = GetPosition().y;
+    glm::vec2 FlyKoopa_size = m_Drawable->GetSize();
+    FlyKoopa_size *= KOOPA_MAGNIFICATION;
+
+    // 根據不同狀態處理移動
+    if (isFlying) {
+        // 飛行狀態的垂直移動（像花一樣）
+        const float step = BLOCK_SIZE / 32.0f;
+        float step_distance = std::min(step, std::abs(distance));
+
+        // 根據面向方向調整方向
+        if (!isFacingUp) {
+            step_distance *= -1;
+        }
+
+        // 計算下一位置
+        float next_y = FlyKoopa_y + step_distance;
+
+        // 檢查是否達到邊界
+        if (next_y <= min_y_position) {
+            next_y = min_y_position;
+            isFacingUp = true; // 反向，開始上升
+        } else if (next_y >= max_y_position) {
+            next_y = max_y_position;
+            isFacingUp = false; // 反向，開始下降
+        }
+
+        // 更新位置（不重計算範圍）
+        Enemy::SetPosition(FlyKoopa_x, next_y);
+    }
+    else if (isShell && isMovingShell) {
+        // 龜殼狀態高速水平移動
+        const float shell_step = BLOCK_SIZE / 3.0f; // 龜殼移動速度較快
+        float remaining_distance = distance;
+        float step_distance = std::min(shell_step, std::abs(distance));
+
+        // 根據面向方向決定移動方向
+        if (!isFacingRight) {
+            step_distance *= -1;
+        }
+
+        bool collision = false;
+        while (std::abs(remaining_distance) > 0.0f) {
+            float step_distance = (remaining_distance > 0.0f) ? std::min(shell_step, remaining_distance)
+                                                            : std::max(-shell_step, remaining_distance);
+
+            // 根據面向方向調整
+            if (!isFacingRight) {
+                step_distance *= -1;
+            }
+
+            float next_x = FlyKoopa_x + step_distance;
+
+            // 檢查與方塊的碰撞
+            for (const auto& box : collision_boxes) {
+                if (box->GetVisible() == false) continue;
+
+                AABBCollides({next_x, FlyKoopa_y}, box);
+                if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
+                    collision = true;
+                    break;
+                }
+            }
+
+            if (collision) break;
+
+            // 檢查與碰撞方塊的碰撞
+            for (const auto& block : collision_blocks) {
+                if (block->GetVisible() == false) continue;
+
+                AABBCollides({next_x, FlyKoopa_y}, block);
+                if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
+                    collision = true;
+                    break;
+                }
+            }
+
+            if (collision) break;
+
+            FlyKoopa_x = next_x;
+            this->SetPosition(FlyKoopa_x, FlyKoopa_y);
+            remaining_distance -= step_distance;
+        }
+
+        // 發生碰撞時反轉方向
+        if (collision) {
+            isFacingRight = !isFacingRight;
+        }
+    }
+    else {
+        // 普通狀態的水平移動
+        const float step = BLOCK_SIZE / 4.0f;
+        float remaining_distance = distance;
+        float step_distance = std::min(step, std::abs(distance));
+
+        // 根據面向方向決定移動方向
+        if (!isFacingRight) {
+            step_distance *= -1;
+        }
+
+        bool collision = false;
+        while (std::abs(remaining_distance) > 0.0f) {
+            float step_distance = (remaining_distance > 0.0f) ? std::min(step, remaining_distance)
+                                                            : std::max(-step, remaining_distance);
+
+            // 根據面向方向調整
+            if (!isFacingRight) {
+                step_distance *= -1;
+            }
+
+            float next_x = FlyKoopa_x + step_distance;
+
+            // 檢查前方是否有坑洞（只在非飛行模式且非龜殼模式時）
+            if (!isFlying && !isShell && DetectHole(next_x, FlyKoopa_y)) {
+                isFacingRight = !isFacingRight; // 改變方向
+                step_distance *= -1; // 反向移動
+                next_x = FlyKoopa_x + step_distance; // 重新計算下一個位置
+            }
+
+            // 檢查與方塊的碰撞
+            for (const auto& box : collision_boxes) {
+                if (box->GetVisible() == false) continue;
+
+                AABBCollides({next_x, FlyKoopa_y}, box);
+                if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
+                    collision = true;
+                    break;
+                }
+            }
+
+            if (collision) break;
+
+            // 檢查與碰撞方塊的碰撞
+            for (const auto& block : collision_blocks) {
+                if (block->GetVisible() == false) continue;
+
+                AABBCollides({next_x, FlyKoopa_y}, block);
+                if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
+                    collision = true;
+                    break;
+                }
+            }
+
+            if (collision) break;
+
+            FlyKoopa_x = next_x;
+            this->SetPosition(FlyKoopa_x, FlyKoopa_y);
+            remaining_distance -= step_distance;
+        }
+
+        // 發生碰撞時反轉方向
+        if (collision) {
+            isFacingRight = !isFacingRight;
+        }
+    }
+}
+
+bool FlyKoopa::AABBCollides(glm::vec2 FlyKoopa_pos, std::shared_ptr<BackgroundImage> box) {
+    glm::vec2 a = FlyKoopa_pos;
+    glm::vec2 FlyKoopa_size = this->m_Drawable->GetSize();
+    FlyKoopa_size *= KOOPA_MAGNIFICATION;
+
+    glm::vec2 b = box->m_Transform.translation;
+    glm::vec2 b_size = box->GetSize();
+
+    b_size.x *= box->GetScale().x;
+    b_size.y *= box->GetScale().y;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
+
+    X_state = CollisionState::None;
+    float aleft = a.x - FlyKoopa_size.x / 2;
+    float aright = a.x + FlyKoopa_size.x / 2;
+    float atop = a.y + FlyKoopa_size.y / 2;
+    float abottom = a.y - FlyKoopa_size.y / 2;
+
+    float bleft = b.x - b_size.x / 2;
+    float bright = b.x + b_size.x / 2;
+    float btop = b.y + b_size.y / 2;
+    float bbottom = b.y - b_size.y / 2;
+
+    float EPSILON = 0.0f;  // 允許 0.0 pixel 誤差
+
+    bool collisionX = (aleft < bright - EPSILON) && (aright > bleft + EPSILON);
+    bool collisionY = (abottom < btop - EPSILON) && (atop > bbottom + EPSILON);
+
+    if (!(collisionX && collisionY)) {
+        return false;
+    }
+
+    // calculate minimum overlap area
+    float minOverlap = std::min({bright - aleft, aright - bleft});
+
+    if (minOverlap == bright - aleft) X_state = CollisionState::Left;
+    else if (minOverlap == aright - bleft) X_state = CollisionState::Right;
+
+    return X_state != CollisionState::None;
+}
+
+bool FlyKoopa::CCDDCollides(glm::vec2 FlyKoopa_pos, std::shared_ptr<BackgroundImage> box) {
+    glm::vec2 a = FlyKoopa_pos;
+    glm::vec2 FlyKoopa_size = this->m_Drawable->GetSize();
+    FlyKoopa_size *= KOOPA_MAGNIFICATION;
+
+    glm::vec2 b = box->m_Transform.translation;
+    glm::vec2 b_size = box->GetSize();
+
+    b_size.x *= box->GetScale().x;
+    b_size.y *= box->GetScale().y;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
+
+    Y_state = CollisionState::None;
+    float aleft = a.x - FlyKoopa_size.x / 2;
+    float aright = a.x + FlyKoopa_size.x / 2;
+    float atop = a.y + FlyKoopa_size.y / 2;
+    float abottom = a.y - FlyKoopa_size.y / 2;
+
+    float bleft = b.x - b_size.x / 2;
+    float bright = b.x + b_size.x / 2;
+    float btop = b.y + b_size.y / 2;
+    float bbottom = b.y - b_size.y / 2;
+
+    float EPSILON = 0.0f;  // 允許 0.0 pixel 誤差
+
+    bool collisionX = (aleft < bright - EPSILON) && (aright > bleft + EPSILON);
+    bool collisionY = (abottom < btop - EPSILON) && (atop > bbottom + EPSILON);
+
+    if (!(collisionX && collisionY)) {
+        return false;
+    }
+
+    // calculate minimum overlap area
+    float minOverlap = std::min({atop - bbottom, btop - abottom});
+
+    if (minOverlap == atop - bbottom) Y_state = CollisionState::Top;
+    else if (minOverlap == btop - abottom) Y_state = CollisionState::Bottom;
+
+    return Y_state != CollisionState::None;
+}
+
+bool FlyKoopa::GravityAndCollision(const float delta) {
+    // 如果是飛行狀態，停用重力（像花一樣）
+    if (isFlying) {
+        return false;
+    }
+
+    // 如果不是飛行狀態，使用重力（像原始的FlyKoopa）
+    glm::vec2 FlyKoopa_size = this->m_Drawable->GetSize();
+    FlyKoopa_size *= KOOPA_MAGNIFICATION;
+    float FlyKoopa_x = this->GetPosition().x;
+    float FlyKoopa_y = this->GetPosition().y;
+
+    // 更新垂直速度（根據重力）
+    velocityY += GRAVITY * (delta / 60.0f);
+    FlyKoopa_y += velocityY * (delta / 60.0f);
+
+    bool collision = false;
+    for (const auto &box : collision_boxes){
+        // box had already destroyed
+        if(box->GetVisible() == false) {
+            continue;
+        }
+        glm::vec2 b_size = box->GetSize();
+        b_size.x *= box->GetScale().x;
+        b_size.y *= box->GetScale().y;
+
+        collision = CCDDCollides({FlyKoopa_x, FlyKoopa_y}, box);
+
+        if (Y_state == CollisionState::Bottom) {
+            FlyKoopa_y = box->GetTransform().translation.y + b_size.y / 2 + FlyKoopa_size.y / 2;
+            velocityY = 0;
+            this->SetPosition(FlyKoopa_x, FlyKoopa_y);
+            return false;  // 碰撞到地面，不在滯空狀態
+        }
+        if(Y_state == CollisionState::Top) {
+            // 固定在方塊下方開始下墜
+            FlyKoopa_y = box->GetTransform().translation.y - b_size.y / 2 - FlyKoopa_size.y / 2;
+            this->SetPosition(FlyKoopa_x, FlyKoopa_y);
+
+            // 如果碰撞到FlyKoopa的頂部，轉換為unflykoopa
+            ConvertToUnfly();
+            break;
+        }
+    }
+    for (const auto &block : collision_blocks) {
+        // block had already destroyed
+        if(block->GetBroken() == true) {
+            continue;
+        }
+        glm::vec2 b_size = block->GetSize();
+        b_size.x *= block->GetScale().x;
+        b_size.y *= block->GetScale().y;
+
+        collision = CCDDCollides({FlyKoopa_x, FlyKoopa_y}, block);
+
+        if (Y_state == CollisionState::Bottom) {
+            // 固定瑪利歐在地板位置
+            FlyKoopa_y = block->GetTransform().translation.y + b_size.y / 2 + FlyKoopa_size.y / 2;
+            velocityY = 0;
+            this->SetPosition(FlyKoopa_x, FlyKoopa_y);
+            return false;  // 碰撞到地面，不在滯空狀態
+        }
+
+        if (Y_state == CollisionState::Top) {
+            // 如果碰撞到FlyKoopa的頂部，將其轉換為unfly狀態
+            ConvertToUnfly();
+        }
+    }
+    this->SetPosition(FlyKoopa_x, FlyKoopa_y);
+
+    // 如果沒有碰撞，表示在滯空狀態
+    return !collision;
+}
+
 void FlyKoopa::ConvertToUnfly() {
+    // 只在飛行狀態下轉換
     if (isFlying) {
         isFlying = false;
-        SetMoving(true);
-        isFacingRight = false;
+        // 更改動畫為非飛行庫巴??
+        SetImage(AnimationDead, 500, 0);
+    }
+}
+
+void FlyKoopa::UpdateAnimation() {
+    if (isFlying) {
+        // 飛行動畫與上/下移動
+        m_Transform.scale = glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
+    }
+    else if (isShell) {
+        // 龜殼動畫
+        if (isMovingShell) {
+            // 移動中的龜殼動畫可以旋轉得更快
+            m_Transform.scale = isFacingRight ?
+                glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION} :
+                glm::vec2{-KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
+        } else {
+            // 靜止的龜殼
+            m_Transform.scale = glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
+        }
+    }
+    else {
+        // 標準水平移動動畫
+        if (isFacingRight) {
+            m_Transform.scale = glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
+        } else {
+            m_Transform.scale = glm::vec2{-KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
+        }
+    }
+}
+
+void FlyKoopa::OnUpdate(const float delta) {
+    float distance = GetMoveVelocity() * delta;
+
+    if (!isFlying) {
+        // 標準水平移動邏輯
+        if (isFacingRight == false) {
+            distance *= -1;
+        }
+
+        // 只有在非飛行狀態下才應用重力
+        GravityAndCollision(3 * delta);
+    }
+
+    UpdateAnimation();
+    Action(distance);
+}
+
+void FlyKoopa::Move() {
+    OnUpdate(1);
+    if (is_set_runanimation == false) {
         SetImage(AnimationRun, 500, 0);
-        current_animation = AnimationState::Walking;
-        std::shared_ptr<Util::SFX> sound = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/stomp.wav");
-        if (sound) {
-            sound->SetVolume(200);
-            sound->Play();
-        }
+        is_set_runanimation = true;
+        // 確保在有drawable後更新Y範圍
+        UpdateYMovementRange();
     }
 }
 
-void FlyKoopa::ConvertToShell() {
-    if (!isShell) {
-        isShell = true;
-        isMovingShell = false;
-        isFlying = false;
-        shell_timer = 0.0f;
-        SetImage(AnimationShell, 1000, 0);
-        current_animation = AnimationState::Shell;
-        SetMoving(false);
-        velocityY = 0.0f;
-        std::shared_ptr<Util::SFX> shell_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.mp3");
-        if (shell_sfx) {
-            shell_sfx->SetVolume(200);
-            shell_sfx->Play();
-        }
-    }
-}
-
-void FlyKoopa::ActivateShell(bool move_right) {
-    if (isShell && !isMovingShell) {
-        isMovingShell = true;
-        shell_timer = 0.0f;
-        SetMoving(true);
-        isFacingRight = !move_right;
-        SetImage(AnimationMovingShell, 500, 0);
-        current_animation = AnimationState::MovingShell;
-        std::shared_ptr<Util::SFX> kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
-        if (kick_sfx) {
-            kick_sfx->SetVolume(200);
-            kick_sfx->Play();
-        }
-    }
-}
-
-void FlyKoopa::SetLive(int live) {
+void FlyKoopa::SetLive(const int live) {
     this->live = live;
     if (live == 0) {
-        SetImage(AnimationRun, 1000, 0);
-        current_animation = AnimationState::Walking;
-        is_dead = true;
-        death_timer = 0.0f;
+        SetImage(AnimationDead, 100, 0);
+        isFlying = false; // 確保死亡時不是飛行狀態
     }
 }
 
@@ -333,22 +556,20 @@ int FlyKoopa::GetLive() const {
     return live;
 }
 
-bool FlyKoopa::IsFly() const {
-    return isFlying;
-}
-
 void FlyKoopa::AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) {
-    collision_boxes.clear();
-    for (const auto& box : boxes) collision_boxes.push_back(box);
-}
-
-void FlyKoopa::AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) {
-    collision_blocks.clear();
-    for (const auto& block : blocks) collision_blocks.push_back(block);
+    for (const auto& box : boxes) {
+        collision_boxes.push_back(box);
+    }
 }
 
 void FlyKoopa::ClearCollisionBoxes() {
     collision_boxes.clear();
+}
+
+void FlyKoopa::AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) {
+    for (const auto& block : blocks) {
+        collision_blocks.push_back(block);
+    }
 }
 
 void FlyKoopa::ClearCollisionBlocks() {
