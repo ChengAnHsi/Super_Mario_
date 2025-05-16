@@ -433,7 +433,6 @@ void Goomba::OnUpdate(const float delta) {
     if (is_dead) {
         death_timer += delta;
 
-        // todo if mario invincible and kill goomba then need to do this part ------
         if(GetPosition().y >= -360.0f && dead_state == DeadState::Hit){
             // flying
             velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
@@ -442,7 +441,6 @@ void Goomba::OnUpdate(const float delta) {
             float enemy_y = GetPosition().y + velocityY * (delta / 60.0f);
             SetPosition(enemy_x, enemy_y);
         }
-        // end line ------
 
         if (death_timer >= DEATH_ANIMATION_TIME) {
             // After the animation time, make the Goomba disappear

@@ -38,7 +38,6 @@ public:
     void AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies);
     void ClearEnemies();
     void KillGoomba();
-    // TODO 被擊倒動畫
     bool is_dead = false;
     float velocityY = 0.0f; // 角色在 Y 軸的速度
 private:

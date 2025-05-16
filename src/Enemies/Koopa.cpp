@@ -115,9 +115,19 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
 
     // todo kill koopa
     if(mario->GetInvincible()) {
-    //     KillEnemy();
-    //     mario->IncreaseScore(score);
-    //     return true;
+        SetLive(0);
+        dead_state = DeadState::Hit;
+        // Apply death animation - flip upside down
+        SetScale(ENEMY_MAGNIFICATION, -ENEMY_MAGNIFICATION);
+        death_timer = 0.0f;
+        velocityY = DEATH_JUMP_VELOCITY * 1.5f;
+
+        std::shared_ptr<Util::SFX> kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
+        kick_sfx->SetVolume(200);
+        kick_sfx->Play();
+
+        mario->IncreaseScore(score);
+        return true;
     }
 
     // Determine collision side by finding minimum overlap
@@ -220,7 +230,6 @@ void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
     if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
         // Kill the Goomba if it's not already dead
         if (!goomba->GetIsDead()) {
-            // todo set deadstate
             goomba->SetDeadState(DeadState::Hit);
             goomba->SetLive(0);
 
@@ -641,9 +650,22 @@ void Koopa::UpdateAnimation() {
 void Koopa::OnUpdate(const float delta) {
     // Update delta_time for animation timing
     delta_time = delta;
+    if(GetPosition().y >= -360.0f && dead_state == DeadState::Hit){
+        // flying
+        velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
+
+        float enemy_x = GetPosition().x;
+        float enemy_y = GetPosition().y + velocityY * (delta / 60.0f);
+        SetPosition(enemy_x, enemy_y);
+        if (death_timer >= DEATH_ANIMATION_TIME) {
+            // After the animation time, make the Goomba disappear
+            SetVisible(false);
+        }
+        return;
+    }
 
     // Apply gravity regardless of state to prevent floating
-    bool in_air = GravityAndCollision(3 * delta);
+    GravityAndCollision(3 * delta);
 
     // Update animation (shell revival timing, sprite flipping)
     UpdateAnimation();
@@ -683,12 +705,13 @@ void Koopa::Move(){
 void Koopa::SetLive(const int live) {
     this->live = live;
     if (live == 0) {
-        is_dead = true;
         if (GetOverworld() == true) {
             SetImage(AnimationDead, 1000, 0);
         } else {
             SetImage(AnimationUnderWorldDead, 1000, 0);
         }
+        is_dead = true;
+        death_timer = 0.0f;
     }
 }
 

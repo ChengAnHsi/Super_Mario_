@@ -52,6 +52,10 @@ private:
     CollisionState Y_state = CollisionState::None;
     float shell_timer = 0.0f;  // Timer for shell state management
     float delta_time = 1.0f;
+    float death_timer = 0.0f;
+    const float DEATH_JUMP_DURATION = 120.0f;
+    const float DEATH_ANIMATION_TIME = 80.0f;
+    const float DEATH_JUMP_VELOCITY = 300.0f;
     float velocityY = 0.0f; // 角色在 Y 軸的速度
     float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
     bool is_shell = false;  // Flag to track if Koopa is in shell state
