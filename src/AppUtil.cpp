@@ -68,61 +68,86 @@ void App::ResetPhase() {
         bool hasProp = (propsx[propidx] == tmpx[i] && propsy[propidx] == tmpy[i]);
 
         std::shared_ptr<Block> block;
-        std::shared_ptr<Props> prop;
+        std::shared_ptr<Props> prop = nullptr;
+        std::shared_ptr<Props> prop2 = nullptr;
+        Block::PROP_TYPE prop_type = Block::PROP_TYPE::None;
+        Block::PROP_TYPE prop_type2 = Block::PROP_TYPE::None;
 
-        // Block with props
+        // Block with props(mystery block)
         if (hasProp) {
             int prop_imgidx = propsidx[propidx++];
             auto mysteryBlock = std::make_shared<MysteryBlock>();
 
             switch (prop_imgidx) {
-                case 0:
+                case 0: {
                     prop = std::make_shared<OneUpMushroom>();
                     prop->SetImage(m_PM->propsImagePaths[prop_imgidx]);
-                    mysteryBlock->SetInsidePropType(Block::PROP_TYPE::OneUpMushroom);
+                    prop_type = Block::PROP_TYPE::OneUpMushroom;
+                    prop_type2 = Block::PROP_TYPE::None;
                     break;
+                }
 
-                case 1:
+                case 1: {
                     prop = std::make_shared<MagicMushroom>();
                     prop->SetImage(m_PM->propsImagePaths[prop_imgidx]);
-                    mysteryBlock->SetInsidePropType(Block::PROP_TYPE::MagicMushroom);
-                    break;
+                    prop_type = Block::PROP_TYPE::MagicMushroom;
 
-                case 2:
+                    int prop_imgidx2 = 0;
+                    if (m_Phase == Phase::Level1_2) {
+                        prop_imgidx2 = 12;
+                    } else {
+                        prop_imgidx2 = 8;
+                    }
+                    prop2 = std::make_shared<FireFlower>();
+                    prop2->SetImage({
+                                        m_PM->propsImagePaths[prop_imgidx2],
+                                        m_PM->propsImagePaths[prop_imgidx2 + 1],
+                                        m_PM->propsImagePaths[prop_imgidx2 + 2],
+                                        m_PM->propsImagePaths[prop_imgidx2 + 3]
+                                    }, 1000, 0);
+                    prop_type2 = Block::PROP_TYPE::FireFlower;
+                    break;
+                }
+                case 2: {
                     prop = std::make_shared<Starman>();
                     prop->SetImage({
-                        m_PM->propsImagePaths[prop_imgidx],
-                        m_PM->propsImagePaths[prop_imgidx+1],
-                        m_PM->propsImagePaths[prop_imgidx+2],
-                        m_PM->propsImagePaths[prop_imgidx+3],
-                        m_PM->propsImagePaths[prop_imgidx+4],
-                        m_PM->propsImagePaths[prop_imgidx+5]
-                    }, 200, 0);
-                    mysteryBlock->SetInsidePropType(Block::PROP_TYPE::Starman);
+                                       m_PM->propsImagePaths[prop_imgidx],
+                                       m_PM->propsImagePaths[prop_imgidx + 1],
+                                       m_PM->propsImagePaths[prop_imgidx + 2],
+                                       m_PM->propsImagePaths[prop_imgidx + 3],
+                                       m_PM->propsImagePaths[prop_imgidx + 4],
+                                       m_PM->propsImagePaths[prop_imgidx + 5]
+                                   }, 200, 0);
+                    prop_type = Block::PROP_TYPE::Starman;
+                    prop_type2 = Block::PROP_TYPE::None;
                     break;
+                }
 
                 case 8:
+                case 11: {
+                    // Won't be used here(only used when mystery block only has fire flower)
                     prop = std::make_shared<FireFlower>();
                     prop->SetImage({
-                        m_PM->propsImagePaths[prop_imgidx],
-                        m_PM->propsImagePaths[prop_imgidx+1],
-                        m_PM->propsImagePaths[prop_imgidx+2],
-                        m_PM->propsImagePaths[prop_imgidx+3],
-                        m_PM->propsImagePaths[prop_imgidx+4],
-                        m_PM->propsImagePaths[prop_imgidx+5]
-                    }, 1000, 0);
-                    mysteryBlock->SetInsidePropType(Block::PROP_TYPE::FireFlower);
+                                       m_PM->propsImagePaths[prop_imgidx],
+                                       m_PM->propsImagePaths[prop_imgidx + 1],
+                                       m_PM->propsImagePaths[prop_imgidx + 2],
+                                       m_PM->propsImagePaths[prop_imgidx + 3]
+                                   }, 1000, 0);
+                    prop_type = Block::PROP_TYPE::FireFlower;
+                    prop_type2 = Block::PROP_TYPE::None;
                     break;
+                }
 
                 case 16: {
                     prop = std::make_shared<Coin>();
                     prop->SetImage({
-                        m_PM->propsImagePaths[prop_imgidx],
-                        m_PM->propsImagePaths[prop_imgidx+1],
-                        m_PM->propsImagePaths[prop_imgidx+2],
-                        m_PM->propsImagePaths[prop_imgidx+3]
-                    }, 200, 0);
-                    mysteryBlock->SetInsidePropType(Block::PROP_TYPE::Coin);
+                                       m_PM->propsImagePaths[prop_imgidx],
+                                       m_PM->propsImagePaths[prop_imgidx + 1],
+                                       m_PM->propsImagePaths[prop_imgidx + 2],
+                                       m_PM->propsImagePaths[prop_imgidx + 3]
+                                   }, 200, 0);
+                    prop_type = Block::PROP_TYPE::Coin;
+                    prop_type2 = Block::PROP_TYPE::None;
                     break;
                 }
 
@@ -135,7 +160,16 @@ void App::ResetPhase() {
             prop->SetZIndex(-30);
             props.push_back(prop);
 
-            mysteryBlock->SetProps(prop);
+            mysteryBlock->SetInsidePropType(prop_type, prop_type2);
+            if (prop_type == Block::PROP_TYPE::MagicMushroom) {
+                prop2->SetScale(PROP_MAGNIFICATION, PROP_MAGNIFICATION);
+                prop2->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+                prop2->SetZIndex(-30);
+                props.push_back(prop2);
+                mysteryBlock->SetProps(prop, prop2, true);
+            }else {
+                mysteryBlock->SetProps(prop, nullptr, false);
+            }
 
             // Special case: Level 1-2 specific coordinates coin can be triggered 7 times
             if (m_Phase == Phase::Level1_2 &&
@@ -144,17 +178,13 @@ void App::ResetPhase() {
             }
 
             block = mysteryBlock;
-        }
-
-        // Block without prop
-        if (!hasProp) {
+        }else {
+            // Block without prop
             if (tmpidx[i] == 0 || tmpidx[i] == 1) {
                 auto commonBlock = std::make_shared<CommonBlock>();
-                commonBlock->SetInsidePropType(Block::PROP_TYPE::None);
                 block = commonBlock;
             } else {
                 auto immovableBlock = std::make_shared<ImmovableBlock>();
-                immovableBlock->SetInsidePropType(Block::PROP_TYPE::None);
                 block = immovableBlock;
             }
         }
