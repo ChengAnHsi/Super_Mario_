@@ -13,10 +13,11 @@ void Koopa::AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies) {
         }
     }
 }
-void Koopa::ClearEnemies() {
 
+void Koopa::ClearEnemies() {
     other_enemies.clear();
 }
+
 bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy) {
     // Don't check collision with self or if either enemy is dead or not visible
     if (this == enemy.get() || is_dead || !GetVisible()) {
@@ -219,6 +220,8 @@ void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
     if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
         // Kill the Goomba if it's not already dead
         if (!goomba->GetIsDead()) {
+            // todo set deadstate
+            goomba->SetDeadState(DeadState::Hit);
             goomba->SetLive(0);
 
             // Apply death animation - flip upside down

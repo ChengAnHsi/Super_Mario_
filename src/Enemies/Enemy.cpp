@@ -16,6 +16,10 @@ void Enemy::SetOverworld(bool is_overworld) {
     isOverWorld = is_overworld;
 }
 
+void Enemy::SetDeadState(DeadState deadState) {
+    dead_state = deadState;
+}
+
 bool Enemy::GetIsDead(){
     return is_dead;
 }

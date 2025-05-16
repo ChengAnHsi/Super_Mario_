@@ -7,6 +7,7 @@
 
 #include "AnimatedImage.hpp"
 #include "Blocks/Block.hpp"
+#include "DeadState.hpp"
 
 class Enemy : public BackgroundImage {
 
@@ -25,16 +26,19 @@ public:
     float GetMoveVelocity();
     bool GetOverworld();
     bool GetIsDead();
+    void SetDeadState(DeadState deadState);
     void SetOverworld(bool is_overworld);
-    void SetMoveVelocity(float veclocityX);
+    virtual void SetMoveVelocity(float veclocityX);
     bool GetFacingRight();
     void SetFacingRight(bool facingRight);
+
     virtual void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) = 0;
     virtual void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) = 0;
     virtual void ClearCollisionBoxes() = 0;
     virtual void ClearCollisionBlocks() = 0;
 protected:
     bool isFacingRight = false;
+    DeadState dead_state = DeadState::Alive;
 private:
     bool is_dead = false;
     bool isMoving = false;

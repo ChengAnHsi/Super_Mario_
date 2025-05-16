@@ -416,11 +416,11 @@ void FlyKoopa::ConvertToUnfly() {
         SetImage(AnimationDead, 500, 0);
     }
 }
-void FlyKoopa::SetMoveVelocity(float speed)
-{
-    velocityX = speed;
 
+void FlyKoopa::SetMoveVelocity(float speed){
+    velocityX = speed;
 }
+
 void FlyKoopa::ConvertToShell() {
     // 只在非飛行、非龜殼狀態下轉換
     if (!isFlying && !isShell) {

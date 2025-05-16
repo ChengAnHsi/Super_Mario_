@@ -53,6 +53,7 @@ void Goomba::AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies) {
 void Goomba::ClearEnemies() {
     other_enemies.clear();
 }
+
 bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     if (is_dead || !GetVisible() || mario->is_dying) {
         return false; // No collision if already dead or not visible
@@ -83,8 +84,8 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
 
     if (collision_x && collision_y) {
         if(mario->GetInvincible()) {
-            // todo check why goomba dead will got thin
             SetLive(0);
+            dead_state = DeadState::Hit;
             // Apply death animation - flip upside down
             SetScale(GOOMBA_MAGNIFICATION, -GOOMBA_MAGNIFICATION);
             death_timer = 0.0f;
@@ -95,7 +96,7 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
             kick_sfx->Play();
 
             mario->IncreaseScore(score);
-            return true;
+            return false;
         }
         // Calculate the vertical velocity direction
         bool mario_moving_down = mario->velocityY <= 0;
@@ -114,6 +115,7 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
 
         if (mario_bottom <= goomba_top + overlap_threshold && mario_moving_down && overlap_percentage < 0.5f) {
             // Mario is stepping on Goomba from above
+            dead_state = DeadState::Trampled;
             KillGoomba();
             // Make Mario bounce with a small jump
             mario->OnKillJump();
@@ -139,7 +141,7 @@ void Goomba::KillGoomba() {
     if (GetLive() > 0) {
         SetLive(0); // This will trigger the death animation
         is_dead = true; // Set the death flag
-        death_timer = 0.0f; // Reset the death timer
+        //death_timer = 0.0f; // Reset the death timer
 
         // Play a sound effect for Goomba death
         std::shared_ptr<Util::SFX> death_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/goomba_stomp.wav");
@@ -432,7 +434,7 @@ void Goomba::OnUpdate(const float delta) {
         death_timer += delta;
 
         // todo if mario invincible and kill goomba then need to do this part ------
-        if(GetPosition().y >= -360.0f){
+        if(GetPosition().y >= -360.0f && dead_state == DeadState::Hit){
             // flying
             velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
 
@@ -474,13 +476,16 @@ void Goomba::Move(){
     }
 }
 
-void Goomba::SetLive(const int live) {
+void Goomba::SetLive(int live){
     this->live = live;
     if (live == 0) {
-        if (GetOverworld() == true) {
-            SetImage(AnimationDead, 1000, 0);
-        } else {
-            SetImage(AnimationUnderWorldDead, 1000, 0);
+        if (dead_state == DeadState::Trampled){
+            // only trampled will got squashed
+            if (GetOverworld() == true) {
+                SetImage(AnimationDead, 1000, 0);
+            } else {
+                SetImage(AnimationUnderWorldDead, 1000, 0);
+            }
         }
         is_dead = true; // Set the death flag
         death_timer = 0.0f; // Reset the death timer
