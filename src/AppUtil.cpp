@@ -227,7 +227,19 @@ void App::ResetPhase() {
             eneimes.push_back(std::make_shared<Koopa>());
         }
         else if(ftmpidx[i] == 18){
-            eneimes.push_back(std::make_shared<FlyKoopa>());
+            // inside koopa setting
+            auto inside_koopa = std::make_shared<Koopa>();
+            inside_koopa->SetLive(0);
+            inside_koopa->SetImage({m_EM->imageFiles[20]}, 1000, 0);
+            inside_koopa->SetScale(ENEMY_MAGNIFICATION,ENEMY_MAGNIFICATION);
+            inside_koopa->SetPosition(ftmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET,ftmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            inside_koopa->SetVisible(false);
+            eneimes.push_back(inside_koopa);
+            if (m_Phase == Phase::Level1_2) eneimes.back()->SetOverworld(false);
+
+            auto flykoopa = std::make_shared<FlyKoopa>();
+            flykoopa->SetInsideKoopa(inside_koopa);
+            eneimes.push_back(flykoopa);
         }
         if (m_Phase == Phase::Level1_2) {
             eneimes.back()->SetOverworld(false);

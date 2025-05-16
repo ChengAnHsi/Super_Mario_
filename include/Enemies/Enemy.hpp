@@ -41,7 +41,6 @@ protected:
     bool isFacingRight = false;
     DeadState dead_state = DeadState::Alive;
 private:
-
     bool is_dead = false;
     bool isMoving = false;
     float move_velocity = 2.0f;
