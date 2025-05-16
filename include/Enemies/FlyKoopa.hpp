@@ -19,7 +19,7 @@ public:
     bool CCDDCollides(glm::vec2 flykoopa_pos, std::shared_ptr<BackgroundImage> box);
     bool GravityAndCollision(float delta) override;
     bool DetectHole(float next_x, float y); // 檢測前方是否有坑洞
-
+    bool CheckMarioCollision(std::shared_ptr<Mario> mario) override;
     void UpdateAnimation() override;
     void UpdateYMovementRange();
 
@@ -46,6 +46,8 @@ public:
     void ClearCollisionBoxes() override;
     void ClearCollisionBlocks() override;
     void SetMoveVelocity(float speed);
+    void ClearEnemies();
+    void TurnToShell();
 private:
     int live = 1;
     // 被擊倒的分數
@@ -56,19 +58,26 @@ private:
 
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
-
+    bool is_shell = false;  // Flag to track if Koopa is in shell state
+    bool shell_is_moving = false;
     bool isFacingRight = false;
     bool isFacingUp = true;      // For vertical movement
     bool isFlying = true;        // Track flying state
     bool isShell = false;        // Track shell state
     bool isMovingShell = false;  // Track if shell is moving
-
+    bool KickShell(std::shared_ptr<Mario> mario);
+    void KillEnemy(std::shared_ptr<Enemy> enemy);
+    void BounceOffShell(std::shared_ptr<FlyKoopa> other_koopa);
     float delta_time = 1.0f;
     float velocityY = 0.0f;
     float velocityX = 0.0f;
     float GRAVITY = -300.0f;
     float shell_move_velocity = 8.0f; // 龜殼移動速度
-
+    float shell_timer = 0.0f;  // Timer for shell state management
+    float death_timer = 0.0f;
+    const float DEATH_JUMP_DURATION = 120.0f;
+    const float DEATH_ANIMATION_TIME = 80.0f;
+    const float DEATH_JUMP_VELOCITY = 300.0f;
     // Y movement range for flying state
     float min_y_position = 0.0f;
     float max_y_position = 0.0f;

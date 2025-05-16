@@ -21,7 +21,7 @@ public:
     bool AABBCollides(glm::vec2 flower_pos, std::shared_ptr<BackgroundImage> box);
     bool CCDDCollides(glm::vec2 flower_pos, std::shared_ptr<BackgroundImage> box);
     bool GravityAndCollision(float delta) override;
-    bool CheckMarioCollision(std::shared_ptr<Mario> mario);
+    bool CheckMarioCollision(std::shared_ptr<Mario> mario) override;
     void UpdateAnimation() override;
 
     // Re-calculate Y movement range based on current position

@@ -8,7 +8,7 @@
 #include "AnimatedImage.hpp"
 #include "Blocks/Block.hpp"
 #include "DeadState.hpp"
-
+#include "Mario.hpp"
 class Enemy : public BackgroundImage {
 
 public:
@@ -36,10 +36,12 @@ public:
     virtual void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) = 0;
     virtual void ClearCollisionBoxes() = 0;
     virtual void ClearCollisionBlocks() = 0;
+    virtual bool CheckMarioCollision(std::shared_ptr<Mario> mario) = 0;
 protected:
     bool isFacingRight = false;
     DeadState dead_state = DeadState::Alive;
 private:
+
     bool is_dead = false;
     bool isMoving = false;
     float move_velocity = 2.0f;

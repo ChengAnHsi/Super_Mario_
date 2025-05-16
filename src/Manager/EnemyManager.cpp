@@ -35,10 +35,10 @@ EnemyManager::EnemyManager() {
             if (std::shared_ptr<FlyKoopa> flykoopa = std::dynamic_pointer_cast<FlyKoopa>(m_Enemies.back())) {
                 float flight_height = 3.0f;
 
-                if (m_PositionX[i] < 80) {
-                    flight_height = 2.0f;
-                } else if (m_PositionX[i] > 100) {
-                    flight_height = 100.0f;
+                if (m_PositionX[i] < 990) {
+                    flight_height = 2000000000.0f;
+                } else{
+                    flight_height = 1000000.0f;
                 }
 
                 flykoopa->SetFlightHeight(flight_height);
@@ -151,20 +151,13 @@ void EnemyManager::SetAllEnemyCollisionBlocks(std::vector<std::shared_ptr<Block>
 }
 
 bool EnemyManager::CheckMarioCollisions(std::shared_ptr<Mario> mario) {
-    bool is_collision = false;
+    //bool is_collisioning = false;
     for (const auto& enemy : m_Enemies) {
         // Check collisions for different enemy types
-        if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
-            is_collision = goomba->CheckMarioCollision(mario);
-        }
-        else if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
-            is_collision = koopa->CheckMarioCollision(mario);
-        }
-        else if (auto flower = std::dynamic_pointer_cast<Flower>(enemy)) {
-            is_collision = flower->CheckMarioCollision(mario);
-        }
+        // is_collisioning =
+        enemy->CheckMarioCollision(mario);
 
-        if(is_collision) return true;
+
     }
     return false;
 }

@@ -33,7 +33,7 @@ public:
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) override;
     void ClearCollisionBoxes() override;
     void ClearCollisionBlocks() override;
-    bool CheckMarioCollision(std::shared_ptr<Mario> mario);
+    bool CheckMarioCollision(std::shared_ptr<Mario> mario) override;
     bool CheckEnemyCollision(std::shared_ptr<Enemy> enemy);
     void AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies);
     void ClearEnemies();
