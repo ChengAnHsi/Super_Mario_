@@ -16,7 +16,6 @@ FlyKoopa::FlyKoopa() : Koopa() {
     velocityY = 0.0f;
     velocityX = 0.0f;
     m_Transform.scale = glm::vec2{isFacingRight ? -KOOPA_MAGNIFICATION : KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
-    this->SetZIndex(-20);
     UpdateYMovementRange();
     SetImage(AnimationFly, 500, 2); // Set initial flying animation
     current_animation = AnimationState::Flying;

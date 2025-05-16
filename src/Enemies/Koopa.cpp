@@ -24,10 +24,20 @@ bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy) {
     glm::vec2 enemy_pos = enemy->GetPosition();
     glm::vec2 enemy_size = enemy->GetSize() * ENEMY_MAGNIFICATION;
 
+    // Apply the same collision box adjustments
+    float top_offset = 0.0f;
+    if (is_shell) {
+        // Reduce collision height by 1/3 from the top when in shell form
+        top_offset = this_size.y / 10.0f;
+    } else {
+        // Reduce collision height by 1/3 from the top when walking
+        top_offset = this_size.y / 4.0f;
+    }
+
     float EPSILON = 0.01f;
     float this_left = this_pos.x - this_size.x / 2 + EPSILON;
     float this_right = this_pos.x + this_size.x / 2 - EPSILON;
-    float this_top = this_pos.y + this_size.y / 2 - EPSILON;
+    float this_top = this_pos.y + this_size.y / 2 - top_offset - EPSILON; // Adjusted top position
     float this_bottom = this_pos.y - this_size.y / 2 + EPSILON;
 
     float enemy_left = enemy_pos.x - enemy_size.x / 2 + EPSILON;
@@ -68,9 +78,19 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     glm::vec2 mario_pos = mario->GetPosition();
     glm::vec2 mario_size = mario->GetSize() * MARIO_MAGNIFICATION;
 
+    // Adjust collision box based on Koopa state
+    float top_offset = 0.0f;
+    if (is_shell) {
+        // Reduce collision height by 1/3 from the top when in shell form
+        top_offset = koopa_size.y / 3.0f;
+    } else {
+        // Reduce collision height by 1/2 from the top when walking
+        top_offset = koopa_size.y / 2.0f;
+    }
+
     float koopa_left = koopa_pos.x - koopa_size.x / 2;
     float koopa_right = koopa_pos.x + koopa_size.x / 2;
-    float koopa_top = koopa_pos.y + koopa_size.y / 2;
+    float koopa_top = koopa_pos.y + koopa_size.y / 2 - top_offset; // Adjusted top position
     float koopa_bottom = koopa_pos.y - koopa_size.y / 2;
 
     float mario_left = mario_pos.x - mario_size.x / 2;
@@ -143,14 +163,8 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         return false;
     }
 
-    /**
-     * 1. mario is not invincible AND koopa is shell
-     *
-     *
-     *
-     */
-    if ((!is_shell || (is_shell && shell_is_moving) )&& mario->is_temporarily_invincible == false)  {
-        if ( mario->GetLive() > 0) {
+    if ((!is_shell || (is_shell && shell_is_moving)) && mario->is_temporarily_invincible == false) {
+        if (mario->GetLive() > 0) {
             mario->Die();
         }
     } else if (is_shell && !shell_is_moving) {
@@ -163,7 +177,6 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     }
     return true;
 }
-
 void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
     if (!enemy->GetVisible()) return;
 
@@ -270,6 +283,68 @@ void Koopa::Action(const float distance) {
     if (!isFacingRight) step_distance *= -1;
 
     bool collision = false;
+
+    // Check if next position would make Koopa fall off platform
+    float check_ahead_distance = isFacingRight ? Koopa_size.x / 2 + 2.0f : -(Koopa_size.x / 2 + 2.0f);
+    float edge_check_x = Koopa_x + check_ahead_distance;
+    bool would_fall = true;
+
+    // Check if there's ground beneath the edge check position
+    for (const auto& box : collision_boxes) {
+        if (!box->GetVisible()) continue;
+
+        glm::vec2 box_pos = box->GetTransform().translation;
+        glm::vec2 box_size = box->GetSize();
+        box_size.x *= box->GetScale().x;
+        box_size.y *= box->GetScale().y;
+
+        float box_left = box_pos.x - box_size.x / 2;
+        float box_right = box_pos.x + box_size.x / 2;
+        float box_top = box_pos.y + box_size.y / 2;
+
+        // Check if edge check point is above the box horizontally
+        if (edge_check_x >= box_left && edge_check_x <= box_right) {
+            // Check if the box is directly below the Koopa
+            if (std::abs(Koopa_y - Koopa_size.y / 2 - box_top) < 5.0f) {
+                would_fall = false;
+                break;
+            }
+        }
+    }
+
+    // Also check collision blocks (like brick blocks)
+    if (would_fall) {
+        for (const auto& block : collision_blocks) {
+            if (!block->GetVisible() || block->GetBroken()) continue;
+
+            glm::vec2 block_pos = block->GetTransform().translation;
+            glm::vec2 block_size = block->GetSize();
+            block_size.x *= block->GetScale().x;
+            block_size.y *= block->GetScale().y;
+
+            float block_left = block_pos.x - block_size.x / 2;
+            float block_right = block_pos.x + block_size.x / 2;
+            float block_top = block_pos.y + block_size.y / 2;
+
+            // Check if edge check point is above the block horizontally
+            if (edge_check_x >= block_left && edge_check_x <= block_right) {
+                // Check if the block is directly below the Koopa
+                if (std::abs(Koopa_y - Koopa_size.y / 2 - block_top) < 5.0f) {
+                    would_fall = false;
+                    break;
+                }
+            }
+        }
+    }
+
+    // If koopa would fall, turn around
+    if (would_fall && !
+        is_shell) {
+        isFacingRight = !isFacingRight;
+        return;
+    }
+
+    // Original collision detection logic
     while (std::abs(remaining_distance) > 0.0f) {
         float step_distance = (remaining_distance > 0.0f) ?
             std::min(step, remaining_distance) : std::max(-step, remaining_distance);
@@ -337,9 +412,20 @@ bool Koopa::AABBCollides(glm::vec2 Koopa_pos, std::shared_ptr<BackgroundImage> b
     if(b_size.y < 0) b_size.y *= -1;
 
     X_state = CollisionState::None;
+
+    // Apply the same collision box adjustments
+    float top_offset = 0.0f;
+    if (is_shell) {
+        // Reduce collision height by 1/3 from the top when in shell form
+        top_offset = Koopa_size.y / 3.0f;
+    } else {
+        // Reduce collision height by 1/2 from the top when walking
+        top_offset = Koopa_size.y / 2.0f;
+    }
+
     float aleft = a.x - Koopa_size.x / 2;
     float aright = a.x + Koopa_size.x / 2;
-    float atop = a.y + Koopa_size.y / 2;
+    float atop = a.y + Koopa_size.y / 2 - top_offset; // Adjusted top position
     float abottom = a.y - Koopa_size.y / 2;
 
     float bleft = b.x - b_size.x / 2;
@@ -372,9 +458,20 @@ bool Koopa::CCDDCollides(glm::vec2 Koopa_pos, std::shared_ptr<BackgroundImage> b
     if(b_size.y < 0) b_size.y *= -1;
 
     Y_state = CollisionState::None;
+
+    // Apply the same collision box adjustments
+    float top_offset = 0.0f;
+    if (is_shell) {
+        // Reduce collision height by 1/3 from the top when in shell form
+        top_offset = Koopa_size.y / 3.0f;
+    } else {
+        // Reduce collision height by 1/2 from the top when walking
+        top_offset = Koopa_size.y / 2.0f;
+    }
+
     float aleft = a.x - Koopa_size.x / 2;
     float aright = a.x + Koopa_size.x / 2;
-    float atop = a.y + Koopa_size.y / 2;
+    float atop = a.y + Koopa_size.y / 2 - top_offset; // Adjusted top position
     float abottom = a.y - Koopa_size.y / 2;
 
     float bleft = b.x - b_size.x / 2;
@@ -394,6 +491,7 @@ bool Koopa::CCDDCollides(glm::vec2 Koopa_pos, std::shared_ptr<BackgroundImage> b
 
     return Y_state != CollisionState::None;
 }
+
 
 bool Koopa::GravityAndCollision(const float delta) {
     glm::vec2 Koopa_size = m_Drawable->GetSize() * KOOPA_MAGNIFICATION;
