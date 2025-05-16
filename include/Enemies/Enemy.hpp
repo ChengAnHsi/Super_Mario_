@@ -28,7 +28,7 @@ public:
     bool GetIsDead();
     void SetDeadState(DeadState deadState);
     void SetOverworld(bool is_overworld);
-    virtual void SetMoveVelocity(float veclocityX);
+    void SetMoveVelocity(float veclocityX);
     bool GetFacingRight();
     void SetFacingRight(bool facingRight);
 

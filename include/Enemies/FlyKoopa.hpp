@@ -4,8 +4,8 @@
 #include "Enemy.hpp"
 #include "Blocks/Block.hpp"
 #include "CollisionState.hpp"
-
-class FlyKoopa : public Enemy{
+#include "Koopa.hpp"
+class FlyKoopa : public Koopa{
 public:
     FlyKoopa();
 
@@ -33,26 +33,23 @@ public:
     void ActivateShell(bool move_right); // 激活移動的龜殼
 
     // getter and setter
-    void SetPosition(float x, float y);
+    //void SetPosition(float x, float y);
     void SetLive(int live);
     [[nodiscard]] int GetLive() const;
     [[nodiscard]] int GetScore() const { return score; }
     [[nodiscard]] bool IsFlying() const { return isFlying; }
     [[nodiscard]] bool IsShell() const { return isShell; }
     [[nodiscard]] bool IsMovingShell() const { return isMovingShell; }
-
+    bool IsFly() const;
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) override;
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) override;
     void ClearCollisionBoxes() override;
     void ClearCollisionBlocks() override;
-    void SetMoveVelocity(float speed);
-    void ClearEnemies();
-    void TurnToShell();
+
 private:
     int live = 1;
     // 被擊倒的分數
     int score = 100;
-
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
 
@@ -65,9 +62,6 @@ private:
     bool isFlying = true;        // Track flying state
     bool isShell = false;        // Track shell state
     bool isMovingShell = false;  // Track if shell is moving
-    bool KickShell(std::shared_ptr<Mario> mario);
-    void KillEnemy(std::shared_ptr<Enemy> enemy);
-    void BounceOffShell(std::shared_ptr<FlyKoopa> other_koopa);
     float delta_time = 1.0f;
     float velocityY = 0.0f;
     float velocityX = 0.0f;
@@ -79,8 +73,8 @@ private:
     const float DEATH_ANIMATION_TIME = 80.0f;
     const float DEATH_JUMP_VELOCITY = 300.0f;
     // Y movement range for flying state
-    float min_y_position = 0.0f;
-    float max_y_position = 0.0f;
+    float min_y_position = -30.0f;
+    float max_y_position = 30.0f;
     float default_flight_height = 3.0f; // Default flight height in blocks
     float custom_flight_height = -1.0f; // -1 means use default calculation
 

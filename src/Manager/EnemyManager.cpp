@@ -36,9 +36,9 @@ EnemyManager::EnemyManager() {
                 float flight_height = 3.0f;
 
                 if (m_PositionX[i] < 990) {
-                    flight_height = 2000000000.0f;
+                    flight_height = 3.0f;
                 } else{
-                    flight_height = 1000000.0f;
+                    flight_height = 3.0f;
                 }
 
                 flykoopa->SetFlightHeight(flight_height);
