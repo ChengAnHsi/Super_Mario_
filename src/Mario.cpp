@@ -332,6 +332,7 @@ bool Mario::GravityAndCollision(const float delta) {
 
             if (block->GetBlockType() == Block::TYPE::MysteryBlock) {
                 if (std::dynamic_pointer_cast<MysteryBlock>(block)->GetInsidePropType()[0] == Block::PROP_TYPE::Coin && block->GetCollisionTime() > 0) IncreaseCoin(1);
+                if (std::dynamic_pointer_cast<MysteryBlock>(block)->GetInsidePropType()[1] != Block::PROP_TYPE::None && is_grow) std::dynamic_pointer_cast<MysteryBlock>(block)->SetChooseProp(false);
             }
 
             if(is_grow || block->GetBlockType() != Block::TYPE::CommonBlock){

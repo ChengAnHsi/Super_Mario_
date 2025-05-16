@@ -161,6 +161,7 @@ void App::ResetPhase() {
             props.push_back(prop);
 
             mysteryBlock->SetInsidePropType(prop_type, prop_type2);
+            mysteryBlock->SetChooseProp(true);
             if (prop_type == Block::PROP_TYPE::MagicMushroom) {
                 prop2->SetScale(PROP_MAGNIFICATION, PROP_MAGNIFICATION);
                 prop2->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);

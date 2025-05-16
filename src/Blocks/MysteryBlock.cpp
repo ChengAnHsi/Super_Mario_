@@ -45,6 +45,10 @@ std::vector<Block::PROP_TYPE> MysteryBlock::GetInsidePropType(){
     return {inside_prop_type, inside_prop_type2};
 }
 
+void MysteryBlock::SetChooseProp(bool choose1prop) {
+    this->choose_1prop = choose1prop;
+}
+
 void MysteryBlock::SetProps(std::shared_ptr<Props> prop1, std::shared_ptr<Props> prop2, bool multipleProps) {
     inside_prop1 = prop1;
     inside_prop2 = prop2;
@@ -53,9 +57,9 @@ void MysteryBlock::SetProps(std::shared_ptr<Props> prop1, std::shared_ptr<Props>
 
 std::shared_ptr<Props> MysteryBlock::GetProps() {
     //if (hasMultipleProps && mario->GetGrow()) {
-    if (hasMultipleProps) {
+    if (choose_1prop) {
         // return fire flower
-        return inside_prop2;
+        return inside_prop1;
     }
-    return inside_prop1;
+    return inside_prop2;
 }
