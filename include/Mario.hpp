@@ -56,8 +56,11 @@ public:
     [[nodiscard]] int GetScore() const;
     void SetGrow(bool is_grow);
     bool GetGrowing();
+    bool GetGrow();
+    void SetFire(bool is_fire);
     void SetInvincible(bool is_invincible);
     bool GetInvincible();
+    bool GetFire();
 
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
@@ -70,7 +73,7 @@ public:
     bool is_dying = false; // Transitional state between alive and dead
     void Die(); // Handle Mario's death sequence
     void UpdateDeadState(float delta); // Update function for when Mario is dead
-    bool is_invincible = false;
+
     bool is_temporarily_invincible = false;
 
 private:
@@ -103,6 +106,8 @@ private:
     bool isRunning = false;
     bool is_grow = false;
     bool is_growing = false;
+    bool is_fire = false;
+    bool is_invincible = false;
     float delta_time = 1.0f;
     float run_velocity = 5.0f;
     float jump_velocity = 12.7f;
@@ -132,12 +137,16 @@ private:
     std::vector<std::string> AnimationStandGrow = {RESOURCE_DIR"/Entities/mario_grown_stand.png"};
     std::vector<std::string> AnimationSquatGrow = {RESOURCE_DIR"/Entities/mario_grown_squat.png"};
 
+    std::vector<std::string> AnimationRunGrowFire = {RESOURCE_DIR"/Entities/mario_fire0.png",RESOURCE_DIR"/Entities/mario_fire1.png",RESOURCE_DIR"/Entities/mario_fire2.png"};
+    std::vector<std::string> AnimationJumpGrowFire = {RESOURCE_DIR"/Entities/mario_fire_Jump.png"};
+    std::vector<std::string> AnimationStandGrowFire = {RESOURCE_DIR"/Entities/mario_fire_stand.png"};
+    std::vector<std::string> AnimationSquatGrowFire = {RESOURCE_DIR"/Entities/mario_fire_squat.png"};
+
     std::vector<std::string> AnimationRunInvincible = {RESOURCE_DIR"/Entities/mario0_Invinci0.png", RESOURCE_DIR"/Entities/mario0_Invinci1.png", RESOURCE_DIR"/Entities/mario0_Invinci2.png", RESOURCE_DIR"/Entities/mario0.png",
         RESOURCE_DIR"/Entities/mario1_Invinci0.png", RESOURCE_DIR"/Entities/mario1_Invinci1.png", RESOURCE_DIR"/Entities/mario1_Invinci2.png",RESOURCE_DIR"/Entities/mario1.png",
         RESOURCE_DIR"/Entities/mario2_Invinci0.png", RESOURCE_DIR"/Entities/mario2_Invinci1.png", RESOURCE_DIR"/Entities/mario2_Invinci2.png",RESOURCE_DIR"/Entities/mario2.png"};
     std::vector<std::string> AnimationJumpInvincible = {RESOURCE_DIR"/Entities/mario_Jump_Invinci0.png", RESOURCE_DIR"/Entities/mario_Jump_Invinci1.png", RESOURCE_DIR"/Entities/mario_Jump_Invinci2.png",RESOURCE_DIR"/Entities/mario_Jump.png"};
     std::vector<std::string> AnimationStandInvincible = {RESOURCE_DIR"/Entities/mario_stand_Invinci0.png", RESOURCE_DIR"/Entities/mario_stand_Invinci1.png", RESOURCE_DIR"/Entities/mario_stand_Invinci2.png",RESOURCE_DIR"/Entities/mario_stand.png"};
-    std::vector<std::string> AnimationSquatGrowInvincible = {RESOURCE_DIR"/Entities/mario_grown_squat_invinci0.png",RESOURCE_DIR"/Entities/mario_grown_squat_invinci1.png",RESOURCE_DIR"/Entities/mario_grown_squat_invinci2.png",RESOURCE_DIR"/Entities/mario_grown_squat.png"};
 
     std::vector<std::string> AnimationGrowInvincible = {RESOURCE_DIR"/Entities/mario_grown_stand_mid_invinci0.png",
         RESOURCE_DIR"/Entities/mario_grown_stand_small.png",
@@ -149,11 +158,30 @@ private:
         RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",
          RESOURCE_DIR"/Entities/mario_grown_stand.png"};
 
+    // todo: mario_grown_stand_small + fire & mario_grown_stand_mid + fire state
+    std::vector<std::string> AnimationGrowFireInvincible = {RESOURCE_DIR"/Entities/mario_grown_stand_mid_invinci0.png",
+        RESOURCE_DIR"/Entities/mario_grown_stand_small.png",
+             RESOURCE_DIR"/Entities/mario_grown_stand_mid_invinci1.png",
+        RESOURCE_DIR"/Entities/mario_grown_stand_small.png",
+        RESOURCE_DIR"/Entities/mario_grown_stand_mid_invinci2.png",
+         RESOURCE_DIR"/Entities/mario_fire_stand.png",
+        RESOURCE_DIR"/Entities/mario_grown_stand_small.png",
+        RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",
+         RESOURCE_DIR"/Entities/mario_fire_stand.png"};
+
     std::vector<std::string> AnimationRunGrowInvincible = {RESOURCE_DIR"/Entities/mario_grown0_invinci0.png",RESOURCE_DIR"/Entities/mario_grown0_invinci1.png",RESOURCE_DIR"/Entities/mario_grown0_invinci2.png",RESOURCE_DIR"/Entities/mario_grown0.png",
         RESOURCE_DIR"/Entities/mario_grown1_invinci0.png",RESOURCE_DIR"/Entities/mario_grown1_invinci1.png",RESOURCE_DIR"/Entities/mario_grown1_invinci2.png",RESOURCE_DIR"/Entities/mario_grown1.png",
         RESOURCE_DIR"/Entities/mario_grown2_invinci0.png",RESOURCE_DIR"/Entities/mario_grown2_invinci1.png",RESOURCE_DIR"/Entities/mario_grown2_invinci2.png",RESOURCE_DIR"/Entities/mario_grown2.png"};
     std::vector<std::string> AnimationJumpGrowInvincible = {RESOURCE_DIR"/Entities/mario_grown_Jump_invinci0.png",RESOURCE_DIR"/Entities/mario_grown_Jump_invinci1.png",RESOURCE_DIR"/Entities/mario_grown_Jump_invinci2.png",RESOURCE_DIR"/Entities/mario_grown_Jump.png"};
     std::vector<std::string> AnimationStandGrowInvincible = {RESOURCE_DIR"/Entities/mario_grown_stand_invinci0.png",RESOURCE_DIR"/Entities/mario_grown_stand_invinci1.png",RESOURCE_DIR"/Entities/mario_grown_stand_invinci2.png",RESOURCE_DIR"/Entities/mario_grown_stand.png"};
+    std::vector<std::string> AnimationSquatGrowInvincible = {RESOURCE_DIR"/Entities/mario_grown_squat_invinci0.png",RESOURCE_DIR"/Entities/mario_grown_squat_invinci1.png",RESOURCE_DIR"/Entities/mario_grown_squat_invinci2.png",RESOURCE_DIR"/Entities/mario_grown_squat.png"};
+
+    std::vector<std::string> AnimationRunGrowFireInvincible = {RESOURCE_DIR"/Entities/mario_grown0_invinci0.png",RESOURCE_DIR"/Entities/mario_grown0_invinci1.png",RESOURCE_DIR"/Entities/mario_grown0_invinci2.png",RESOURCE_DIR"/Entities/mario_fire0.png",
+        RESOURCE_DIR"/Entities/mario_grown1_invinci0.png",RESOURCE_DIR"/Entities/mario_grown1_invinci1.png",RESOURCE_DIR"/Entities/mario_grown1_invinci2.png",RESOURCE_DIR"/Entities/mario_fire1.png",
+        RESOURCE_DIR"/Entities/mario_grown2_invinci0.png",RESOURCE_DIR"/Entities/mario_grown2_invinci1.png",RESOURCE_DIR"/Entities/mario_grown2_invinci2.png",RESOURCE_DIR"/Entities/mario_fire2.png"};
+    std::vector<std::string> AnimationJumpGrowFireInvincible = {RESOURCE_DIR"/Entities/mario_grown_Jump_invinci0.png",RESOURCE_DIR"/Entities/mario_grown_Jump_invinci1.png",RESOURCE_DIR"/Entities/mario_grown_Jump_invinci2.png",RESOURCE_DIR"/Entities/mario_fire_Jump.png"};
+    std::vector<std::string> AnimationStandGrowFireInvincible = {RESOURCE_DIR"/Entities/mario_grown_stand_invinci0.png",RESOURCE_DIR"/Entities/mario_grown_stand_invinci1.png",RESOURCE_DIR"/Entities/mario_grown_stand_invinci2.png",RESOURCE_DIR"/Entities/mario_fire_stand.png"};
+    std::vector<std::string> AnimationSquatGrowFireInvincible = {RESOURCE_DIR"/Entities/mario_grown_squat_invinci0.png",RESOURCE_DIR"/Entities/mario_grown_squat_invinci1.png",RESOURCE_DIR"/Entities/mario_grown_squat_invinci2.png",RESOURCE_DIR"/Entities/mario_fire_squat.png"};
 };
 #endif //MARIO_HPP
 

@@ -3,9 +3,20 @@
 
 void FireFlower::AfterCollisionEvents(std::shared_ptr<Mario> mario){
     if(state == PropsState::After_Activated) return;
-    if(state == PropsState::Active) SetVisible(false);
-    // todo mario state change, if state is flower then add point
-    state = PropsState::After_Activated;
+    if(state == PropsState::Active) {
+        SetVisible(false);
+        // todo mario state change, if state is flower then add point
+        if (mario->GetFire()) {
+            mario->IncreaseScore(1000);
+        }else {
+            if (mario->GetGrow()) {
+                mario->SetFire(true);
+            }else {
+                mario->SetGrowingAnimation();
+            }
+        }
+        state = PropsState::After_Activated;
+    }
 }
 
 void FireFlower::SpawnProps() {
