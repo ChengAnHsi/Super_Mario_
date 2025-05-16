@@ -197,7 +197,7 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     // Left or right side collision (min_index 0 or 1) or bottom collision (min_index 3)
     if (!is_shell || (is_shell && shell_is_moving)) {
         // Only hurt Mario if not invincible and not coming from above
-        if (!mario->is_invincible && mario->GetLive() > 0) {
+        if (!mario->GetInvincible() && mario->GetLive() > 0) {
             mario->Die();
         }
     } else if (is_shell && !shell_is_moving) {

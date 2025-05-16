@@ -9,9 +9,8 @@ MysteryBlock::MysteryBlock(){
 }
 
 void MysteryBlock::AfterCollisionEvents() {
-    // TODO check props pos
     if(iscollision == true) {
-        return ;
+        return;
     }
 
     if (collision_time > 0) {
