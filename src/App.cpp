@@ -50,6 +50,9 @@ void App::Start() {
     m_EM = std::make_shared<EnemyManager>();
     m_Root.AddChildren(m_EM->GetChildren());
 
+    m_FM = std::make_shared<FireballManager>();
+    m_Mario->SetFireballManager(m_FM);
+
     m_CurrentState = State::UPDATE;
 }
 
@@ -89,6 +92,13 @@ void App::Update() {
 
         // check for collisions with enemies
         m_EM->CheckMarioCollisions(m_Mario);
+
+        // update each fireball pos and collision
+        m_FM->UpdateFireballsAnimation();
+        auto fireball = m_FM->GetNewFireball();
+        if (fireball) {
+            m_Root.AddChild(fireball);
+        }
     }
 
     // Camera cannot move left

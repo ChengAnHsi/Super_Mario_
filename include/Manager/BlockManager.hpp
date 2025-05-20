@@ -5,7 +5,6 @@
 #ifndef BLOCKMANAGER_HPP
 #define BLOCKMANAGER_HPP
 
-#include "BlockManager.hpp"
 #include "BackgroundImage.hpp"
 #include "Blocks/Block.hpp"
 #include "Util/Renderer.hpp"

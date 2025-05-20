@@ -612,6 +612,17 @@ float Mario::OnUpdate(const float delta) {
     return distance;
 }
 
+void Mario::Fire() {
+    glm::vec2 pos = this->GetPosition();  // = Mario pos
+    //bool facing_right = ??;
+    auto fball = std::make_shared<Fireball>(pos, true);
+    m_FM->AddFireball(fball);
+}
+
+void Mario::SetFireballManager(std::shared_ptr<FireballManager> FM) {
+    this->m_FM = FM;
+}
+
 float Mario::Move() {
     if (is_dying) {
         // clear key down state
@@ -658,7 +669,7 @@ float Mario::Move() {
         OnSmallJump();
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::LSHIFT) || Util::Input::IsKeyPressed(Util::Keycode::RSHIFT)) {
-        // todo shoot fireball
+        if (is_fire) Fire();
     }
     if (Util::Input::IsKeyUp(Util::Keycode::LEFT)) {
         is_left_key_down = false;

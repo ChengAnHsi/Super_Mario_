@@ -38,12 +38,19 @@ void App::ResetPhase() {
     m_Mario->ClearCollisionBoxes();
     m_Mario->ClearCollisionBlocks();
 
-    // remove last level and set next level block
+    // remove last level and set next level items
     std::vector<std::shared_ptr<Props>> tmp2 = m_PM->GetProps();
     for (const auto & prop : tmp2) {
         std::shared_ptr<Util::GameObject> tmp3 = prop;
         m_Root.RemoveChild(tmp3);
     }
+
+    std::vector<std::shared_ptr<Fireball>> tmp4 = m_FM->GetFireballs();
+    for (const auto & fireball : tmp4) {
+        std::shared_ptr<Util::GameObject> tmp3 = fireball;
+        m_Root.RemoveChild(tmp3);
+    }
+    m_FM->ResetFireballs();
 
     std::vector<std::shared_ptr<BackgroundImage>> tmp = m_BM->GetBackground();
     for (const auto & img : tmp) {

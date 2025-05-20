@@ -48,6 +48,8 @@ add_executable(${PROJECT_NAME}
         src/Blocks/CommonBlock.cpp
         src/Blocks/ImmovableBlock.cpp
         src/Props/Coin.cpp
+        src/Props/Fireball.cpp
+        src/Manager/FireballManager.cpp
 )
 
 if(MSVC)

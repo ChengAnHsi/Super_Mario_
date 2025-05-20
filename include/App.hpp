@@ -14,6 +14,7 @@
 #include "Manager/BlockManager.hpp"
 #include "Manager/EnemyManager.hpp"
 #include "Manager/PropsManager.hpp"
+#include "Manager/FireballManager.hpp"
 
 class App {
 public:
@@ -54,6 +55,7 @@ private:
     std::shared_ptr<BlockManager> m_BM;
     std::shared_ptr<EnemyManager> m_EM;
     std::shared_ptr<PropsManager> m_PM;
+    std::shared_ptr<FireballManager> m_FM;
     std::shared_ptr<Util::BGM> m_BGM;
     std::shared_ptr<Util::SFX> m_SFX;
 

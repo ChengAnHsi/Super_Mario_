@@ -10,6 +10,7 @@
 #include "AnimatedCharacter.hpp"
 #include "CollisionState.hpp"
 
+#include "Manager/FireballManager.hpp"
 #include "Manager/BlockManager.hpp"
 #include "Manager/PhaseResourceManger.hpp"
 
@@ -36,6 +37,7 @@ public:
     void OnRun(float distance);
     float Move();
     float OnUpdate(float delta);
+    void Fire();
 
     // collision function
     bool AABBCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> box);
@@ -61,6 +63,7 @@ public:
     void SetInvincible(bool is_invincible);
     bool GetInvincible();
     bool GetFire();
+    void SetFireballManager(std::shared_ptr<FireballManager> FM);
 
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
@@ -97,6 +100,7 @@ private:
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
     std::vector<std::shared_ptr<BackgroundImage>> collision_collectibles;
+    std::shared_ptr<FireballManager> m_FM;
 
     MarioState state = MarioState::Stand;
     CollisionState X_state = CollisionState::None;
