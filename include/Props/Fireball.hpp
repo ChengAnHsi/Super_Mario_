@@ -1,6 +1,10 @@
 //
 // Created by 112590007 on 2025/5/20.
 //
+
+#ifndef FIREBALL_HPP
+#define FIREBALL_HPP
+
 #include "BackgroundImage.hpp"
 #include "Blocks/Block.hpp"
 #include "CollisionState.hpp"
@@ -8,10 +12,6 @@
 class Fireball : public BackgroundImage {
 public:
     Fireball() = default;
-    // Fireball(const glm::vec2& pos, bool right) {
-    //     SetPosition(pos.x, pos.y);
-    //     m_Velocity = right ? glm::vec2(5.0f, 0.0f) : glm::vec2(-5.0f, 0.0f);
-    // }
 
     void Update(float delta); // update position and animation
 
@@ -41,3 +41,5 @@ private:
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
 };
+
+#endif //FIREBALL_HPP

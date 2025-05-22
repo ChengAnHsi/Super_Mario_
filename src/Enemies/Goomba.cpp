@@ -432,7 +432,7 @@ void Goomba::OnUpdate(const float delta) {
     if (is_dead) {
         death_timer += delta;
 
-        if(GetPosition().y >= -360.0f && dead_state == DeadState::Hit){
+        if(GetPosition().y >= -360.0f && (dead_state == DeadState::Hit || dead_state == DeadState::Shot)){
             // flying
             velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
 

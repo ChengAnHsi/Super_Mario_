@@ -186,7 +186,7 @@ void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
             goomba->SetDeadState(DeadState::Hit);
             goomba->SetLive(0);
             goomba->SetScale(GOOMBA_MAGNIFICATION, -GOOMBA_MAGNIFICATION);
-            goomba->velocityY = 200.0f;
+            goomba->SetVelocityY(200.0f);
             kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
         }
     } else if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
@@ -199,7 +199,7 @@ void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
             koopa->SetDeadState(DeadState::Hit);
             koopa->SetLive(0);
             koopa->SetScale(KOOPA_MAGNIFICATION, -KOOPA_MAGNIFICATION);
-            koopa->velocityY = 200.0f;
+            koopa->SetVelocityY(200.0f);
             kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
         }
     }
@@ -555,7 +555,7 @@ void Koopa::UpdateAnimation() {
 void Koopa::OnUpdate(const float delta) {
     if (!GetMoving()) return;
     delta_time = delta;
-    if (GetPosition().y >= -360.0f && dead_state == DeadState::Hit) {
+    if (GetPosition().y >= -360.0f && (dead_state == DeadState::Hit || dead_state == DeadState::Shot)) {
         velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
         float enemy_x = GetPosition().x;
         float enemy_y = GetPosition().y + velocityY * (delta / 60.0f);

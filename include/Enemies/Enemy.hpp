@@ -9,6 +9,7 @@
 #include "Blocks/Block.hpp"
 #include "DeadState.hpp"
 #include "Mario.hpp"
+
 class Enemy : public BackgroundImage {
 
 public:
@@ -21,29 +22,50 @@ public:
     //void OnUpdate(float delta);
 
     // getter and setter
-    bool GetMoving() {return isMoving;}
-    void SetMoving(bool moving) {isMoving = moving;}
+    virtual void SetLive(int live) = 0;
+    [[nodiscard]] bool GetMoving() const {return isMoving;}
+    void SetMoving(const bool moving) {isMoving = moving;}
     float GetMoveVelocity();
     bool GetOverworld();
     bool GetIsDead();
     void SetDeadState(DeadState deadState);
     void SetOverworld(bool is_overworld);
-    void SetMoveVelocity(float veclocityX);
+    void SetVelocityX(float velocityX);
+    void SetVelocityY(float velocityY);
     bool GetFacingRight();
     void SetFacingRight(bool facingRight);
+    int GetScore();
 
     virtual void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) = 0;
     virtual void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) = 0;
     virtual void ClearCollisionBoxes() = 0;
     virtual void ClearCollisionBlocks() = 0;
     virtual bool CheckMarioCollision(std::shared_ptr<Mario> mario) = 0;
-    // todo collision with fireball
-    void CheckFireballCollision(std::shared_ptr<Fireball> fireball);
+    bool CheckFireballCollision(const std::shared_ptr<Fireball>& fireball);
 protected:
+    int live = 1;
+    int score = 100; // 被擊倒的分數
     bool isFacingRight = false;
-    DeadState dead_state = DeadState::Alive;
-private:
+
+    float velocityY = 0.0f; // 角色在 Y 軸的速度
+    float GRAVITY = -300.0f;
+
+    float delta_time = 1.0f;
+
+    // dead
     bool is_dead = false;
+    float death_timer = 0.0f;
+    const float DEATH_JUMP_VELOCITY = 300.0f;
+    const float DEATH_JUMP_DURATION = 120.0f;
+    const float DEATH_ANIMATION_TIME = 80.0f;
+    DeadState dead_state = DeadState::Alive;
+
+    // collision
+    CollisionState X_state = CollisionState::None;
+    CollisionState Y_state = CollisionState::None;
+    std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
+    std::vector<std::shared_ptr<Block>> collision_blocks;
+private:
     bool isMoving = false;
     float move_velocity = 2.0f;
     bool isOverWorld = true;

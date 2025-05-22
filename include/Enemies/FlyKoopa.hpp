@@ -33,7 +33,7 @@ public:
 
     void SetInsideKoopa(std::shared_ptr<Koopa> inside_koopa);
     // getter and setter
-    void SetLive(int live);
+    void SetLive(int live) override;
     [[nodiscard]] int GetLive() const;
     [[nodiscard]] int GetScore() const { return score; }
     [[nodiscard]] bool IsFlying() const { return isFlying; }
@@ -47,26 +47,12 @@ public:
 
     bool CheckMarioCollision(std::shared_ptr<Mario> mario) override;
 private:
-    int live = 1;
-    // 被擊倒的分數
-    int score = 100;
-
-    std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
-    std::vector<std::shared_ptr<Block>> collision_blocks;
-
-    CollisionState X_state = CollisionState::None;
-    CollisionState Y_state = CollisionState::None;
-
-    bool isFacingRight = false;
     bool isFacingUp = true;      // For vertical movement
     bool isFlying = true;        // Track flying state
     bool isShell = false;        // Track shell state
     bool isMovingShell = false;  // Track if shell is moving
 
-    float delta_time = 1.0f;
-    float velocityY = 0.0f;
     float velocityX = 0.0f;
-    float GRAVITY = -300.0f;
     float shell_move_velocity = 8.0f; // 龜殼移動速度
 
     // Y movement range for flying state
@@ -81,11 +67,6 @@ private:
     std::vector<std::string> AnimationShell = {RESOURCE_DIR"/Entities/unfly_koopa_shell0.png",RESOURCE_DIR"/Entities/unfly_koopa_shell1.png"};
     std::vector<std::string> AnimationMovingShell = {RESOURCE_DIR"/Entities/unfly_koopa_shell0.png",RESOURCE_DIR"/Entities/unfly_koopa_shell1.png"};
 
-    bool is_dead = false;
-    float death_timer = 0.0f;
-    const float DEATH_ANIMATION_TIME = 80.0f;
-    const float DEATH_JUMP_DURATION = 120.0f;
-    const float DEATH_JUMP_VELOCITY = 300.0f;
     bool is_set_runanimation = false;
 
     std::shared_ptr<Koopa> inside_self;

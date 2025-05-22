@@ -2,8 +2,7 @@
 #include "Global.hpp"
 
 Flower::Flower() {
-    this -> SetZIndex(-20);
-    // Default constructor will calculate the range after SetPosition is called
+    this->SetZIndex(-20);
 }
 bool Flower::CheckMarioCollision(std::shared_ptr<Mario> mario){
     if (is_dead || !GetVisible() || mario->is_dying) {
@@ -39,10 +38,8 @@ bool Flower::CheckMarioCollision(std::shared_ptr<Mario> mario){
             SetVisible(false);
             return true;
         }
-        // If collision happens, Mario gets hurt regardless of direction
-        // No special handling for stomping from above - Piranha Plants can't be killed this way
         if (!mario->is_dying && mario->GetLive() > 0 && !mario->is_temporarily_invincible) {
-            mario->Die(); // Call Mario's Die method
+            mario->Die();
             return true;
         }
     }
@@ -50,7 +47,6 @@ bool Flower::CheckMarioCollision(std::shared_ptr<Mario> mario){
 }
 
 void Flower::UpdateYMovementRange() {
-    // Apply your algorithm here
     if (m_Drawable != nullptr) {
         min_y_position = GetPosition().y - (m_Drawable->GetSize().y*5.2);
         max_y_position = GetPosition().y - (m_Drawable->GetSize().y*0.1);
@@ -58,7 +54,6 @@ void Flower::UpdateYMovementRange() {
 }
 
 void Flower::SetPosition(float x, float y) {
-    // First set the position
     Enemy::SetPosition(x, y);
     UpdateYMovementRange();
 }
@@ -70,7 +65,6 @@ void Flower::Action(const float distance) {
     Flower_size *= FLOWER_MAGNIFICATION;
 
     const float step = BLOCK_SIZE / 48.0f;
-    float remaining_distance = distance;
     float step_distance = std::min(step, std::abs(distance));
 
     // Adjust direction based on whether moving up or down
@@ -118,16 +112,13 @@ bool Flower::AABBCollides(glm::vec2 Flower_pos, std::shared_ptr<BackgroundImage>
     float btop = b.y + b_size.y / 2;
     float bbottom = b.y - b_size.y / 2;
 
-    float EPSILON = 0.0f;
-
-    bool collisionX = (aleft < bright - EPSILON) && (aright > bleft + EPSILON);
-    bool collisionY = (abottom < btop - EPSILON) && (atop > bbottom + EPSILON);
+    bool collisionX = (aleft < bright) && (aright > bleft);
+    bool collisionY = (abottom < btop) && (atop > bbottom);
 
     if (!(collisionX && collisionY)) {
         return false;
     }
 
-    // calculate minimum overlap area
     float minOverlap = std::min({bright - aleft, aright - bleft});
 
     if (minOverlap == bright - aleft) X_state = CollisionState::Left;
@@ -160,16 +151,13 @@ bool Flower::CCDDCollides(glm::vec2 Flower_pos, std::shared_ptr<BackgroundImage>
     float btop = b.y + b_size.y / 2;
     float bbottom = b.y - b_size.y / 2;
 
-    float EPSILON = 0.0f;
-
-    bool collisionX = (aleft < bright - EPSILON) && (aright > bleft + EPSILON);
-    bool collisionY = (abottom < btop - EPSILON) && (atop > bbottom + EPSILON);
+    bool collisionX = (aleft < bright) && (aright > bleft);
+    bool collisionY = (abottom < btop) && (atop > bbottom);
 
     if (!(collisionX && collisionY)) {
         return false;
     }
 
-    // calculate minimum overlap area
     float minOverlap = std::min({atop - bbottom, btop - abottom});
 
     if (minOverlap == atop - bbottom) Y_state = CollisionState::Top;
@@ -184,16 +172,12 @@ bool Flower::GravityAndCollision(const float delta) {
 }
 
 void Flower::UpdateAnimation() {
-    // Update animation based on direction
-    if (isFacingUp) {
-        // Facing up animation
-        m_Transform.scale = glm::vec2{FLOWER_MAGNIFICATION, FLOWER_MAGNIFICATION};
-    } else {
-        // Facing down animation
-        m_Transform.scale = glm::vec2{FLOWER_MAGNIFICATION, FLOWER_MAGNIFICATION};
-        // Optional: If you have separate up/down sprites or want to flip
-        // m_Transform.scale = glm::vec2{FLOWER_MAGNIFICATION, -FLOWER_MAGNIFICATION};
-    }
+    m_Transform.scale = glm::vec2{FLOWER_MAGNIFICATION, FLOWER_MAGNIFICATION};
+    // if (isFacingUp) {
+    //     m_Transform.scale = glm::vec2{FLOWER_MAGNIFICATION, FLOWER_MAGNIFICATION};
+    // } else {
+    //     m_Transform.scale = glm::vec2{FLOWER_MAGNIFICATION, FLOWER_MAGNIFICATION};
+    // }
 }
 
 void Flower::OnUpdate(const float delta) {
@@ -208,14 +192,16 @@ void Flower::Move() {
     if (is_set_runanimation == false) {
         SetImage(AnimationRun, 500, 0);
         is_set_runanimation = true;
-        // Make sure Y range is updated once we have a drawable
         UpdateYMovementRange();
     }
 }
 
 void Flower::SetLive(const int live) {
     this->live = live;
-    if (live == 0) SetImage(AnimationDead, 100, 0);
+    if (live == 0) {
+        is_dead = true;
+        SetVisible(false);
+    }
 }
 
 int Flower::GetLive() const {
