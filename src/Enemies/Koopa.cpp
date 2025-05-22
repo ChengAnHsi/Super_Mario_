@@ -82,10 +82,10 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     float top_offset = 0.0f;
     if (is_shell) {
         // Reduce collision height by 1/3 from the top when in shell form
-        top_offset = koopa_size.y / 3.0f;
+        top_offset = koopa_size.y / 10.0f;
     } else {
         // Reduce collision height by 1/2 from the top when walking
-        top_offset = koopa_size.y / 2.0f;
+        top_offset = koopa_size.y / 5.0f;
     }
 
     float koopa_left = koopa_pos.x - koopa_size.x / 2;
@@ -162,18 +162,17 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         }
         return false;
     }
-
-    if ((!is_shell || (is_shell && shell_is_moving)) && mario->is_temporarily_invincible == false) {
-        if (mario->GetLive() > 0) {
-            mario->Die();
-        }
-    } else if (is_shell && !shell_is_moving) {
+    if (is_shell && !shell_is_moving) {
         if (min_index == 0 || min_index == 1) {
             return KickShell(mario);
-        }
-        if (min_index == 3) {
-            return true;
-        }
+            }
+            if (min_index == 3) {
+                return true;
+            }else if ((!is_shell || (is_shell && shell_is_moving)) && mario->is_temporarily_invincible == false ) {
+                if (mario->GetLive() > 0) {
+                mario->Die();
+            }
+    }
     }
     return true;
 }
@@ -197,13 +196,13 @@ void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
         }
 
         if (!koopa->GetIsDead()) {
+            koopa->SetDeadState(DeadState::Hit);
             koopa->SetLive(0);
             koopa->SetScale(KOOPA_MAGNIFICATION, -KOOPA_MAGNIFICATION);
             koopa->velocityY = 200.0f;
             kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
         }
     }
-
     if (kick_sfx) {
         kick_sfx->SetVolume(200);
         kick_sfx->Play();
@@ -413,19 +412,9 @@ bool Koopa::AABBCollides(glm::vec2 Koopa_pos, std::shared_ptr<BackgroundImage> b
 
     X_state = CollisionState::None;
 
-    // Apply the same collision box adjustments
-    float top_offset = 0.0f;
-    if (is_shell) {
-        // Reduce collision height by 1/3 from the top when in shell form
-        top_offset = Koopa_size.y / 3.0f;
-    } else {
-        // Reduce collision height by 1/2 from the top when walking
-        top_offset = Koopa_size.y / 2.0f;
-    }
-
     float aleft = a.x - Koopa_size.x / 2;
     float aright = a.x + Koopa_size.x / 2;
-    float atop = a.y + Koopa_size.y / 2 - top_offset; // Adjusted top position
+    float atop = a.y + Koopa_size.y / 2;
     float abottom = a.y - Koopa_size.y / 2;
 
     float bleft = b.x - b_size.x / 2;
@@ -459,19 +448,10 @@ bool Koopa::CCDDCollides(glm::vec2 Koopa_pos, std::shared_ptr<BackgroundImage> b
 
     Y_state = CollisionState::None;
 
-    // Apply the same collision box adjustments
-    float top_offset = 0.0f;
-    if (is_shell) {
-        // Reduce collision height by 1/3 from the top when in shell form
-        top_offset = Koopa_size.y / 3.0f;
-    } else {
-        // Reduce collision height by 1/2 from the top when walking
-        top_offset = Koopa_size.y / 2.0f;
-    }
 
     float aleft = a.x - Koopa_size.x / 2;
     float aright = a.x + Koopa_size.x / 2;
-    float atop = a.y + Koopa_size.y / 2 - top_offset; // Adjusted top position
+    float atop = a.y + Koopa_size.y / 2 ;
     float abottom = a.y - Koopa_size.y / 2;
 
     float bleft = b.x - b_size.x / 2;

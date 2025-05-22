@@ -72,7 +72,7 @@ bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         inside_self->SetPosition(GetPosition().x, GetPosition().y);
         return false;
     }
-    if (mario->is_temporarily_invincible == false)  {
+    if (mario->is_temporarily_invincible == false )  {
         if (mario->GetLive() > 0) {
             mario->Die();
         }
@@ -159,8 +159,6 @@ bool FlyKoopa::DetectHole(float next_x, float y) {
             }
         }
     }
-
-    // 如果沒有地面，表示前方有坑洞
     return !has_ground;
 }
 
@@ -169,43 +167,30 @@ void FlyKoopa::Action(const float distance) {
     float FlyKoopa_y = GetPosition().y;
     glm::vec2 FlyKoopa_size = m_Drawable->GetSize();
     FlyKoopa_size *= KOOPA_MAGNIFICATION;
-
-    // 根據不同狀態處理移動
     if (isFlying) {
-        // 飛行狀態的垂直移動（像花一樣）
         const float step = BLOCK_SIZE / 32.0f;
         float step_distance = std::min(step, std::abs(distance));
-
-        // 根據面向方向調整方向
-        if (!isFacingUp) {
-            step_distance *= -1;
-        }
-
-        // 計算下一位置
+        if (!isFacingUp) step_distance *= -1;
         float next_y = FlyKoopa_y + step_distance;
 
         // 檢查是否達到邊界
         if (next_y <= min_y_position) {
             next_y = min_y_position;
-            isFacingUp = true; // 反向，開始上升
+            isFacingUp = true;
         } else if (next_y >= max_y_position) {
             next_y = max_y_position;
-            isFacingUp = false; // 反向，開始下降
+            isFacingUp = false;
         }
 
         // 更新位置（不重計算範圍）
         Enemy::SetPosition(FlyKoopa_x, next_y);
     }
+
     else if (isShell && isMovingShell) {
-        // 龜殼狀態高速水平移動
-        const float shell_step = BLOCK_SIZE / 3.0f; // 龜殼移動速度較快
+        const float shell_step = BLOCK_SIZE / 3.0f;
         float remaining_distance = distance;
         float step_distance = std::min(shell_step, std::abs(distance));
-
-        // 根據面向方向決定移動方向
-        if (!isFacingRight) {
-            step_distance *= -1;
-        }
+        if (!isFacingRight) step_distance *= -1;
 
         bool collision = false;
         while (std::abs(remaining_distance) > 0.0f) {
@@ -229,20 +214,6 @@ void FlyKoopa::Action(const float distance) {
                     break;
                 }
             }
-
-            if (collision) break;
-
-            // 檢查與碰撞方塊的碰撞
-            for (const auto& block : collision_blocks) {
-                if (block->GetVisible() == false) continue;
-
-                AABBCollides({next_x, FlyKoopa_y}, block);
-                if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
-                    collision = true;
-                    break;
-                }
-            }
-
             if (collision) break;
 
             FlyKoopa_x = next_x;
@@ -408,18 +379,14 @@ bool FlyKoopa::CCDDCollides(glm::vec2 FlyKoopa_pos, std::shared_ptr<BackgroundIm
 }
 
 bool FlyKoopa::GravityAndCollision(const float delta) {
-    // 如果是飛行狀態，停用重力（像花一樣）
     if (isFlying) {
         return false;
     }
 
-    // 如果不是飛行狀態，使用重力（像原始的FlyKoopa）
     glm::vec2 FlyKoopa_size = this->m_Drawable->GetSize();
     FlyKoopa_size *= KOOPA_MAGNIFICATION;
     float FlyKoopa_x = this->GetPosition().x;
     float FlyKoopa_y = this->GetPosition().y;
-
-    // 更新垂直速度（根據重力）
     velocityY += GRAVITY * (delta / 60.0f);
     FlyKoopa_y += velocityY * (delta / 60.0f);
 
@@ -442,11 +409,9 @@ bool FlyKoopa::GravityAndCollision(const float delta) {
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
-            // 固定在方塊下方開始下墜
             FlyKoopa_y = box->GetTransform().translation.y - b_size.y / 2 - FlyKoopa_size.y / 2;
             this->SetPosition(FlyKoopa_x, FlyKoopa_y);
 
-            // 如果碰撞到FlyKoopa的頂部，轉換為unflykoopa
             ConvertToUnfly();
             break;
         }
@@ -485,25 +450,20 @@ void FlyKoopa::ConvertToUnfly() {
     // 只在飛行狀態下轉換
     if (isFlying) {
         isFlying = false;
-        // 更改動畫為非飛行庫巴??
         SetImage(AnimationDead, 500, 0);
     }
 }
 
 void FlyKoopa::UpdateAnimation() {
     if (isFlying) {
-        // 飛行動畫與上/下移動
         m_Transform.scale = glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
     }
     else if (isShell) {
-        // 龜殼動畫
         if (isMovingShell) {
-            // 移動中的龜殼動畫可以旋轉得更快
             m_Transform.scale = isFacingRight ?
                 glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION} :
                 glm::vec2{-KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
         } else {
-            // 靜止的龜殼
             m_Transform.scale = glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
         }
     }
