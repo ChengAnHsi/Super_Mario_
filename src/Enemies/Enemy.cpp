@@ -1,5 +1,9 @@
 #include <Enemies/Enemy.hpp>
 
+void Enemy::CheckFireballCollision(std::shared_ptr<Fireball> fireball) {
+    // todo
+}
+
 void Enemy::SetMoveVelocity(float veclocityX){
     move_velocity = veclocityX;
 }

@@ -26,6 +26,7 @@ constexpr float ENEMY_MAGNIFICATION = 2.5f;
 constexpr float KOOPA_MAGNIFICATION = 2.5f;
 constexpr float FLOWER_MAGNIFICATION = 2.5f;
 constexpr float PROP_MAGNIFICATION = 2.5f;
+constexpr float FIREBALL_MAGNIFICATION = 3.0f;
 constexpr float BACKGROUND_X_OFFSET = -335.0f;
 constexpr float BACKGROUND_Y_OFFSET = -325.0f;
 //constexpr int WINDOW_WIDTH = 720;

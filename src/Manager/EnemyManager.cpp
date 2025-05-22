@@ -156,9 +156,13 @@ bool EnemyManager::CheckMarioCollisions(std::shared_ptr<Mario> mario) {
         // Check collisions for different enemy types
         // is_collisioning =
         enemy->CheckMarioCollision(mario);
-
-
     }
     return false;
 }
+
+// void EnemyManager::CheckFireBallCollisions(std::vector<std::shared_ptr<Fireball>> fireballs) {
+//     for (const auto& enemy : m_Enemies) {
+//         enemy->CheckMarioCollision(fireballs);
+//     }
+// }
 

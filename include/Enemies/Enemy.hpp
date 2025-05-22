@@ -37,6 +37,8 @@ public:
     virtual void ClearCollisionBoxes() = 0;
     virtual void ClearCollisionBlocks() = 0;
     virtual bool CheckMarioCollision(std::shared_ptr<Mario> mario) = 0;
+    // todo collision with fireball
+    void CheckFireballCollision(std::shared_ptr<Fireball> fireball);
 protected:
     bool isFacingRight = false;
     DeadState dead_state = DeadState::Alive;

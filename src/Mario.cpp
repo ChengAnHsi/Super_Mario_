@@ -397,10 +397,12 @@ void Mario::UpdateAnimation() {
     const int direction = is_right_key_down - is_left_key_down;
     // facing left
     if (direction == -1) {
+        isFacingRight = false;
         m_Transform.scale = glm::vec2{-MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
     }
     // facing right
     if (direction == 1)  {
+        isFacingRight = true;
         m_Transform.scale = glm::vec2{MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
     }
 
@@ -560,6 +562,7 @@ void Mario::Die() {
     } else if (is_growing == false){
         // Mario dies
         is_dying = true;
+        is_fire = false;
         death_timer = 0.0f;
 
         // Play death sound
@@ -613,9 +616,11 @@ float Mario::OnUpdate(const float delta) {
 }
 
 void Mario::Fire() {
-    glm::vec2 pos = this->GetPosition();  // = Mario pos
-    //bool facing_right = ??;
-    auto fball = std::make_shared<Fireball>(pos, true);
+    auto fball = std::make_shared<Fireball>();
+    fball->SetPosition(GetPosition().x, GetPosition().y);
+    fball->AddCollisionBlocks(collision_blocks);
+    fball->AddCollisionBoxes(collision_boxes);
+    fball->SetFacingRight(isFacingRight);
     m_FM->AddFireball(fball);
 }
 

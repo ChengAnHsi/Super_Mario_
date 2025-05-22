@@ -108,6 +108,7 @@ private:
 
     bool isJumping = false;
     bool isRunning = false;
+    bool isFacingRight = true;
     bool is_grow = false;
     bool is_growing = false;
     bool is_fire = false;

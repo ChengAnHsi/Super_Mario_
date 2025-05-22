@@ -8,13 +8,13 @@
 #include "BackgroundImage.hpp"
 #include "Enemies/Enemy.hpp"
 #include "Mario.hpp"
+//#include "Props/Fireball.hpp"
 
 class EnemyManager {
 public:
     EnemyManager();
     [[nodiscard]] std::vector<std::shared_ptr<Enemy>> GetEnemies() const {
         return m_Enemies;
-
     }
 
     std::vector<std::string> imageFiles = {
@@ -61,6 +61,7 @@ public:
     void SetAllEnemyCollisionBoxs(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void SetAllEnemyCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
     bool CheckMarioCollisions(std::shared_ptr<Mario> mario);
+    //void CheckFireBallCollisions(std::vector<std::shared_ptr<Fireball>> fireballs);
 private:
     // map 1-1
     std::vector<float> tmp_x = {30,22,40,51,52.5,80,82,97,98.5,107,114,115.5,124,125.5,128,129.5,174,175.5};

@@ -11,7 +11,7 @@ void FireballManager::UpdateFireballsAnimation() {
                 // is collision or disappear
                 continue;
             }
-            fireball->Update();
+            fireball->Update(1.0f);
         }
     }
 
