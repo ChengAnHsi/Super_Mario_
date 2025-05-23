@@ -616,8 +616,15 @@ float Mario::OnUpdate(const float delta) {
 }
 
 void Mario::Fire() {
+    if (shoot_fireball_timer != FIREBALL_SHOOT_TIME) return;
+    shoot_fireball_timer = 0;
+
     auto fball = std::make_shared<Fireball>();
-    fball->SetPosition(GetPosition().x, GetPosition().y);
+    if (isFacingRight) {
+        fball->SetPosition(GetPosition().x, GetPosition().y - BLOCK_SIZE / 4);
+    }else {
+        fball->SetPosition(GetPosition().x, GetPosition().y - BLOCK_SIZE / 4);
+    }
     fball->AddCollisionBlocks(collision_blocks);
     fball->AddCollisionBoxes(collision_boxes);
     fball->SetFacingRight(isFacingRight);
@@ -646,16 +653,19 @@ float Mario::Move() {
     if (is_temporarily_invincible) {
         invincible_timer += delta_time;
         // 3sec
-        if (invincible_timer >= 180.0f) {
+        if (invincible_timer >= TEMP_INVINCIBLE_END_TIME) {
             is_temporarily_invincible = false;
         }
     }
     if (is_invincible) {
         invincible_timer += delta_time;
         // 30sec
-        if (invincible_timer >= 1800.0f) {
+        if (invincible_timer >= INVINCIBLE_END_TIME) {
             is_invincible = false;
         }
+    }
+    if (shoot_fireball_timer < FIREBALL_SHOOT_TIME) {
+        shoot_fireball_timer += delta_time;
     }
 
     if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) && is_grow) {

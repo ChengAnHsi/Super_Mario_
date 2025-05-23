@@ -6,6 +6,15 @@
 #include "Global.hpp"
 
 void Fireball::Update(float delta) {
+    if (isExploing) {
+        if (IfAnimationEnds()) {
+            SetVisible(false);
+            isExploing = false;
+            isExploded = true;
+        }
+        return;
+    }
+
     float distance = velocityX * delta;
 
     // facing left
@@ -181,9 +190,10 @@ void Fireball::Action(const float distance) {
         remaining_distance -= step_distance;
     }
 
-    // 如果發生碰撞，反轉方向
+    // 如果發生碰撞，爆炸
     if (collision) {
-        isFacingRight = not isFacingRight;
+        Exploded();
+        //isFacingRight = not isFacingRight;
     }
 }
 
@@ -279,4 +289,21 @@ void Fireball::ClearCollisionBlocks() {
 
 void Fireball::SetFacingRight(bool isFacingRight) {
     this->isFacingRight = isFacingRight;
+}
+
+void Fireball::Exploded() {
+    if (isExploded || isExploing) {
+        return;
+    }
+    this->isExploing = true;
+    SetImage({RESOURCE_DIR"/Entities/fireball_explosion0.png",RESOURCE_DIR"/Entities/fireball_explosion1.png",RESOURCE_DIR"/Entities/fireball_explosion2.png"}, 100, 0);
+    SetLooping(false);
+}
+
+bool Fireball::GetExploded() {
+    return isExploded;
+}
+
+bool Fireball::GetExploing() {
+    return isExploing;
 }

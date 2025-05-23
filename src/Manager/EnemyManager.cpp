@@ -165,10 +165,10 @@ int EnemyManager::CheckFireBallCollisionsAndGotPoint(std::vector<std::shared_ptr
     for (const auto& enemy : m_Enemies) {
         if(enemy->GetIsDead()) continue;
         for (const auto& fireball : fireballs) {
+            if (fireball->GetExploded() || fireball->GetExploing()) continue;
             bool was_shot = enemy->CheckFireballCollision(fireball);
-            // todo update fireball real state not only visible
             if(was_shot) {
-                fireball->SetVisible(false);
+                fireball->Exploded();
                 score += enemy->GetScore();
                 break;
             }

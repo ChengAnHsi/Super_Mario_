@@ -7,8 +7,7 @@
 void FireballManager::UpdateFireballsAnimation() {
     if(fireballs.empty() == false) {
         for (auto& fireball : fireballs) {
-            if(fireball->GetVisible() == false) {
-                // is collision or disappear
+            if(fireball->GetExploded()) {
                 continue;
             }
             fireball->Update(1.0f);

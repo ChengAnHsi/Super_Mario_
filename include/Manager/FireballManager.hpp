@@ -18,7 +18,7 @@ public:
         RESOURCE_DIR"/Entities/fireball2.png",
         RESOURCE_DIR"/Entities/fireball3.png",
         RESOURCE_DIR"/Entities/fireball_explosion0.png",
-        RESOURCE_DIR"/Entities/fireball_explosion1.png",
+        RESOURCE_DIR"/Entities/fireball_explosion1.png", // 5
         RESOURCE_DIR"/Entities/fireball_explosion2.png"
     };
 
@@ -31,8 +31,8 @@ public:
     void ResetFireballs();
 
 private:
-    std::vector<std::shared_ptr<Fireball>> fireballs = {};
     int fireball_idx = 0;
+    std::vector<std::shared_ptr<Fireball>> fireballs = {};
 };
 
 #endif //FIREBALLMANAGER_HPP

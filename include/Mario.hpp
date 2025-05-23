@@ -95,7 +95,12 @@ private:
 
     // track invincible state
     float invincible_timer = 0.0f; // The countdown ends when the invincibility time (3 sec) ends
-    const float INVINCIBLE_PAUSE_TIME = 60.0f; // 1 second at 60fps
+    const float TEMP_INVINCIBLE_END_TIME = 180.0f;
+    const float INVINCIBLE_END_TIME = 1800.0f;
+
+    // fireball shoot timer
+    float shoot_fireball_timer = 0.0f;
+    const float FIREBALL_SHOOT_TIME = 30.0f;
 
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;

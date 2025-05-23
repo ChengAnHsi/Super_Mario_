@@ -9,7 +9,7 @@
 #include "Blocks/Block.hpp"
 #include "CollisionState.hpp"
 
-class Fireball : public BackgroundImage {
+class Fireball : public AnimatedImage {
 public:
     Fireball() = default;
 
@@ -29,13 +29,21 @@ public:
     void ClearCollisionBlocks();
 
     void SetFacingRight(bool isFacingRight);
+    void Exploded();
+    bool GetExploded();
+    bool GetExploing();
 private:
-    float velocityX = 4.0f;
+    float velocityX = 8.5f;
+    bool isFacingRight = true;
+
     float velocityY = 0.0f;
     float GRAVITY = -300.0f;
     float JUMP_VELOCITY = 170.0f;
     bool isJumping = false;
-    bool isFacingRight = true;
+
+    bool isExploded = false;
+    bool isExploing = false;
+
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
