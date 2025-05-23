@@ -31,8 +31,8 @@ bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         SetLive(0);
         dead_state = DeadState::Hit;
         SetScale(ENEMY_MAGNIFICATION, -ENEMY_MAGNIFICATION);
-         death_timer = 0.0f;
-         velocityY = DEATH_JUMP_VELOCITY * 1.5f;
+        death_timer = 0.0f;
+        velocityY = DEATH_JUMP_VELOCITY * 1.5f;
 
         std::shared_ptr<Util::SFX> kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
         kick_sfx->SetVolume(200);
@@ -505,10 +505,30 @@ void FlyKoopa::Move() {
 }
 
 void FlyKoopa::SetLive(const int live) {
+    // If it is not dead yet, turn it into a dead shell.
+    if(dead_state == DeadState::Shot && this->live != 0) {
+        this->is_dead = true;
+        SetVisible(false);
+
+        inside_self->SetLive(0);
+        inside_self->SetVisible(true);
+        inside_self->SetPosition(GetPosition().x, GetPosition().y);
+    }
+
     this->live = live;
+
     if (live == 0) {
-        SetImage(AnimationDead, 100, 0);
-        isFlying = false; // 確保死亡時不是飛行狀態
+        if(GetPosition().y >= -360.0f && dead_state == DeadState::Shot) {
+            float delta = 1.0f;
+            velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
+
+            float enemy_x = GetPosition().x;
+            float enemy_y = GetPosition().y + velocityY * (delta / 60.0f);
+            SetPosition(enemy_x, enemy_y);
+        }else {
+            SetImage(AnimationDead, 100, 0);
+            isFlying = false; // 確保死亡時不是飛行狀態
+        }
     }
 }
 

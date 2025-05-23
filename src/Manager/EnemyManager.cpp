@@ -160,9 +160,20 @@ bool EnemyManager::CheckMarioCollisions(std::shared_ptr<Mario> mario) {
     return false;
 }
 
-// void EnemyManager::CheckFireBallCollisions(std::vector<std::shared_ptr<Fireball>> fireballs) {
-//     for (const auto& enemy : m_Enemies) {
-//         enemy->CheckMarioCollision(fireballs);
-//     }
-// }
+int EnemyManager::CheckFireBallCollisionsAndGotPoint(std::vector<std::shared_ptr<Fireball>> fireballs) {
+    int score = 0;
+    for (const auto& enemy : m_Enemies) {
+        if(enemy->GetIsDead()) continue;
+        for (const auto& fireball : fireballs) {
+            bool was_shot = enemy->CheckFireballCollision(fireball);
+            // todo update fireball real state not only visible
+            if(was_shot) {
+                fireball->SetVisible(false);
+                score += enemy->GetScore();
+                break;
+            }
+        }
+    }
+    return score;
+}
 

@@ -99,6 +99,7 @@ void App::Update() {
         if (fireball) {
             m_Root.AddChild(fireball);
         }
+        m_Mario->IncreaseScore(m_EM->CheckFireBallCollisionsAndGotPoint(m_FM->GetFireballs()));
     }
 
     // Camera cannot move left

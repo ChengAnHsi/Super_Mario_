@@ -7,7 +7,6 @@
 
 #include "Enemy.hpp"
 #include "Blocks/Block.hpp"
-#include "CollisionState.hpp"
 #include "Mario.hpp"
 
 class Goomba : public Enemy{
@@ -23,47 +22,31 @@ public:
     bool AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box);
     bool CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box);
     bool GravityAndCollision(float delta) override;
-
-    void UpdateAnimation() override;
-
-    // getter and setter
-    void SetLive(int live);
-    [[nodiscard]] int GetLive() const;
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) override;
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) override;
     void ClearCollisionBoxes() override;
     void ClearCollisionBlocks() override;
     bool CheckMarioCollision(std::shared_ptr<Mario> mario) override;
     bool CheckEnemyCollision(std::shared_ptr<Enemy> enemy);
+
+    void UpdateAnimation() override;
+
     void AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies);
     void ClearEnemies();
     void KillGoomba();
-    bool is_dead = false;
-    float velocityY = 0.0f; // 角色在 Y 軸的速度
+
+    // getter and setter
+    void SetLive(int live) override;
+    [[nodiscard]] int GetLive() const;
+
 private:
-    int live = 1;
-    // 被擊倒的分數
-    int score = 100;
-
-    std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
-    std::vector<std::shared_ptr<Block>> collision_blocks;
     std::vector<std::shared_ptr<Enemy>> other_enemies;
-    CollisionState X_state = CollisionState::None;
-    CollisionState Y_state = CollisionState::None;
 
-    float delta_time = 1.0f;
-    float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
-    const float DEATH_JUMP_DURATION = 120.0f;
-    const float DEATH_JUMP_VELOCITY = 300.0f;
-
-    // TODO: dead update
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/Overworld/goomba0.png",RESOURCE_DIR"/Entities/Overworld/goomba1.png"};
     std::vector<std::string> AnimationUnderWorldRun = {RESOURCE_DIR"/Entities/Underworld/goomba0.png",RESOURCE_DIR"/Entities/Underworld/goomba1.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/Overworld/goombaDead.png"};
     std::vector<std::string> AnimationUnderWorldDead = {RESOURCE_DIR"/Entities/Underworld/goombaDead.png"};
 
-    float death_timer = 0.0f;
-    const float DEATH_ANIMATION_TIME = 80.0f;
     bool is_set_runanimation = false;
 };
 #endif //GOOMBA_HPP
