@@ -1,10 +1,10 @@
 #ifndef PHASE_MANGER_HPP
 #define PHASE_MANGER_HPP
 
-#include "../PTSD/include/Util/GameObject.hpp"
+#include "Util/GameObject.hpp"
 #include "TaskText.hpp"
 #include "BackgroundImage.hpp"
-#include <chrono>
+#include "Mario.hpp"
 
 class PhaseResourceManger {
 public:
@@ -40,9 +40,12 @@ public:
     };
 
     void NextPhase(int m_phase);
+    bool CheckMarioCollisionFlag(std::shared_ptr<Mario> mario, int m_phase);
     // fixed texts
     void ResetPosition(float dis) const;
+
     void DecreaseTime();
+    void ConvertTimeToScore(std::shared_ptr<Mario> mario);
 
     // setter and getter
     void SetTime(int time);

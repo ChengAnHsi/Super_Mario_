@@ -59,6 +59,46 @@ PhaseResourceManger::PhaseResourceManger() {
     m_Background.back()->SetScale(1.3f,1.3f);
 }
 
+bool PhaseResourceManger::CheckMarioCollisionFlag(std::shared_ptr<Mario> mario, int m_phase) {
+    if (mario->GetPull() || mario->GetBackToCastle()) return false;
+
+    // todo after finish nextphase 1-2 and 1-3 remove it
+    if (m_phase != 1) return false;
+
+    // m_Background[2][3]: flag
+    glm::vec2 a = m_Background[2]->GetPosition();
+    glm::vec2 prop_size = m_Background[2]->GetSize();
+    prop_size *= FIREBALL_MAGNIFICATION;
+
+    glm::vec2 b = mario->GetPosition();
+    glm::vec2 b_size = mario->GetSize();
+
+    b_size.x *= MARIO_MAGNIFICATION;
+    b_size.y *= MARIO_MAGNIFICATION;
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
+
+    float aleft = a.x - prop_size.x / 2;
+    float aright = a.x + prop_size.x / 2;
+    float atop = a.y + prop_size.y / 2;
+    float abottom = a.y - prop_size.y / 2;
+
+    float bleft = b.x - b_size.x / 2;
+    float bright = b.x + b_size.x / 2;
+    float btop = b.y + b_size.y / 2;
+    float bbottom = b.y - b_size.y / 2;
+
+    bool collisionX = (aleft < bright) && (aright > bleft);
+    bool collisionY = (abottom < btop) && (atop > bbottom);
+
+    if (!(collisionX && collisionY)) {
+        return false;
+    }
+    mario->SetPull(true);
+    mario->SetPosition({m_Background[2]->GetPosition().x - (mario->GetSize().x * MARIO_MAGNIFICATION) / 2, mario->GetPosition().y});
+    return true;
+}
+
 void PhaseResourceManger::NextPhase(int m_Phase) {
     LOG_DEBUG("Passed! Next phase: {}", m_Phase);
     if (m_Phase == 1){
@@ -72,14 +112,19 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         // map 1-1 castle
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/castle.png");
-        m_Background.back()->SetPosition(202 * BLOCK_SIZE - 320.0f, 4 * BLOCK_SIZE - 325.0f);
+        m_Background.back()->SetPosition(204 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 4 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         m_Background.back()->SetScale(3.0f, 3.0f);
-        // [2]: flag set
+        // [2][3]: flag set
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/flag-mast.png");
-        m_Background.back()->SetPosition(198 * BLOCK_SIZE - 320.0f, 8 * BLOCK_SIZE - 390.0f);
+        m_Background.back()->SetPosition(198 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 8 * BLOCK_SIZE - 385.0f);
         m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        // TODO [3]> mountain, cloud... set invisible use app->nextphase
+
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/final-flag.png");
+        m_Background.back()->SetPosition(197.5 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 11 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        // TODO [4]> mountain, cloud... set invisible use app->nextphase
 
         // TODO use function fix pos(not finish)
         // m_Tube.back()->SetPosition(28 * BLOCK_SIZE + BACKGROUND_X_OFFSET + m_Tube.back()->GetSize().x / 2, 2.5 * BLOCK_SIZE + BACKGROUND_Y_OFFSET - m_Tube.back()->GetSize().y / 2);
@@ -100,7 +145,7 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.back()->SetScale(80.0f,7.0f);
         m_Background.back()->SetZIndex(-50);
         // [1]: castle???
-        // [2]: flag set???
+        // [2][3]: flag set???
 
         // tube & lifting platform init(map 1-2)
         m_CollisionBoxes.clear();
@@ -176,6 +221,14 @@ void PhaseResourceManger::ResetPosition(float dis) const {
     m_MoneyText->m_Transform.translation.x += dis;
     m_WorldText->m_Transform.translation.x += dis;
     m_TimeText->m_Transform.translation.x += dis;
+}
+
+void PhaseResourceManger::ConvertTimeToScore(std::shared_ptr<Mario> mario) {
+    if (time > 0) {
+        time -= 1;
+        m_TimeText->SetTxtIdx(4, time);
+        mario->IncreaseScore(50);
+    }
 }
 
 void PhaseResourceManger::DecreaseTime() {

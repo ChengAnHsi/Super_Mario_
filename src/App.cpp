@@ -62,13 +62,18 @@ void App::Update() {
         m_Coin->SetPlaying(true);
 
         // decrease time after start game
-        m_PRM->DecreaseTime();
+        if (!m_Mario->GetReadyNextPhase()) m_PRM->DecreaseTime();
 
         // check mario is in enemy visiion
         m_EM->SetEnemyMoving();
     }
 
-    if(m_PRM->GetTime() == 0) m_Mario->Die();
+    if(m_PRM->GetTime() == 0) {
+        if (m_Mario->GetReadyNextPhase()) {
+            NextPhase(true);
+        }
+        else m_Mario->Die();
+    }
 
     // Calculate how far the camera should move to the right
     float dis = 0.0f;
@@ -146,6 +151,12 @@ void App::Update() {
     if (m_Mario->GetLive() == 0) {
         // TODO gameover
         m_CurrentState = State::END;
+    }
+
+    // todo nextphase 1-2 and 1-3 then remove second parameter
+    m_PRM->CheckMarioCollisionFlag(m_Mario, static_cast<int>(m_Phase));
+    if (m_Mario->GetReadyNextPhase()) {
+        m_PRM->ConvertTimeToScore(m_Mario);
     }
 
     if (m_EnterDown) {

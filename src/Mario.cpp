@@ -19,29 +19,7 @@ void Mario::OnJump() {
         velocityY = JUMP_VELOCITY;
         isJumping = true;
         state = MarioState::Jump;
-        if(is_grow) {
-            if(is_invincible) {
-                if (is_fire) {
-                    this->SetImages(AnimationJumpGrowFireInvincible, 100, 0);
-                    AnimationFireLast = AnimationJumpGrowFireInvincible;
-                }else {
-                    this->SetImages(AnimationJumpGrowInvincible, 100, 0);
-                }
-            }else {
-                if (is_fire) {
-                    this->SetImages(AnimationJumpGrowFire, 100, 0);
-                    AnimationFireLast = AnimationJumpGrowFire;
-                }else {
-                    this->SetImages(AnimationJumpGrow, 100, 0);
-                }
-            }
-        }else {
-            if(is_invincible) {
-                this->SetImages(AnimationJumpInvincible, 100, 0);
-            }else {
-                this->SetImages(AnimationJump, 100, 0);
-            }
-        }
+        SetJumpAnimation();
         std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/jump.mp3");
         jump_sfx->SetVolume(25);
         jump_sfx->Play();
@@ -54,29 +32,7 @@ void Mario::OnSmallJump() {
         velocityY = SMALL_JUMP_VELOCITY;
         isJumping = true;
         state = MarioState::Jump;
-        if(is_grow) {
-            if(is_invincible) {
-                if (is_fire) {
-                    this->SetImages(AnimationJumpGrowFireInvincible, 100, 0);
-                    AnimationFireLast = AnimationJumpGrowFireInvincible;
-                }else {
-                    this->SetImages(AnimationJumpGrowInvincible, 100, 0);
-                }
-            }else {
-                if (is_fire) {
-                    this->SetImages(AnimationJumpGrowFire, 100, 0);
-                    AnimationFireLast = AnimationJumpGrowFire;
-                }else {
-                    this->SetImages(AnimationJumpGrow, 100, 0);
-                }
-            }
-        }else {
-            if(is_invincible) {
-                this->SetImages(AnimationJumpInvincible, 100, 0);
-            }else {
-                this->SetImages(AnimationJump, 100, 0);
-            }
-        }
+        SetJumpAnimation();
         std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/jump.mp3");
         jump_sfx->SetVolume(25);
         jump_sfx->Play();
@@ -88,33 +44,12 @@ void Mario::OnKillJump() {
     velocityY = SMALL_JUMP_VELOCITY;
     isJumping = true;
     state = MarioState::Jump;
-    if(is_grow) {
-        if(is_invincible) {
-            if (is_fire) {
-                this->SetImages(AnimationJumpGrowFireInvincible, 100, 0);
-                AnimationFireLast = AnimationJumpGrowFireInvincible;
-            }else {
-                this->SetImages(AnimationJumpGrowInvincible, 100, 0);
-            }
-        }else {
-            if (is_fire) {
-                this->SetImages(AnimationJumpGrowFire, 100, 0);
-                AnimationFireLast = AnimationJumpGrowFire;
-            }else {
-                this->SetImages(AnimationJumpGrow, 100, 0);
-            }
-        }
-    }else {
-        if(is_invincible) {
-            this->SetImages(AnimationJumpInvincible, 100, 0);
-        }else {
-            this->SetImages(AnimationJump, 100, 0);
-        }
-    }
+    SetJumpAnimation();
 }
 
 void Mario::OnRun(const float distance) {
     if (distance == 0) return;
+    if (is_back_to_castle) back_to_castle_dis += distance;
 
     float mario_x = GetPosition().x;
     float mario_y = GetPosition().y;
@@ -505,6 +440,43 @@ void Mario::UpdateAnimation() {
     state = MarioState::Stand;
 }
 
+void Mario::PullFlag() {
+    if (GetPosition().y >= -360.0f + 3 * BLOCK_SIZE + GetSize().y * MARIO_MAGNIFICATION) {
+        this->SetPosition({GetPosition().x, GetPosition().y - 1.0f});
+    }else {
+        this->SetPosition({GetPosition().x, GetPosition().y + BLOCK_SIZE / 2});
+        m_Transform.scale = glm::vec2{-MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
+        is_pull = false;
+        is_back_to_castle = true;
+    }
+}
+
+void Mario::SetJumpAnimation() {
+    if(is_grow) {
+        if(is_invincible) {
+            if (is_fire) {
+                this->SetImages(AnimationJumpGrowFireInvincible, 100, 0);
+                AnimationFireLast = AnimationJumpGrowFireInvincible;
+            }else {
+                this->SetImages(AnimationJumpGrowInvincible, 100, 0);
+            }
+        }else {
+            if (is_fire) {
+                this->SetImages(AnimationJumpGrowFire, 100, 0);
+                AnimationFireLast = AnimationJumpGrowFire;
+            }else {
+                this->SetImages(AnimationJumpGrow, 100, 0);
+            }
+        }
+    }else {
+        if(is_invincible) {
+            this->SetImages(AnimationJumpInvincible, 100, 0);
+        }else {
+            this->SetImages(AnimationJump, 100, 0);
+        }
+    }
+}
+
 void Mario::SetGrowingAnimation() {
     if (is_grow) return;
 
@@ -619,7 +591,7 @@ float Mario::OnUpdate(const float delta) {
     // update moving
     int direction = is_right_key_down - is_left_key_down;
     if(is_down_key_down) direction = 0;
-    const float distance = direction * run_velocity * delta;
+    const float distance = direction * velocityX * delta;
 
     OnRun(distance);
 
@@ -666,6 +638,13 @@ float Mario::Move() {
         UpdateGrowingState();
         return 0.0f; // 阻止移動與其他輸入處理
     }
+    if (is_pull) {
+        // clear key down state
+        is_left_key_down = false;
+        is_right_key_down = false;
+        PullFlag();
+        return 0.0f;
+    }
     if (is_temporarily_invincible) {
         invincible_timer += delta_time;
         // 3sec
@@ -680,12 +659,16 @@ float Mario::Move() {
             is_invincible = false;
         }
     }
+    if (!is_back_to_castle) {
+        is_left_key_down = false;
+        is_right_key_down = false;
+    }
     if (shoot_fireball_timer < FIREBALL_SHOOT_TIME) {
         if (shoot_fireball_timer == 10) SetImages(AnimationFireLast, 1000, 0);
         shoot_fireball_timer += delta_time;
     }
 
-    if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) && is_grow) {
+    if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) && is_grow && !is_back_to_castle) {
         is_down_key_down = true;
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
@@ -694,13 +677,13 @@ float Mario::Move() {
     if (Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
         is_right_key_down = true;
     }
-    if (Util::Input::IsKeyPressed(Util::Keycode::UP)) {
+    if (Util::Input::IsKeyPressed(Util::Keycode::UP) && !is_back_to_castle) {
         OnJump();
     }
-    if (Util::Input::IsKeyPressed(Util::Keycode::SPACE)) {
+    if (Util::Input::IsKeyPressed(Util::Keycode::SPACE) && !is_back_to_castle) {
         OnSmallJump();
     }
-    if (Util::Input::IsKeyPressed(Util::Keycode::LSHIFT) || Util::Input::IsKeyPressed(Util::Keycode::RSHIFT)) {
+    if (Util::Input::IsKeyPressed(Util::Keycode::LSHIFT) || Util::Input::IsKeyPressed(Util::Keycode::RSHIFT) && !is_back_to_castle) {
         if (is_fire) Fire();
     }
     if (Util::Input::IsKeyUp(Util::Keycode::LEFT)) {
@@ -711,6 +694,17 @@ float Mario::Move() {
     }
     if (Util::Input::IsKeyUp(Util::Keycode::DOWN)) {
         is_down_key_down = false;
+    }
+    if (is_back_to_castle){
+        // from flag to castle distance is 6 block size
+        if (back_to_castle_dis <= 6 * BLOCK_SIZE) {
+            is_right_key_down = true;
+        }else {
+            is_back_to_castle = false;
+            is_right_key_down = false;
+            is_ready_for_next_phase = true;
+            SetVisible(false);
+        }
     }
     // test locate to center
     if (Util::Input::IsKeyDown(Util::Keycode::A)) SetPosition({-20.0f, 0.0f});
@@ -734,6 +728,22 @@ void Mario::SetFire(bool is_fire) {
     this->is_fire = is_fire;
 }
 
+void Mario::SetPull(bool is_pull) {
+    if (!is_pull) return;
+    if (!this->is_pull) {
+        if (is_grow) {
+            SetImages(AnimationPullGrow, 500, 0);
+        }else {
+            SetImages(AnimationPull, 500, 0);
+        }
+    }
+    this->is_pull = is_pull;
+}
+
+bool Mario::GetPull() {
+    return is_pull;
+}
+
 void Mario::SetInvincible(bool is_invincible) {
     this->is_invincible = is_invincible;
     if(is_invincible) {
@@ -748,6 +758,21 @@ bool Mario::GetInvincible() {
 
 bool Mario::GetFire() {
     return is_fire;
+}
+
+bool Mario::GetBackToCastle() {
+    return is_back_to_castle;
+}
+
+bool Mario::GetReadyNextPhase() {
+    return is_ready_for_next_phase;
+}
+
+void Mario::ResetStateForNextPhase() {
+    SetVisible(true);
+    is_pull = false;
+    is_back_to_castle = false;
+    is_ready_for_next_phase = false;
 }
 
 void Mario::IncreaseCoin(const int coin) {

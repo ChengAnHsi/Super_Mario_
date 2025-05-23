@@ -11,8 +11,6 @@
 #include "CollisionState.hpp"
 
 #include "Manager/FireballManager.hpp"
-#include "Manager/BlockManager.hpp"
-#include "Manager/PhaseResourceManger.hpp"
 
 enum class MarioState {
     Stand,
@@ -47,7 +45,10 @@ public:
     // animation
     void UpdateAnimation();
     void SetGrowingAnimation();
+
+    void SetJumpAnimation();
     void UpdateGrowingState();
+    void PullFlag();
 
     // getter and setter
     void IncreaseCoin(int coin);
@@ -63,6 +64,11 @@ public:
     void SetInvincible(bool is_invincible);
     bool GetInvincible();
     bool GetFire();
+    void SetPull(bool is_pull);
+    bool GetPull();
+    bool GetBackToCastle();
+    bool GetReadyNextPhase();
+    void ResetStateForNextPhase();
     void SetFireballManager(std::shared_ptr<FireballManager> FM);
 
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
@@ -114,24 +120,31 @@ private:
     bool isJumping = false;
     bool isRunning = false;
     bool isFacingRight = true;
+
     bool is_grow = false;
     bool is_growing = false;
     bool is_fire = false;
     bool is_invincible = false;
-    float delta_time = 1.0f;
-    float run_velocity = 5.0f;
-    float jump_velocity = 12.7f;
 
+    bool is_pull = false;
+    bool is_back_to_castle = false;
+    bool is_ready_for_next_phase = false;
+
+    float delta_time = 1.0f;
+    float back_to_castle_dis = 0;
+
+    float velocityX = 5.0f;
     float GRAVITY = -300.0f; // 重力值，以 px/s² 為單位
     float JUMP_VELOCITY = 360.0f;
     float SMALL_JUMP_VELOCITY = 250.0f;
 
-    std::vector<std::string> AnimationFireLast = {};
+    std::vector<std::string> AnimationFireLast = {}; // Restore the previous animation of the throwing animation
 
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/mario0.png",RESOURCE_DIR"/Entities/mario1.png",RESOURCE_DIR"/Entities/mario2.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/marioDead.png"};
     std::vector<std::string> AnimationJump = {RESOURCE_DIR"/Entities/mario_Jump.png"};
     std::vector<std::string> AnimationStand = {RESOURCE_DIR"/Entities/mario_stand.png"};
+    std::vector<std::string> AnimationPull = {RESOURCE_DIR"/Entities/mario_pull0.png", RESOURCE_DIR"/Entities/mario_pull1.png"};
 
     // m s m s m l s m l
     std::vector<std::string> AnimationGrow = {RESOURCE_DIR"/Entities/mario_grown_stand_mid.png",RESOURCE_DIR"/Entities/mario_grown_stand_small.png",
@@ -148,6 +161,7 @@ private:
     std::vector<std::string> AnimationJumpGrow = {RESOURCE_DIR"/Entities/mario_grown_Jump.png"};
     std::vector<std::string> AnimationStandGrow = {RESOURCE_DIR"/Entities/mario_grown_stand.png"};
     std::vector<std::string> AnimationSquatGrow = {RESOURCE_DIR"/Entities/mario_grown_squat.png"};
+    std::vector<std::string> AnimationPullGrow = {RESOURCE_DIR"/Entities/mario_grown_pull0.png", RESOURCE_DIR"/Entities/mario_grown_pull1.png"};
 
     std::vector<std::string> AnimationRunGrowFire = {RESOURCE_DIR"/Entities/mario_fire0.png",RESOURCE_DIR"/Entities/mario_fire1.png",RESOURCE_DIR"/Entities/mario_fire2.png"};
     std::vector<std::string> AnimationJumpGrowFire = {RESOURCE_DIR"/Entities/mario_fire_Jump.png"};

@@ -33,6 +33,7 @@ void App::ResetPhase() {
     //}
     m_Mario->SetImages({RESOURCE_DIR"/Entities/mario_stand.png"}, 1000, 0);
     m_Mario->m_Transform.scale = {MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
+    m_Mario->ResetStateForNextPhase();
 
     // update next level block
     m_Mario->ClearCollisionBoxes();
