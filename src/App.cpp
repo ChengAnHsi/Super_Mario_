@@ -94,6 +94,7 @@ void App::Update() {
         m_EM->CheckMarioCollisions(m_Mario);
 
         // update each fireball pos and collision
+        m_FM->UpdateFireballInvalidState();
         m_FM->UpdateFireballsAnimation();
         auto fireball = m_FM->GetNewFireball();
         if (fireball) {

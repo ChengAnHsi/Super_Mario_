@@ -23,9 +23,12 @@ public:
     };
 
     void UpdateFireballsAnimation();
+    void UpdateFireballInvalidState();
+
+    void AddFireball(std::shared_ptr<Fireball> fireball);
 
     std::vector<std::shared_ptr<Util::GameObject>> GetChildren();
-    void AddFireball(std::shared_ptr<Fireball> fireball);
+
     std::shared_ptr<Fireball> GetNewFireball();
     std::vector<std::shared_ptr<Fireball>> GetFireballs();
     void ResetFireballs();

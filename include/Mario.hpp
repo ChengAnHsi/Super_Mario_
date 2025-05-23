@@ -99,7 +99,7 @@ private:
     const float INVINCIBLE_END_TIME = 1800.0f;
 
     // fireball shoot timer
-    float shoot_fireball_timer = 0.0f;
+    float shoot_fireball_timer = 30.0f;
     const float FIREBALL_SHOOT_TIME = 30.0f;
 
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
@@ -122,9 +122,11 @@ private:
     float run_velocity = 5.0f;
     float jump_velocity = 12.7f;
 
-    float GRAVITY = -300.0f; // 重力值，現在是以 px/s² 為單位
+    float GRAVITY = -300.0f; // 重力值，以 px/s² 為單位
     float JUMP_VELOCITY = 360.0f;
     float SMALL_JUMP_VELOCITY = 250.0f;
+
+    std::vector<std::string> AnimationFireLast = {};
 
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/mario0.png",RESOURCE_DIR"/Entities/mario1.png",RESOURCE_DIR"/Entities/mario2.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/marioDead.png"};

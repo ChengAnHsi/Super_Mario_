@@ -13,7 +13,22 @@ void FireballManager::UpdateFireballsAnimation() {
             fireball->Update(1.0f);
         }
     }
+}
 
+void FireballManager::UpdateFireballInvalidState() {
+    if(fireballs.empty() == false) {
+        for (auto& fireball : fireballs) {
+            if (fireball->GetExploded() || fireball->GetExploing()) {
+                continue;
+            }
+            if (fireball->GetPosition().x < -370.0f || fireball->GetPosition().x > 370.0f) {
+                fireball->Exploded();
+            }
+            if (fireball->GetPosition().y < -370.0f) {
+                fireball->Exploded();
+            }
+        }
+    }
 }
 
 std::vector<std::shared_ptr<Util::GameObject>> FireballManager::GetChildren() {
