@@ -162,18 +162,19 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         }
         return false;
     }
-    if (is_shell && !shell_is_moving) {
+    if (is_shell && !shell_is_moving){
         if (min_index == 0 || min_index == 1) {
             return KickShell(mario);
-            }
-            if (min_index == 3) {
-                return true;
-            }else if ((!is_shell || (is_shell && shell_is_moving)) && mario->is_temporarily_invincible == false ) {
+        }
+        if (min_index == 3) {
+            return true;
+        }
+    }else if ((!is_shell || (is_shell && shell_is_moving)) && mario->is_temporarily_invincible == false ) {
                 if (mario->GetLive() > 0) {
                 mario->Die();
             }
     }
-    }
+
     return true;
 }
 void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {

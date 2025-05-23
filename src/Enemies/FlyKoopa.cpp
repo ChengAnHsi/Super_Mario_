@@ -62,7 +62,7 @@ bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     float horizontal_overlap = std::min(mario_right, koopa_right) - std::max(mario_left, koopa_left);
     float horizontal_percentage = horizontal_overlap / std::min(koopa_size.x, mario_size.x);
 
-    if (min_index == 2 && mario_moving_down && horizontal_percentage > 0.4f) {
+    if (min_index == 2 && mario_moving_down && horizontal_percentage > -0.5f) {
         mario->OnKillJump();
         SetVisible(false);
         is_dead = true;

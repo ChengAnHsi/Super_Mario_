@@ -45,6 +45,7 @@ private:
     int live = 1;
     // 被擊倒的分數
     int score = 100;
+
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
     std::vector<std::shared_ptr<Enemy>> other_enemies;
