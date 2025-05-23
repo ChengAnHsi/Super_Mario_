@@ -139,7 +139,7 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     float horizontal_overlap = std::min(mario_right, koopa_right) - std::max(mario_left, koopa_left);
     float horizontal_percentage = horizontal_overlap / std::min(koopa_size.x, mario_size.x);
 
-    if (min_index == 2 && mario_moving_down && horizontal_percentage > 0.4f) {
+    if (min_index == 2 && mario_moving_down && horizontal_percentage > 0.1f) {
         std::shared_ptr<Util::SFX> sound;
         if (!is_shell) {
             TurnToShell();
@@ -178,9 +178,7 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
 }
 void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
     if (!enemy->GetVisible()) return;
-
     std::shared_ptr<Util::SFX> kick_sfx;
-
     if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
         if (!goomba->GetIsDead()) {
             goomba->SetDeadState(DeadState::Hit);
