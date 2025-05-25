@@ -92,7 +92,7 @@ private:
     bool is_left_key_down = false;
     bool is_right_key_down = false;
     bool is_down_key_down = false;
-
+    bool is_run_key_down = false;
     // track death state
     float death_timer = 0.0f; // Time to start jumping
     const float DEATH_PAUSE_TIME = 60.0f; // 1 second at 60fps

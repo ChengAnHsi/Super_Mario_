@@ -591,9 +591,11 @@ float Mario::OnUpdate(const float delta) {
     // update moving
     int direction = is_right_key_down - is_left_key_down;
     if(is_down_key_down) direction = 0;
+
     const float distance = direction * velocityX * delta;
 
-    OnRun(distance);
+    if (is_run_key_down) OnRun(distance*1.75);
+    else OnRun(distance);
 
     isJumping = GravityAndCollision(3 * delta);
 
@@ -628,6 +630,7 @@ float Mario::Move() {
         // clear key down state
         is_left_key_down = false;
         is_right_key_down = false;
+        is_run_key_down = false;
         UpdateDeadState(1.0f);
         return 0.0f; // No camera movement when dead
     }
@@ -635,6 +638,7 @@ float Mario::Move() {
         // clear key down state
         is_left_key_down = false;
         is_right_key_down = false;
+        is_run_key_down = false;
         UpdateGrowingState();
         return 0.0f; // 阻止移動與其他輸入處理
     }
@@ -642,6 +646,7 @@ float Mario::Move() {
         // clear key down state
         is_left_key_down = false;
         is_right_key_down = false;
+        is_run_key_down = false;
         PullFlag();
         return 0.0f;
     }
@@ -662,6 +667,7 @@ float Mario::Move() {
     if (!is_back_to_castle) {
         is_left_key_down = false;
         is_right_key_down = false;
+        is_run_key_down = false;
     }
     if (shoot_fireball_timer < FIREBALL_SHOOT_TIME) {
         if (shoot_fireball_timer == 10) SetImages(AnimationFireLast, 1000, 0);
@@ -685,6 +691,7 @@ float Mario::Move() {
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::LSHIFT) || Util::Input::IsKeyPressed(Util::Keycode::RSHIFT) && !is_back_to_castle) {
         if (is_fire) Fire();
+        is_run_key_down = true;
     }
     if (Util::Input::IsKeyUp(Util::Keycode::LEFT)) {
         is_left_key_down = false;
