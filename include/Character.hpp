@@ -28,17 +28,6 @@ public:
 
     [[nodiscard]] bool IfCollides(const std::shared_ptr<Character>& other) const {
         (void) other;
-        /**float width = 60.0f;
-        float height = 60.0f;
-
-        auto posA = m_Transform.translation;
-        auto posB = other->GetPosition();
-        return (posA.x < posB.x + width &&
-            posA.x + width > posB.x &&
-            posA.y < posB.y + height &&
-            posA.y + height > posB.y);**/
-        //std::cout << this->GetPosition().x << std::endl;
-        //std::cout << this->GetPosition().y << std::endl;
         auto po1 = this->GetPosition();
         auto po2 = this->GetPosition();
         auto po3 = this->GetPosition();
@@ -48,23 +37,23 @@ public:
         po3.y += 95;
         po4.x += 80;
         po4.y += 95;
-        if(po1.x >= po_other.x and po1.x <= po_other.x + 80) {
-            if(po1.y >= po_other.y and po1.y <= po_other.y + 100) {
+        if(po1.x >= po_other.x && po1.x <= po_other.x + 80) {
+            if(po1.y >= po_other.y && po1.y <= po_other.y + 100) {
                 return true;
             }
         }
-        if(po2.x >= po_other.x and po2.x <= po_other.x + 80) {
-            if(po2.y >= po_other.y and po2.y <= po_other.y + 100) {
+        if(po2.x >= po_other.x && po2.x <= po_other.x + 80) {
+            if(po2.y >= po_other.y && po2.y <= po_other.y + 100) {
                 return true;
             }
         }
-        if(po3.x >= po_other.x and po3.x <= po_other.x + 80) {
-            if(po3.y >= po_other.y and po3.y <= po_other.y + 100) {
+        if(po3.x >= po_other.x && po3.x <= po_other.x + 80) {
+            if(po3.y >= po_other.y && po3.y <= po_other.y + 100) {
                 return true;
             }
         }
-        if(po4.x >= po_other.x and po4.x <= po_other.x + 80) {
-            if(po4.y >= po_other.y and po4.y <= po_other.y + 100) {
+        if(po4.x >= po_other.x && po4.x <= po_other.x + 80) {
+            if(po4.y >= po_other.y && po4.y <= po_other.y + 100) {
                 return true;
             }
         }

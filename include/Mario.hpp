@@ -19,6 +19,13 @@ enum class MarioState {
     Squat
 };
 
+enum class DrillState {
+    Left,
+    Right,
+    Up,
+    Down,
+    None
+};
 
 class Mario : public AnimatedCharacter {
 public:
@@ -36,6 +43,7 @@ public:
     float Move();
     float OnUpdate(float delta);
     void Fire();
+    void Die(); // Handle Mario's death sequence
 
     // collision function
     bool AABBCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> box);
@@ -48,7 +56,9 @@ public:
 
     void SetJumpAnimation();
     void UpdateGrowingState();
+    void UpdateDeadState(float delta); // Update function for when Mario is dead
     void PullFlag();
+    void DrillTube();
 
     // getter and setter
     void IncreaseCoin(int coin);
@@ -57,6 +67,7 @@ public:
     [[nodiscard]] int GetLive() const;
     void IncreaseScore(int score);
     [[nodiscard]] int GetScore() const;
+    float GetVelocityY();
     void SetGrow(bool is_grow);
     bool GetGrowing();
     bool GetGrow();
@@ -66,8 +77,14 @@ public:
     bool GetFire();
     void SetPull(bool is_pull);
     bool GetPull();
+    void SetDrill(bool is_drill);
+    bool GetDrill();
+    void SetDrillState(DrillState drill_state);
+    void SetDrillDistance(float drill_tube_dis);
     bool GetBackToCastle();
     bool GetReadyNextPhase();
+    void SetTimeToMoveCamera(bool is_time_to_move_camera_map2);
+    bool GetTimeToMoveCamera();
     void ResetStateForNextPhase();
     void SetFireballManager(std::shared_ptr<FireballManager> FM);
 
@@ -77,11 +94,9 @@ public:
     void ClearCollisionBoxes();
     void ClearCollectibles();
     void ClearCollisionBlocks();
-    float velocityY = 0.0f; // Y axis speed
+
     bool is_dead = false; // game over or not
     bool is_dying = false; // Transitional state between alive and dead
-    void Die(); // Handle Mario's death sequence
-    void UpdateDeadState(float delta); // Update function for when Mario is dead
 
     bool is_temporarily_invincible = false;
 
@@ -113,7 +128,8 @@ private:
     std::vector<std::shared_ptr<BackgroundImage>> collision_collectibles;
     std::shared_ptr<FireballManager> m_FM;
 
-    MarioState state = MarioState::Stand;
+    MarioState mario_state = MarioState::Stand;
+    DrillState drill_state = DrillState::None;
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
 
@@ -127,13 +143,17 @@ private:
     bool is_invincible = false;
 
     bool is_pull = false;
+    bool is_drill = false;
     bool is_back_to_castle = false;
+    bool is_time_to_move_camera_map2 = false;
     bool is_ready_for_next_phase = false;
 
     float delta_time = 1.0f;
-    float back_to_castle_dis = 0;
+    float back_to_castle_dis = 0.0f;
+    float drill_tube_dis = 0.0f;
 
     float velocityX = 5.0f;
+    float velocityY = 0.0f; // Y axis speed
     float GRAVITY = -300.0f; // 重力值，以 px/s² 為單位
     float JUMP_VELOCITY = 360.0f;
     float SMALL_JUMP_VELOCITY = 250.0f;

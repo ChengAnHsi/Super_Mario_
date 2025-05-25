@@ -29,7 +29,7 @@ void App::ResetPhase() {
     // if(m_Phase == Phase::Level1_2) {
     //     m_Mario->SetPosition({-380.0f + 3.0f * BLOCK_SIZE, -240.0f + 7.5 * BLOCK_SIZE});
     // }else {
-    m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -232.0f});
+    m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -222.0f});
     //}
     m_Mario->SetImages({RESOURCE_DIR"/Entities/mario_stand.png"}, 1000, 0);
     m_Mario->m_Transform.scale = {MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
