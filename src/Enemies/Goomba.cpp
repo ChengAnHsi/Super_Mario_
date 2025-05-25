@@ -195,39 +195,54 @@ void Goomba::Action(const float distance) {
             }
             AABBCollides({next_x, goomba_y}, block);
             // check next step will collision or not
-            if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
+            if ((X_state == CollisionState::Left || X_state == CollisionState::Right)) {
+                for (const auto& enemy : other_enemies) {
+                    if (!enemy->GetVisible()) {
+                        break;
+                    }
+
+                    if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
+                        if (goomba->GetIsDead()) {
+                            break;
+                        }
+                    }
+                    if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
+                        if (koopa->GetIsDead()) {
+                            break;
+                        }
+                    }
+                    glm::vec2 original_pos = GetPosition();
+                    SetPosition(next_x, goomba_y);
+                    bool would_collide = CheckEnemyCollision(enemy);
+                    SetPosition(original_pos.x, original_pos.y);
+
+                    if (would_collide) {
+                        collision = true;
+                        break;
+                    }
+                }
                 collision = true;
-                break;
             }
         }
 
         for (const auto& enemy : other_enemies) {
-            // Skip enemies that are not visible or are dead
             if (!enemy->GetVisible()) {
                 continue;
             }
 
-            // If enemy is a Goomba and it's dead, skip collision check
             if (auto goomba = std::dynamic_pointer_cast<Goomba>(enemy)) {
                 if (goomba->GetIsDead()) {
                     continue;
                 }
             }
-
-            // If enemy is a Koopa and it's dead, skip collision check
             if (auto koopa = std::dynamic_pointer_cast<Koopa>(enemy)) {
                 if (koopa->GetIsDead()) {
                     continue;
                 }
             }
-
-            // Temporarily set position to check if next step would cause collision
             glm::vec2 original_pos = GetPosition();
             SetPosition(next_x, goomba_y);
-
             bool would_collide = CheckEnemyCollision(enemy);
-
-            // Reset position
             SetPosition(original_pos.x, original_pos.y);
 
             if (would_collide) {

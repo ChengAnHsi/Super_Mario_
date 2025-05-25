@@ -81,10 +81,10 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
     // Adjust collision box based on Koopa state
     float top_offset = 0.0f;
     if (is_shell) {
-        // Reduce collision height by 1/3 from the top when in shell form
+        // Reduce collision height by 1/10 from the top when in shell form
         top_offset = koopa_size.y / 10.0f;
     } else {
-        // Reduce collision height by 1/2 from the top when walking
+        // Reduce collision height by 1/5 from the top when walking
         top_offset = koopa_size.y / 5.0f;
     }
 
@@ -268,7 +268,7 @@ void Koopa::TurnToShell() {
 }
 
 void Koopa::Action(const float distance) {
-    if (is_shell && !shell_is_moving) return;
+    if ((is_shell && !shell_is_moving ) && TouchGrand ) return;
 
     float Koopa_x = GetPosition().x;
     float Koopa_y = GetPosition().y;
@@ -336,8 +336,7 @@ void Koopa::Action(const float distance) {
     }
 
     // If koopa would fall, turn around
-    if (would_fall && !
-        is_shell) {
+    if (would_fall && ! is_shell &&  TouchGrand && !GravityAndCollision(1)) {
         isFacingRight = !isFacingRight;
         return;
     }
@@ -494,6 +493,7 @@ bool Koopa::GravityAndCollision(const float delta) {
             Koopa_y = box->GetTransform().translation.y + b_size.y / 2 + Koopa_size.y / 2;
             velocityY = 0;
             SetPosition(Koopa_x, Koopa_y);
+            TouchGrand = true;
             return false;
         }
         if (Y_state == CollisionState::Top) {
@@ -513,6 +513,7 @@ bool Koopa::GravityAndCollision(const float delta) {
         collision = CCDDCollides({Koopa_x, Koopa_y}, block);
 
         if (Y_state == CollisionState::Bottom) {
+            TouchGrand = true;
             Koopa_y = block->GetTransform().translation.y + b_size.y / 2 + Koopa_size.y / 2;
             velocityY = 0;
             SetPosition(Koopa_x, Koopa_y);
@@ -572,7 +573,7 @@ void Koopa::OnUpdate(const float delta) {
 
     float distance = GetMoveVelocity() * delta;
     if (!isFacingRight) distance *= -1;
-    if (is_shell) distance *= 3;
+    if (is_shell) distance *= 5;
 
     Action(distance);
 }

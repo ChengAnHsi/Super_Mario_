@@ -66,7 +66,7 @@ bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         mario->OnKillJump();
         SetVisible(false);
         is_dead = true;
-
+        inside_self->SetVelocityY(0.0f);
         inside_self->SetLive(1);
         inside_self->SetVisible(true);
         inside_self->SetPosition(GetPosition().x, GetPosition().y);
@@ -436,13 +436,11 @@ bool FlyKoopa::GravityAndCollision(const float delta) {
         }
 
         if (Y_state == CollisionState::Top) {
-            // 如果碰撞到FlyKoopa的頂部，將其轉換為unfly狀態
             ConvertToUnfly();
         }
     }
     this->SetPosition(FlyKoopa_x, FlyKoopa_y);
 
-    // 如果沒有碰撞，表示在滯空狀態
     return !collision;
 }
 
@@ -481,13 +479,11 @@ void FlyKoopa::OnUpdate(const float delta) {
     float distance = GetMoveVelocity() * delta;
 
     if (!isFlying) {
-        // 標準水平移動邏輯
         if (isFacingRight == false) {
             distance *= -1;
         }
 
-        // 只有在非飛行狀態下才應用重力
-        GravityAndCollision(3 * delta);
+        GravityAndCollision(delta);
     }
 
     UpdateAnimation();
@@ -513,6 +509,7 @@ void FlyKoopa::SetLive(const int live) {
         inside_self->SetLive(0);
         inside_self->SetVisible(true);
         inside_self->SetPosition(GetPosition().x, GetPosition().y);
+        inside_self->SetVelocityY(0.0f);
     }
 
     this->live = live;

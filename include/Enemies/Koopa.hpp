@@ -43,6 +43,7 @@ public:
     [[nodiscard]] int GetLive() const;
 
 private:
+    bool TouchGrand = false;
     std::vector<std::shared_ptr<Enemy>> other_enemies;
     float shell_timer = 0.0f;  // Timer for shell state management
 
