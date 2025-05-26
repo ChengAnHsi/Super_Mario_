@@ -62,13 +62,13 @@ PhaseResourceManger::PhaseResourceManger() {
 bool PhaseResourceManger::CheckMarioCollisionFlag(std::shared_ptr<Mario> mario, int m_phase) {
     if (mario->GetPull() || mario->GetBackToCastle()) return false;
 
-    // todo after finish nextphase 1-2 and 1-3 remove it
-    if (m_phase != 1) return false;
+    // todo after finish nextphase 1-2 remove it
+    if (m_phase == 2) return false;
 
     // m_Background[2][3]: flag
     glm::vec2 a = m_Background[2]->GetPosition();
     glm::vec2 prop_size = m_Background[2]->GetSize();
-    prop_size *= FIREBALL_MAGNIFICATION;
+    prop_size *= 3.0f;
 
     glm::vec2 b = mario->GetPosition();
     glm::vec2 b_size = mario->GetSize();
@@ -95,7 +95,56 @@ bool PhaseResourceManger::CheckMarioCollisionFlag(std::shared_ptr<Mario> mario, 
         return false;
     }
     mario->SetPull(true);
+    // fixed mario position
     mario->SetPosition({m_Background[2]->GetPosition().x - (mario->GetSize().x * MARIO_MAGNIFICATION) / 2, mario->GetPosition().y});
+    return true;
+}
+
+bool PhaseResourceManger::CheckMarioCollisionTube(std::shared_ptr<Mario> mario, int m_phase) {
+    if(m_phase != 2) return false;
+
+    // 1-2 m_CollisionBoxes[0]: horizontal tube
+    glm::vec2 a = m_CollisionBoxes[0]->GetPosition();
+    glm::vec2 prop_size = m_CollisionBoxes[0]->GetSize();
+    prop_size *= tube_magnification[0];
+
+    glm::vec2 b = mario->GetPosition();
+    glm::vec2 b_size = mario->GetSize();
+
+    // * 1.5f to solve detect collision problem
+    b_size.x *= MARIO_MAGNIFICATION * 1.5f;
+    b_size.y *= MARIO_MAGNIFICATION * 1.5f;
+
+    if(b_size.x < 0) b_size.x *= -1;
+    if(b_size.y < 0) b_size.y *= -1;
+
+    float aleft = a.x - prop_size.x / 2;
+    float aright = a.x + prop_size.x / 2;
+    float atop = a.y + prop_size.y / 2;
+    float abottom = a.y - prop_size.y / 2;
+
+    float bleft = b.x - b_size.x / 2;
+    float bright = b.x + b_size.x / 2;
+    float btop = b.y + b_size.y / 2;
+    float bbottom = b.y - b_size.y / 2;
+
+    bool collisionX = (aleft < bright) && (aright > bleft);
+    bool collisionY = (abottom < btop) && (atop > bbottom);
+
+    if (!(collisionX && collisionY)) {
+        return false;
+    }
+    // calculate minimum overlap area
+    float minOverlap = std::min({bright - aleft, aright - bleft,atop - bbottom, btop - abottom});
+
+    // CollisionState == Left
+    if (minOverlap == bright - aleft && !mario->GetDrill()) {
+        mario->SetPosition({m_CollisionBoxes[0]->GetPosition().x, m_CollisionBoxes[0]->GetPosition().y});
+        mario->SetDrill(true);
+        mario->SetDrillState(DrillState::Right);
+        mario->SetDrillDistance(2 * BLOCK_SIZE);
+    }
+
     return true;
 }
 
@@ -105,11 +154,11 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.clear();
         // [0]: blue background image
         m_Background.push_back(std::make_shared<BackgroundImage>());
-        m_Background.back()->NextPhase(m_Phase);
+        m_Background.back()->SetPhaseImgIsOverWorld(true);
+        m_Background.back()->SetPosition(0.0f,0.0f);
         m_Background.back()->SetScale(80.0f,7.0f);
         m_Background.back()->SetZIndex(-50);
-        // [1]: castle is visible
-        // map 1-1 castle
+        // [1]: castle
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/castle.png");
         m_Background.back()->SetPosition(204 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 4 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
@@ -141,25 +190,28 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.clear();
         // [0]: black background image
         m_Background.push_back(std::make_shared<BackgroundImage>());
-        m_Background.back()->NextPhase(m_Phase);
+        m_Background.back()->SetPhaseImgIsOverWorld(false);
+        m_Background.back()->SetPosition(0.0f,0.0f);
         m_Background.back()->SetScale(80.0f,7.0f);
         m_Background.back()->SetZIndex(-50);
-        // [1]: castle???
-        // [2][3]: flag set???
+        // [1]: castle
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/castle.png");
+        m_Background.back()->SetPosition(204 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 19 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(3.0f, 3.0f);
+        // [2][3]: flag set
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/flag-mast.png");
+        m_Background.back()->SetPosition(198 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 23 * BLOCK_SIZE - 385.0f);
+        m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/final-flag.png");
+        m_Background.back()->SetPosition(197.5 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 26 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
 
         // tube & lifting platform init(map 1-2)
         m_CollisionBoxes.clear();
-        for (size_t i = 0; i < collisionboxes_x2.size(); i++) {
-            m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
-            m_CollisionBoxes.back()->SetImage(imagePaths[collisionboxes_imgidx2[i]]);
-            m_CollisionBoxes.back()->SetPosition(collisionboxes_x2[i] * BLOCK_SIZE + tubex_offset[collisionboxes_imgidx2[i]], collisionboxes_y2[i] * BLOCK_SIZE  + tubey_offset[collisionboxes_imgidx2[i]]);
-            m_CollisionBoxes.back()->SetScale(tube_magnification[collisionboxes_imgidx2[i]], tube_magnification[collisionboxes_imgidx2[i]]);
-        }
-        // top tube
-        m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
-        m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-medium-tube.png");
-        m_CollisionBoxes.back()->SetPosition(2 * BLOCK_SIZE + tubex_offset[1], 14 * BLOCK_SIZE + tubey_offset[1]);
-        m_CollisionBoxes.back()->SetScale(tube_magnification[1], -tube_magnification[1]);
         // end horizontal tube
         m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
         m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/horizontal-final-tube.png");
@@ -170,6 +222,18 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-xlarge-tube.png");
         m_CollisionBoxes.back()->SetPosition(168 * BLOCK_SIZE + tubex_offset[0], 11 * BLOCK_SIZE + tubey_offset[2]);
         m_CollisionBoxes.back()->SetScale(tube_magnification[0], tube_magnification[0]);
+        // top tube
+        m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
+        m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-medium-tube.png");
+        m_CollisionBoxes.back()->SetPosition(2 * BLOCK_SIZE + tubex_offset[1], 14 * BLOCK_SIZE + tubey_offset[1]);
+        m_CollisionBoxes.back()->SetScale(tube_magnification[1], -tube_magnification[1]);
+
+        for (size_t i = 0; i < collisionboxes_x2.size(); i++) {
+            m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
+            m_CollisionBoxes.back()->SetImage(imagePaths[collisionboxes_imgidx2[i]]);
+            m_CollisionBoxes.back()->SetPosition(collisionboxes_x2[i] * BLOCK_SIZE + tubex_offset[collisionboxes_imgidx2[i]], collisionboxes_y2[i] * BLOCK_SIZE  + tubey_offset[collisionboxes_imgidx2[i]]);
+            m_CollisionBoxes.back()->SetScale(tube_magnification[collisionboxes_imgidx2[i]], tube_magnification[collisionboxes_imgidx2[i]]);
+        }
 
         // coin init(map 1-2)
         m_CollectibleCoins.clear();
@@ -184,7 +248,8 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.clear();
         // [0]: black background image
         m_Background.push_back(std::make_shared<BackgroundImage>());
-        m_Background.back()->NextPhase(m_Phase);
+        m_Background.back()->SetPhaseImgIsOverWorld(true);
+        m_Background.back()->SetPosition(0.0f,0.0f);
         m_Background.back()->SetScale(80.0f,7.0f);
         m_Background.back()->SetZIndex(-50);
         // [1]: castle is visible
@@ -192,11 +257,16 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background[1]->SetImage(RESOURCE_DIR"/Scenery/castle.png");
         m_Background[1]->SetPosition(202 * BLOCK_SIZE - 320.0f, 4 * BLOCK_SIZE - 325.0f);
         m_Background[1]->SetScale(3.0f, 3.0f);
-        // [2]: flag set
+        // [2][3]: flag set
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background[2]->SetImage(RESOURCE_DIR"/Scenery/flag-mast.png");
-        m_Background[2]->SetPosition(198 * BLOCK_SIZE - 320.0f, 8 * BLOCK_SIZE - 390.0f);
+        m_Background[2]->SetPosition(152 * BLOCK_SIZE - 320.0f, 8 * BLOCK_SIZE - 390.0f);
         m_Background[2]->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/final-flag.png");
+        m_Background.back()->SetPosition(151.5 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 11 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         // TODO append lifting platform to background
         // TODO getter: lifting platform, add them to mario's collision box
         m_CollisionBoxes.clear();

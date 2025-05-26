@@ -102,9 +102,7 @@ void App::Update() {
         m_FM->UpdateFireballInvalidState();
         m_FM->UpdateFireballsAnimation();
         auto fireball = m_FM->GetNewFireball();
-        if (fireball) {
-            m_Root.AddChild(fireball);
-        }
+        if (fireball) m_Root.AddChild(fireball);
         m_Mario->IncreaseScore(m_EM->CheckFireBallCollisionsAndGotPoint(m_FM->GetFireballs()));
     }
 
@@ -123,7 +121,7 @@ void App::Update() {
     }
 
     // lower than ground
-    if(m_Mario->GetPosition().y < -360) {
+    if(m_Mario->GetPosition().y < -360 && !m_Mario->GetTimeToMoveCamera()) {
         m_Mario->is_dying = false;
         m_Mario->SetLive(m_Mario->GetLive() - 1);
         if (m_Mario->GetLive() > 0) {
@@ -143,6 +141,19 @@ void App::Update() {
 
     // move camera
     m_Root.Update({dis,0.0f});
+    // if mario drill tube then move the camera
+    if(m_Mario->GetTimeToMoveCamera()) {
+        // todo after moving right then camera should update to top vision
+        if(!m_Mario->GetDrill()) {
+            m_Root.Update({0,180.0f});
+            m_Mario->SetTimeToMoveCamera(false);
+        }else {
+            m_Mario->SetPosition({m_Mario->GetPosition().x, m_Mario->GetPosition().y + 9 * BLOCK_SIZE});
+            m_Mario->SetDrill(true);
+            m_Mario->SetDrillState(DrillState::Up);
+            m_Mario->SetDrillDistance(4 * BLOCK_SIZE);
+        }
+    }
 
     if (Util::Input::IsKeyUp(Util::Keycode::ESCAPE) || Util::Input::IfExit()) {
         m_CurrentState = State::END;
@@ -153,8 +164,9 @@ void App::Update() {
         m_CurrentState = State::END;
     }
 
-    // todo nextphase 1-2 and 1-3 then remove second parameter
+    // todo after finish next phase 1-2 then remove second parameter
     m_PRM->CheckMarioCollisionFlag(m_Mario, static_cast<int>(m_Phase));
+    m_PRM->CheckMarioCollisionTube(m_Mario, static_cast<int>(m_Phase));
     if (m_Mario->GetReadyNextPhase()) {
         m_PRM->ConvertTimeToScore(m_Mario);
     }

@@ -58,7 +58,7 @@ bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         }
     }
 
-    bool mario_moving_down = mario->velocityY <= 0;
+    bool mario_moving_down = mario->GetVelocityY() <= 0;
     float horizontal_overlap = std::min(mario_right, koopa_right) - std::max(mario_left, koopa_left);
     float horizontal_percentage = horizontal_overlap / std::min(koopa_size.x, mario_size.x);
 

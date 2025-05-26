@@ -99,7 +99,7 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
             return false;
         }
         // Calculate the vertical velocity direction
-        bool mario_moving_down = mario->velocityY <= 0;
+        bool mario_moving_down = mario->GetVelocityY() <= 0;
 
         // Calculate vertical overlap percentage to determine stomping
         float vertical_overlap = std::min(mario_top, goomba_top) - std::max(mario_bottom, goomba_bottom);

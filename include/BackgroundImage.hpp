@@ -11,9 +11,9 @@ public:
     BackgroundImage() : GameObject(std::make_unique<Util::Image>(RESOURCE_DIR"/Scenery/logo.png"), -10) {
     }
 
-    void NextPhase(const int phase) const {
+    void SetPhaseImgIsOverWorld(bool is_overworld) const {
         const auto temp = std::dynamic_pointer_cast<Util::Image>(m_Drawable);
-        if (phase != 2){
+        if (is_overworld){
             temp->SetImage(RESOURCE_DIR"/Scenery/Overworld/sky.png");
         }else{
             // black image

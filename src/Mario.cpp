@@ -18,7 +18,7 @@ void Mario::OnJump() {
     if (!isJumping) {
         velocityY = JUMP_VELOCITY;
         isJumping = true;
-        state = MarioState::Jump;
+        mario_state = MarioState::Jump;
         SetJumpAnimation();
         std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/jump.mp3");
         jump_sfx->SetVolume(25);
@@ -31,7 +31,7 @@ void Mario::OnSmallJump() {
     if (!isJumping) {
         velocityY = SMALL_JUMP_VELOCITY;
         isJumping = true;
-        state = MarioState::Jump;
+        mario_state = MarioState::Jump;
         SetJumpAnimation();
         std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/jump.mp3");
         jump_sfx->SetVolume(25);
@@ -43,7 +43,7 @@ void Mario::OnKillJump() {
     if (is_growing) return;
     velocityY = SMALL_JUMP_VELOCITY;
     isJumping = true;
-    state = MarioState::Jump;
+    mario_state = MarioState::Jump;
     SetJumpAnimation();
 }
 
@@ -352,12 +352,12 @@ void Mario::UpdateAnimation() {
         // if(state != MarioState::Jump) {
         //     this->SetImages(AnimationJump);
         // }
-        state = MarioState::Jump;
+        mario_state = MarioState::Jump;
         return;
     }
     // Standing or running on the ground depending on whether you are moving or not
     if(is_down_key_down) {
-        state = MarioState::Squat;
+        mario_state = MarioState::Squat;
         if(is_grow) {
             if(is_invincible){
                 if (is_fire) {
@@ -378,7 +378,7 @@ void Mario::UpdateAnimation() {
         return;
     }
     if (direction != 0) {
-        if(state != MarioState::Run) {
+        if(mario_state != MarioState::Run) {
             this->SetPlaying(true);
             this->SetLooping(true);
             if(is_grow) {
@@ -406,10 +406,10 @@ void Mario::UpdateAnimation() {
             }
         }
         isRunning = true;
-        state = MarioState::Run;
+        mario_state = MarioState::Run;
         return;
     }
-    if(state != MarioState::Stand) {
+    if(mario_state != MarioState::Stand) {
         this->SetPlaying(true);
         this->SetLooping(true);
         if (is_grow) {
@@ -437,18 +437,7 @@ void Mario::UpdateAnimation() {
         }
     }
     isRunning = false;
-    state = MarioState::Stand;
-}
-
-void Mario::PullFlag() {
-    if (GetPosition().y >= -360.0f + 3 * BLOCK_SIZE + GetSize().y * MARIO_MAGNIFICATION) {
-        this->SetPosition({GetPosition().x, GetPosition().y - 1.0f});
-    }else {
-        this->SetPosition({GetPosition().x, GetPosition().y + BLOCK_SIZE / 2});
-        m_Transform.scale = glm::vec2{-MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
-        is_pull = false;
-        is_back_to_castle = true;
-    }
+    mario_state = MarioState::Stand;
 }
 
 void Mario::SetJumpAnimation() {
@@ -527,6 +516,50 @@ void Mario::UpdateGrowingState() {
         }
         this->SetLooping(true);
         is_growing = false;
+    }
+}
+
+void Mario::PullFlag() {
+    if (GetPosition().y >= -360.0f + 3 * BLOCK_SIZE + GetSize().y * MARIO_MAGNIFICATION) {
+        this->SetPosition({GetPosition().x, GetPosition().y - 1.0f});
+    }else {
+        this->SetPosition({GetPosition().x, GetPosition().y + BLOCK_SIZE / 2});
+        m_Transform.scale = glm::vec2{-MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
+        is_pull = false;
+        is_back_to_castle = true;
+    }
+}
+
+void Mario::DrillTube() {
+    if(drill_tube_dis != 0 && drill_state != DrillState::None) drill_tube_dis -= 1.0f;
+    switch (drill_state){
+        case DrillState::Up:{
+            this->SetPosition({GetPosition().x, GetPosition().y + 1.0f});
+            break;
+        }
+        case DrillState::Down:{
+            this->SetPosition({GetPosition().x, GetPosition().y - 1.0f});
+            break;
+        }
+        case DrillState::Left:{
+            m_Transform.scale = glm::vec2{-MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
+            this->SetPosition({GetPosition().x - 1.0f, GetPosition().y});
+            break;
+        }
+        case DrillState::Right:{
+            m_Transform.scale = glm::vec2{MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
+            this->SetPosition({GetPosition().x + 1.0f, GetPosition().y});
+            break;
+        }
+        default:{
+            break;
+        }
+    }
+    if(drill_tube_dis == 0.0f) {
+        if(drill_state == DrillState::Right) is_time_to_move_camera_map2 = true;
+        drill_state = DrillState::None;
+        is_drill = false;
+        // just for map 1-2
     }
 }
 
@@ -610,19 +643,11 @@ void Mario::Fire() {
     SetImages({RESOURCE_DIR"/Entities/mario_fire_throw.png"}, 1000, 0);
 
     auto fball = std::make_shared<Fireball>();
-    if (isFacingRight) {
-        fball->SetPosition(GetPosition().x, GetPosition().y - BLOCK_SIZE / 4);
-    }else {
-        fball->SetPosition(GetPosition().x, GetPosition().y - BLOCK_SIZE / 4);
-    }
+    fball->SetPosition(GetPosition().x, GetPosition().y - BLOCK_SIZE / 4);
     fball->AddCollisionBlocks(collision_blocks);
     fball->AddCollisionBoxes(collision_boxes);
     fball->SetFacingRight(isFacingRight);
     m_FM->AddFireball(fball);
-}
-
-void Mario::SetFireballManager(std::shared_ptr<FireballManager> FM) {
-    this->m_FM = FM;
 }
 
 float Mario::Move() {
@@ -632,22 +657,27 @@ float Mario::Move() {
         is_right_key_down = false;
         is_run_key_down = false;
         UpdateDeadState(1.0f);
-        return 0.0f; // No camera movement when dead
+        return 0.0f;
     }
     if (is_growing) {
-        // clear key down state
         is_left_key_down = false;
         is_right_key_down = false;
         is_run_key_down = false;
         UpdateGrowingState();
-        return 0.0f; // 阻止移動與其他輸入處理
+        return 0.0f;
     }
     if (is_pull) {
-        // clear key down state
         is_left_key_down = false;
         is_right_key_down = false;
         is_run_key_down = false;
         PullFlag();
+        return 0.0f;
+    }
+    if(is_drill) {
+        is_left_key_down = false;
+        is_right_key_down = false;
+        DrillTube();
+        if(drill_state == DrillState::Right) return 1.0f;
         return 0.0f;
     }
     if (is_temporarily_invincible) {
@@ -669,6 +699,7 @@ float Mario::Move() {
         is_right_key_down = false;
         is_run_key_down = false;
     }
+
     if (shoot_fireball_timer < FIREBALL_SHOOT_TIME) {
         if (shoot_fireball_timer == 10) SetImages(AnimationFireLast, 1000, 0);
         shoot_fireball_timer += delta_time;
@@ -714,7 +745,7 @@ float Mario::Move() {
         }
     }
     // test locate to center
-    if (Util::Input::IsKeyDown(Util::Keycode::A)) SetPosition({-20.0f, 0.0f});
+    if (Util::Input::IsKeyDown(Util::Keycode::A)) SetPosition({160.0f, 200.0f});
 
     return OnUpdate(1);
 }
@@ -751,6 +782,22 @@ bool Mario::GetPull() {
     return is_pull;
 }
 
+void Mario::SetDrill(bool is_drill) {
+    this->is_drill = is_drill;
+}
+
+bool Mario::GetDrill() {
+    return is_drill;
+}
+
+void Mario::SetDrillState(DrillState drill_state) {
+    this->drill_state = drill_state;
+}
+
+void Mario::SetDrillDistance(float drill_tube_dis) {
+    this->drill_tube_dis = drill_tube_dis;
+}
+
 void Mario::SetInvincible(bool is_invincible) {
     this->is_invincible = is_invincible;
     if(is_invincible) {
@@ -767,6 +814,10 @@ bool Mario::GetFire() {
     return is_fire;
 }
 
+void Mario::SetFireballManager(std::shared_ptr<FireballManager> FM) {
+    this->m_FM = FM;
+}
+
 bool Mario::GetBackToCastle() {
     return is_back_to_castle;
 }
@@ -775,11 +826,23 @@ bool Mario::GetReadyNextPhase() {
     return is_ready_for_next_phase;
 }
 
+bool Mario::GetTimeToMoveCamera() {
+    return is_time_to_move_camera_map2;
+}
+
+void Mario::SetTimeToMoveCamera(bool is_time_to_move_camera_map2) {
+    this->is_time_to_move_camera_map2 = is_time_to_move_camera_map2;
+}
+
 void Mario::ResetStateForNextPhase() {
     SetVisible(true);
     is_pull = false;
     is_back_to_castle = false;
     is_ready_for_next_phase = false;
+}
+
+float Mario::GetVelocityY() {
+    return velocityY;
 }
 
 void Mario::IncreaseCoin(const int coin) {

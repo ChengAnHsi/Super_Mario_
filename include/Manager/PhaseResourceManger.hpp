@@ -41,6 +41,8 @@ public:
 
     void NextPhase(int m_phase);
     bool CheckMarioCollisionFlag(std::shared_ptr<Mario> mario, int m_phase);
+    // 1-2
+    bool CheckMarioCollisionTube(std::shared_ptr<Mario> mario, int m_phase);
     // fixed texts
     void ResetPosition(float dis) const;
 
