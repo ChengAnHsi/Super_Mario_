@@ -627,14 +627,16 @@ float Mario::OnUpdate(const float delta) {
 
     const float distance = direction * velocityX * delta;
 
-    if (is_run_key_down) OnRun(distance*1.75);
+    if (is_run_key_down) OnRun(distance*1.35);
     else OnRun(distance);
 
     isJumping = GravityAndCollision(3 * delta);
 
     UpdateAnimation();
 
-    return distance;
+    if (is_run_key_down) return  distance*1.35;
+    else return distance;
+
 }
 
 void Mario::Fire() {
@@ -708,10 +710,10 @@ float Mario::Move() {
     if (Util::Input::IsKeyPressed(Util::Keycode::DOWN) && is_grow && !is_back_to_castle) {
         is_down_key_down = true;
     }
-    if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)) {
+    if (Util::Input::IsKeyPressed(Util::Keycode::LEFT)&& !is_back_to_castle) {
         is_left_key_down = true;
     }
-    if (Util::Input::IsKeyPressed(Util::Keycode::RIGHT)) {
+    if (Util::Input::IsKeyPressed(Util::Keycode::RIGHT)&& !is_back_to_castle) {
         is_right_key_down = true;
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::UP) && !is_back_to_castle) {
@@ -722,7 +724,12 @@ float Mario::Move() {
     }
     if (Util::Input::IsKeyPressed(Util::Keycode::LSHIFT) || Util::Input::IsKeyPressed(Util::Keycode::RSHIFT) && !is_back_to_castle) {
         if (is_fire) Fire();
-        is_run_key_down = true;
+        if (isJumping && is_run_key_down);
+        else is_run_key_down = true;
+    }
+    if (Util::Input::IsKeyUp(Util::Keycode::LSHIFT)||Util::Input::IsKeyUp(Util::Keycode::RSHIFT)){
+        if (isJumping)is_run_key_down=is_run_key_down;
+        else is_run_key_down = false;
     }
     if (Util::Input::IsKeyUp(Util::Keycode::LEFT)) {
         is_left_key_down = false;

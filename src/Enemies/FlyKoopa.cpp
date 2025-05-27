@@ -510,6 +510,7 @@ void FlyKoopa::SetLive(const int live) {
         inside_self->SetVisible(true);
         inside_self->SetPosition(GetPosition().x, GetPosition().y);
         inside_self->SetVelocityY(0.0f);
+        inside_self->SetDeadState(DeadState::Hit);
     }
 
     this->live = live;
