@@ -112,7 +112,7 @@ void Mario::OnRun(const float distance) {
         }
 
         mario_x = next_x;
-        this->SetPosition({ mario_x, mario_y });
+        this->SetPosition(mario_x, mario_y);
         remaining_distance -= step_distance;
     }
 }
@@ -224,13 +224,13 @@ bool Mario::GravityAndCollision(const float delta) {
             // 固定瑪利歐在地板位置
             mario_y = box->GetTransform().translation.y + b_size.y / 2 + mario_size.y / 2;
             velocityY = 0;
-            this->SetPosition({ mario_x, mario_y });
+            this->SetPosition(mario_x, mario_y);
             return false;  // 碰撞到地面，不在滯空狀態
         }
         if(Y_state == CollisionState::Top) {
             // 固定在方塊下方開始下墜
             mario_y = box->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
-            this->SetPosition({ mario_x, mario_y });
+            this->SetPosition(mario_x, mario_y);
             break;
         }
     }
@@ -264,7 +264,7 @@ bool Mario::GravityAndCollision(const float delta) {
             // 固定瑪利歐在地板位置
             mario_y = block->GetTransform().translation.y + b_size.y / 2 + mario_size.y / 2;
             velocityY = 0;
-            this->SetPosition({ mario_x, mario_y });
+            this->SetPosition(mario_x, mario_y);
             return false;  // 碰撞到地面，不在滯空狀態
         }
 
@@ -286,7 +286,7 @@ bool Mario::GravityAndCollision(const float delta) {
             }
             // 固定在方塊下方開始下墜
             mario_y = block->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
-            this->SetPosition({ mario_x, mario_y });
+            this->SetPosition(mario_x, mario_y);
             break;
         }
     }
@@ -327,7 +327,7 @@ bool Mario::GravityAndCollision(const float delta) {
         return true;
     }
 
-    this->SetPosition({ mario_x, mario_y });
+    this->SetPosition(mario_x, mario_y);
 
     // 如果沒有碰撞，表示在滯空狀態
     return !collision;
@@ -476,7 +476,7 @@ void Mario::SetGrowingAnimation() {
     float mario_y = this->GetPosition().y;
 
     float height_offset = (32.0f - 16.0f) / 2.0f * MARIO_MAGNIFICATION;
-    this->SetPosition({mario_x, mario_y + height_offset});
+    this->SetPosition(mario_x, mario_y + height_offset);
 
     if(is_invincible) {
         if (is_fire) {
@@ -521,9 +521,9 @@ void Mario::UpdateGrowingState() {
 
 void Mario::PullFlag() {
     if (GetPosition().y >= -360.0f + 3 * BLOCK_SIZE + GetSize().y * MARIO_MAGNIFICATION) {
-        this->SetPosition({GetPosition().x, GetPosition().y - 1.0f});
+        this->SetPosition(GetPosition().x, GetPosition().y - 1.0f);
     }else {
-        this->SetPosition({GetPosition().x, GetPosition().y + BLOCK_SIZE / 2});
+        this->SetPosition(GetPosition().x, GetPosition().y + BLOCK_SIZE / 2);
         m_Transform.scale = glm::vec2{-MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
         is_pull = false;
         is_back_to_castle = true;
@@ -534,21 +534,21 @@ void Mario::DrillTube() {
     if(drill_tube_dis != 0 && drill_state != DrillState::None) drill_tube_dis -= 1.0f;
     switch (drill_state){
         case DrillState::Up:{
-            this->SetPosition({GetPosition().x, GetPosition().y + 1.0f});
+            this->SetPosition(GetPosition().x, GetPosition().y + 1.0f);
             break;
         }
         case DrillState::Down:{
-            this->SetPosition({GetPosition().x, GetPosition().y - 1.0f});
+            this->SetPosition(GetPosition().x, GetPosition().y - 1.0f);
             break;
         }
         case DrillState::Left:{
             m_Transform.scale = glm::vec2{-MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
-            this->SetPosition({GetPosition().x - 1.0f, GetPosition().y});
+            this->SetPosition(GetPosition().x - 1.0f, GetPosition().y);
             break;
         }
         case DrillState::Right:{
             m_Transform.scale = glm::vec2{MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
-            this->SetPosition({GetPosition().x + 1.0f, GetPosition().y});
+            this->SetPosition(GetPosition().x + 1.0f, GetPosition().y);
             break;
         }
         default:{
@@ -616,7 +616,7 @@ void Mario::UpdateDeadState(float delta) {
 
         float mario_x = GetPosition().x;
         float mario_y = GetPosition().y + velocityY * (delta / 60.0f);
-        this->SetPosition({mario_x, mario_y});
+        this->SetPosition(mario_x, mario_y);
     }
 }
 
@@ -745,7 +745,7 @@ float Mario::Move() {
         }
     }
     // test locate to center
-    if (Util::Input::IsKeyDown(Util::Keycode::A)) SetPosition({160.0f, 200.0f});
+    if (Util::Input::IsKeyDown(Util::Keycode::A)) SetPosition(160.0f, 200.0f);
 
     return OnUpdate(1);
 }

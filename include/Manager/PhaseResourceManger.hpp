@@ -40,11 +40,11 @@ public:
     };
 
     void NextPhase(int m_phase);
-    bool CheckMarioCollisionFlag(std::shared_ptr<Mario> mario, int m_phase);
+    bool CheckMarioCollisionFlag(std::shared_ptr<Mario> mario);
     // 1-2
-    bool CheckMarioCollisionTube(std::shared_ptr<Mario> mario, int m_phase);
+    bool CheckMarioCollisionTube(std::shared_ptr<Mario> mario);
     // fixed texts
-    void ResetPosition(float dis) const;
+    void ResetPosition(float disx, float disy) const;
 
     void DecreaseTime();
     void ConvertTimeToScore(std::shared_ptr<Mario> mario);

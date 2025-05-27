@@ -24,7 +24,10 @@ public:
 
     void SetImage(const std::string& ImagePath);
 
-    void SetPosition(const glm::vec2& Position) { m_Transform.translation = Position; }
+    void SetPosition(float posx, float posy) {
+        m_Transform.translation.x = posx;
+        m_Transform.translation.y = posy;
+    }
 
     [[nodiscard]] bool IfCollides(const std::shared_ptr<Character>& other) const {
         (void) other;

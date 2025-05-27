@@ -43,7 +43,10 @@ public:
         }
     }
 
-    void SetPosition(const glm::vec2& Position) { m_Transform.translation = Position; }
+    void SetPosition(float posx, float posy) {
+        m_Transform.translation.x = posx;
+        m_Transform.translation.y = posy;
+    }
 
     [[nodiscard]] const glm::vec2& GetPosition() const { return m_Transform.translation; }
 

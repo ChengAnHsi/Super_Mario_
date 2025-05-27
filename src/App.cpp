@@ -12,7 +12,7 @@ void App::Start() {
     LOG_TRACE("Start");
     std::vector<std::string> marioImages = {RESOURCE_DIR"/Entities/mario_stand.png"};
     m_Mario = std::make_shared<Mario>(0,3,0,marioImages);
-    m_Mario->SetPosition({-380.0f + 2.5f * BLOCK_SIZE, -232.0f});
+    m_Mario->SetPosition(-380.0f + 2.5f * BLOCK_SIZE, -232.0f);
     m_Mario->SetZIndex(50);
     m_Mario->SetPlaying(true);
     m_Mario->SetLooping(true);
@@ -27,7 +27,7 @@ void App::Start() {
     }
     m_Coin = std::make_shared<AnimatedCharacter>(coinImages);
     m_Coin->SetImages(coinImages, 1000, 0);
-    m_Coin->SetPosition({-135.f, 285.f});
+    m_Coin->SetPosition(-135.f, 285.f);
     m_Coin->SetZIndex(5);
     m_Coin->SetPlaying(false);
     m_Coin->m_Transform.scale = glm::vec2(MARIO_MAGNIFICATION, MARIO_MAGNIFICATION);
@@ -117,7 +117,7 @@ void App::Update() {
     // to solve mario left margin
     if(m_Mario->GetPosition().x < -360) {
         // Correct offset
-        m_Mario->SetPosition({-360, m_Mario->GetPosition().y});
+        m_Mario->SetPosition(-360, m_Mario->GetPosition().y);
     }
 
     // lower than ground
@@ -136,23 +136,24 @@ void App::Update() {
     camera_movement_dis += dis;
 
     // fixed position
-    m_PRM->ResetPosition(dis);
+    m_PRM->ResetPosition(dis, 0);
     m_Coin->m_Transform.translation.x += dis;
 
     // move camera
     m_Root.Update({dis,0.0f});
     // if mario drill tube then move the camera
     if(m_Mario->GetTimeToMoveCamera()) {
-        // todo after moving right then camera should update to top vision
-        if(!m_Mario->GetDrill()) {
-            m_Root.Update({0,180.0f});
-            m_Mario->SetTimeToMoveCamera(false);
-        }else {
-            m_Mario->SetPosition({m_Mario->GetPosition().x, m_Mario->GetPosition().y + 9 * BLOCK_SIZE});
-            m_Mario->SetDrill(true);
-            m_Mario->SetDrillState(DrillState::Up);
-            m_Mario->SetDrillDistance(4 * BLOCK_SIZE);
-        }
+        // todo update 1-2 background sky image(blue)
+        m_Mario->SetPosition(m_Mario->GetPosition().x, m_Mario->GetPosition().y + 9 * BLOCK_SIZE);
+        m_Mario->SetDrill(true);
+        m_Mario->SetDrillState(DrillState::Up);
+        m_Mario->SetDrillDistance(4 * BLOCK_SIZE);
+
+        // fix pos
+        m_Root.Update({360.0f + BLOCK_SIZE,720.0f});
+        m_PRM->ResetPosition(360.0f + BLOCK_SIZE, 720.0f);
+        m_Coin->SetPosition(m_Coin->GetPosition().x + 360.0f + BLOCK_SIZE, m_Coin->GetPosition().y + 720.0f);
+        m_Mario->SetTimeToMoveCamera(false);
     }
 
     if (Util::Input::IsKeyUp(Util::Keycode::ESCAPE) || Util::Input::IfExit()) {
@@ -164,9 +165,8 @@ void App::Update() {
         m_CurrentState = State::END;
     }
 
-    // todo after finish next phase 1-2 then remove second parameter
-    m_PRM->CheckMarioCollisionFlag(m_Mario, static_cast<int>(m_Phase));
-    m_PRM->CheckMarioCollisionTube(m_Mario, static_cast<int>(m_Phase));
+    m_PRM->CheckMarioCollisionFlag(m_Mario);
+    if(!m_Mario->GetDrill() && m_Phase == Phase::Level1_2) m_PRM->CheckMarioCollisionTube(m_Mario);
     if (m_Mario->GetReadyNextPhase()) {
         m_PRM->ConvertTimeToScore(m_Mario);
     }
