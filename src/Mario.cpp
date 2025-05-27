@@ -627,15 +627,15 @@ float Mario::OnUpdate(const float delta) {
 
     const float distance = direction * velocityX * delta;
 
-    if (is_run_key_down) OnRun(distance*1.35);
+    if (is_run_key_down) OnRun(distance * 1.35);
     else OnRun(distance);
 
     isJumping = GravityAndCollision(3 * delta);
 
     UpdateAnimation();
 
-    if (is_run_key_down) return  distance*1.35;
-    else return distance;
+    if (is_run_key_down) return distance * 1.35;
+    return distance;
 
 }
 
