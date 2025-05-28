@@ -71,7 +71,7 @@ bool Koopa::CheckEnemyCollision(std::shared_ptr<Enemy> enemy) {
 }
 
 bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
-    if (is_dead || !GetVisible() || mario->is_dying) return false;
+    if (is_dead || !GetVisible() || mario->GetDying()) return false;
 
     glm::vec2 koopa_pos = GetPosition();
     glm::vec2 koopa_size = m_Drawable->GetSize() * KOOPA_MAGNIFICATION;
@@ -169,7 +169,7 @@ bool Koopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         if (min_index == 3) {
             return true;
         }
-    }else if ((!is_shell || (is_shell && shell_is_moving)) && mario->is_temporarily_invincible == false ) {
+    }else if ((!is_shell || (is_shell && shell_is_moving)) && mario->GetTempInvincible() == false ) {
                 if (mario->GetLive() > 0) {
                 mario->Die();
             }

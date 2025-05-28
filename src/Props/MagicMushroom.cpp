@@ -5,7 +5,7 @@ void MagicMushroom::AfterCollisionEvents(std::shared_ptr<Mario> mario){
     if(state == PropsState::After_Activated) return;
     if(state == PropsState::Active) {
         SetVisible(false);
-        // todo if state is grow then add point
+        mario->IncreaseScore(1000);
         mario->SetGrowingAnimation();
         state = PropsState::After_Activated;
     }

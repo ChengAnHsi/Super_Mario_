@@ -17,15 +17,14 @@ public:
     void SetInsidePropType(PROP_TYPE prop_type, PROP_TYPE prop_type2);
     void SetChooseProp(bool choose1prop);
     std::vector<PROP_TYPE> GetInsidePropType();
-    void SetProps(std::shared_ptr<Props> prop1, std::shared_ptr<Props> prop2, bool multipleProps = false);
+    void SetProps(std::shared_ptr<Props> prop1, std::shared_ptr<Props> prop2);
     std::shared_ptr<Props> GetProps();
 private:
-    std::shared_ptr<Props> inside_prop1;
-    std::shared_ptr<Props> inside_prop2;
-    PROP_TYPE inside_prop_type;
-    PROP_TYPE inside_prop_type2;
+    std::shared_ptr<Props> inside_prop1 = nullptr;
+    std::shared_ptr<Props> inside_prop2 = nullptr;
+    PROP_TYPE inside_prop_type = PROP_TYPE::None;
+    PROP_TYPE inside_prop_type2 = PROP_TYPE::None;
     bool choose_1prop = true;
-    bool hasMultipleProps;
 };
 
 #endif //MYSTERYBLOCK_HPP

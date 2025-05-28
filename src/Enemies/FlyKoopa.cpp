@@ -4,7 +4,7 @@
 #include "Util/SFX.hpp"
 
 bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
-    if (is_dead || !GetVisible() || mario->is_dying) return false;
+    if (is_dead || !GetVisible() || mario->GetDying()) return false;
 
     glm::vec2 koopa_pos = GetPosition();
     glm::vec2 koopa_size = m_Drawable->GetSize() * KOOPA_MAGNIFICATION;
@@ -72,7 +72,7 @@ bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         inside_self->SetPosition(GetPosition().x, GetPosition().y);
         return false;
     }
-    if (mario->is_temporarily_invincible == false )  {
+    if (mario->GetTempInvincible() == false )  {
         if (mario->GetLive() > 0) {
             mario->Die();
         }

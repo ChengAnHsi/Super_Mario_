@@ -5,10 +5,8 @@ void FireFlower::AfterCollisionEvents(std::shared_ptr<Mario> mario){
     if(state == PropsState::After_Activated) return;
     if(state == PropsState::Active) {
         SetVisible(false);
-        // todo mario state change, if state is flower then add point
-        if (mario->GetFire()) {
-            mario->IncreaseScore(1000);
-        }else {
+        mario->IncreaseScore(1000);
+        if (!mario->GetFire()) {
             if (mario->GetGrow()) {
                 mario->SetFire(true);
             }else {
@@ -21,9 +19,9 @@ void FireFlower::AfterCollisionEvents(std::shared_ptr<Mario> mario){
 
 void FireFlower::SpawnProps() {
     state = PropsState::Spawning;
-    // 對道具大小作偏移 10.0f
+    // 對道具大小做偏移 10.0f
     remaining_distance = BLOCK_SIZE - 10.0f;
-    velocityY = 3.0f; // 向上速度
+    velocityY = 3.0f;
 }
 
 void FireFlower::Update(float dt) {
@@ -43,113 +41,6 @@ void FireFlower::Update(float dt) {
     } else if (state == PropsState::Moving) {
         Move();
     }
-}
-
-void FireFlower::Action(const float distance) {
-    float goomba_x = GetPosition().x;
-    float goomba_y = GetPosition().y;
-    glm::vec2 goomba_size = m_Drawable->GetSize();
-    goomba_size *= GOOMBA_MAGNIFICATION;
-
-    const float step = BLOCK_SIZE / 4.0f;
-    float remaining_distance = distance;
-    float step_distance = std::min(step, std::abs(distance));
-
-    // go left or right
-    if (!isFacingRight){
-        step_distance *= -1;
-    }
-
-    bool collision = false;
-    while (std::abs(remaining_distance) > 0.0f) {
-        float step_distance = (remaining_distance > 0.0f) ? std::min(step, remaining_distance)
-                                                          : std::max(-step, remaining_distance);
-        float next_x = goomba_x + step_distance;  // 計算下一幀位置
-
-        for (const auto& box : collision_boxes) {
-            // box had already destroyed
-            if (box->GetVisible() == false) {
-                continue;
-            }
-            AABBCollides({next_x, goomba_y}, box);
-            // check next step will collision or not
-            if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
-                collision = true;
-                break;
-            }
-        }
-        // if next step will collision, then do not move
-        if (collision) {
-            break;
-        }
-        for (const auto& block : collision_blocks) {
-            // box had already destroyed
-            if (block->GetVisible() == false) {
-                continue;
-            }
-            AABBCollides({next_x, goomba_y}, block);
-            // check next step will collision or not
-            if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
-                collision = true;
-                break;
-            }
-        }
-        // if next step will collision, then do not move
-        if (collision) {
-            break;
-        }
-
-        goomba_x = next_x;
-        this->SetPosition(goomba_x, goomba_y);
-        remaining_distance -= step_distance;
-    }
-
-    // 如果發生碰撞，反轉方向
-    if (collision) {
-        isFacingRight = not isFacingRight;
-    }
-}
-
-bool FireFlower::AABBCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundImage> box) {
-    glm::vec2 a = char_pos;
-    glm::vec2 prop_size = m_Drawable->GetSize();
-    prop_size *= PROP_MAGNIFICATION;
-
-    glm::vec2 b = box->m_Transform.translation;
-    glm::vec2 b_size = box->GetSize();
-
-    b_size.x *= box->GetScale().x;
-    b_size.y *= box->GetScale().y;
-    if(b_size.x < 0) b_size.x *= -1;
-    if(b_size.y < 0) b_size.y *= -1;
-
-    X_state = CollisionState::None;
-    float aleft = a.x - prop_size.x / 2;
-    float aright = a.x + prop_size.x / 2;
-    float atop = a.y + prop_size.y / 2;
-    float abottom = a.y - prop_size.y / 2;
-
-    float bleft = b.x - b_size.x / 2;
-    float bright = b.x + b_size.x / 2;
-    float btop = b.y + b_size.y / 2;
-    float bbottom = b.y - b_size.y / 2;
-
-    float EPSILON = 0.0f;  // 允許 0.0 pixel 誤差
-
-    bool collisionX = (aleft < bright - EPSILON) && (aright > bleft + EPSILON);
-    bool collisionY = (abottom < btop - EPSILON) && (atop > bbottom + EPSILON);
-
-    if (!(collisionX && collisionY)) {
-        return false;
-    }
-
-    // calculate minimum overlap area
-    float minOverlap = std::min({bright - aleft, aright - bleft});
-
-    if (minOverlap == bright - aleft) X_state = CollisionState::Left;
-    else if (minOverlap == aright - bleft) X_state = CollisionState::Right;
-
-    return X_state != CollisionState::None;
 }
 
 bool FireFlower::CCDDCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundImage> box) {
@@ -176,14 +67,10 @@ bool FireFlower::CCDDCollides(glm::vec2 char_pos, std::shared_ptr<BackgroundImag
     float btop = b.y + b_size.y / 2;
     float bbottom = b.y - b_size.y / 2;
 
-    float EPSILON = 0.0f;  // 允許 0.0 pixel 誤差
+    bool collisionX = aleft < bright && aright > bleft;
+    bool collisionY = abottom < btop && atop > bbottom;
 
-    bool collisionX = (aleft < bright - EPSILON) && (aright > bleft + EPSILON);
-    bool collisionY = (abottom < btop - EPSILON) && (atop > bbottom + EPSILON);
-
-    if (!(collisionX && collisionY)) {
-        return false;
-    }
+    if (!(collisionX && collisionY)) return false;
 
     // calculate minimum overlap area
     float minOverlap = std::min({atop - bbottom, btop - abottom});
@@ -255,21 +142,7 @@ bool FireFlower::GravityAndCollision(const float delta) {
 }
 
 void FireFlower::OnUpdate(const float delta) {
-    float distance = velocityX * delta;
-
-    // facing left
-    if (isFacingRight == false) {
-        //m_Transform.scale = glm::vec2{-GOOMBA_MAGNIFICATION, GOOMBA_MAGNIFICATION};
-        distance *= -1;
-    }
-    // facing right
-    if (isFacingRight == true)  {
-        //m_Transform.scale = glm::vec2{GOOMBA_MAGNIFICATION, GOOMBA_MAGNIFICATION};
-    }
-
     GravityAndCollision(3 * delta);
-
-    Action(distance);
 }
 
 void FireFlower::Move(){

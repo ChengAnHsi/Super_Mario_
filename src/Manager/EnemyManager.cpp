@@ -106,7 +106,7 @@ std::vector<int> EnemyManager::Getidx(int phase){
 void EnemyManager::SetEnemyMoving(){
     for (const auto& enemy : m_Enemies){
         // map size divide by 2 = 360
-        if (enemy->GetPosition().x < 360){
+        if (enemy->GetPosition().x < 370){
             enemy->SetMoving(true);
         }
         enemy->Move();

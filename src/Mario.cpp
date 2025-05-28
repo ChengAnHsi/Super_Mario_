@@ -20,7 +20,7 @@ void Mario::OnJump() {
         isJumping = true;
         mario_state = MarioState::Jump;
         SetJumpAnimation();
-        std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/jump.mp3");
+        const auto jump_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/jump.mp3");
         jump_sfx->SetVolume(25);
         jump_sfx->Play();
     }
@@ -33,7 +33,7 @@ void Mario::OnSmallJump() {
         isJumping = true;
         mario_state = MarioState::Jump;
         SetJumpAnimation();
-        std::shared_ptr<Util::SFX> jump_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/jump.mp3");
+        const auto jump_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/jump.mp3");
         jump_sfx->SetVolume(25);
         jump_sfx->Play();
     }
@@ -71,7 +71,7 @@ void Mario::OnRun(const float distance) {
             if (box->GetVisible() == false) {
                 continue;
             }
-            AABBCollides({next_x, mario_y}, box);
+            CollidesAndSetDirection({next_x, mario_y}, box, true);
             // check next step will collision or not
             if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
                 collision = true;
@@ -87,7 +87,7 @@ void Mario::OnRun(const float distance) {
             if (block->GetVisible() == false) {
                 continue;
             }
-            AABBCollides({next_x, mario_y}, block);
+            CollidesAndSetDirection({next_x, mario_y}, block, true);
             // check next step will collision or not
             if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
                 collision = true;
@@ -105,7 +105,7 @@ void Mario::OnRun(const float distance) {
             if (collectible->GetVisible() == false) {
                 continue;
             }
-            if (AABBCollides({next_x, mario_y}, collectible)) {
+            if (CollidesAndSetDirection({next_x, mario_y}, collectible, true)) {
                 IncreaseCoin(1);
                 collectible->SetVisible(false);
             }
@@ -117,12 +117,12 @@ void Mario::OnRun(const float distance) {
     }
 }
 
-bool Mario::AABBCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> box) {
-    glm::vec2 a = mario_pos;
-    glm::vec2 mario_size = this->m_Drawable->GetSize();
-    mario_size *= MARIO_MAGNIFICATION;
+bool Mario::CollidesAndSetDirection(const glm::vec2 mario_pos, const std::shared_ptr<BackgroundImage>& box, const bool is_checkX) {
+    const glm::vec2 a = mario_pos;
+    glm::vec2 a_size = this->m_Drawable->GetSize();
+    a_size *= MARIO_MAGNIFICATION;
 
-    glm::vec2 b = box->m_Transform.translation;
+    const glm::vec2 b = box->m_Transform.translation;
     glm::vec2 b_size = box->GetSize();
 
     b_size.x *= box->GetScale().x;
@@ -130,71 +130,44 @@ bool Mario::AABBCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> b
     if(b_size.x < 0) b_size.x *= -1;
     if(b_size.y < 0) b_size.y *= -1;
 
-    X_state = CollisionState::None;
-    float aleft = a.x - mario_size.x / 2;
-    float aright = a.x + mario_size.x / 2;
-    float atop = a.y + mario_size.y / 2;
-    float abottom = a.y - mario_size.y / 2;
+    if(is_checkX) X_state = CollisionState::None;
+    else Y_state = CollisionState::None;
 
-    float bleft = b.x - b_size.x / 2;
-    float bright = b.x + b_size.x / 2;
-    float btop = b.y + b_size.y / 2;
-    float bbottom = b.y - b_size.y / 2;
+    const float A_left = a.x - a_size.x / 2;
+    const float A_right = a.x + a_size.x / 2;
+    const float A_top = a.y + a_size.y / 2;
+    const float A_bottom = a.y - a_size.y / 2;
 
-    bool collisionX = (aleft < bright) && (aright > bleft);
-    bool collisionY = (abottom < btop) && (atop > bbottom);
+    const float B_left = b.x - b_size.x / 2;
+    const float B_right = b.x + b_size.x / 2;
+    const float B_top = b.y + b_size.y / 2;
+    const float B_bottom = b.y - b_size.y / 2;
 
-    if (!(collisionX && collisionY)) {
-        return false;
-    }
+    const bool collisionX = A_left < B_right && A_right > B_left;
+    const bool collisionY = A_bottom < B_top && A_top > B_bottom;
 
-    // calculate minimum overlap area
-    float minOverlap = std::min({bright - aleft, aright - bleft});
-
-    if (minOverlap == bright - aleft) X_state = CollisionState::Left;
-    else if (minOverlap == aright - bleft) X_state = CollisionState::Right;
-
-    return X_state != CollisionState::None;
-}
-
-bool Mario::CCDDCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> box) {
-    glm::vec2 a = mario_pos;
-    glm::vec2 mario_size = this->m_Drawable->GetSize();
-    mario_size *= MARIO_MAGNIFICATION;
-
-    glm::vec2 b = box->m_Transform.translation;
-    glm::vec2 b_size = box->GetSize();
-
-    b_size.x *= box->GetScale().x;
-    b_size.y *= box->GetScale().y;
-    if(b_size.x < 0) b_size.x *= -1;
-    if(b_size.y < 0) b_size.y *= -1;
-
-    Y_state = CollisionState::None;
-    float aleft = a.x - mario_size.x / 2;
-    float aright = a.x + mario_size.x / 2;
-    float atop = a.y + mario_size.y / 2;
-    float abottom = a.y - mario_size.y / 2;
-
-    float bleft = b.x - b_size.x / 2;
-    float bright = b.x + b_size.x / 2;
-    float btop = b.y + b_size.y / 2;
-    float bbottom = b.y - b_size.y / 2;
-
-    bool collisionX = (aleft < bright) && (aright > bleft);
-    bool collisionY = (abottom < btop) && (atop > bbottom);
-
-    if (!(collisionX && collisionY)) {
-        return false;
-    }
+    if (!(collisionX && collisionY)) return false;
 
     // calculate minimum overlap area
-    float minOverlap = std::min({atop - bbottom, btop - abottom});
+    if(is_checkX) {
+        // 判斷 X 軸碰撞方向
+        const float overlapLeft = B_right - A_left;
+        const float overlapRight = A_right - B_left;
+        if (overlapLeft < overlapRight)
+            X_state = CollisionState::Left;
+        else
+            X_state = CollisionState::Right;
+    }else {
+        // 判斷 Y 軸碰撞方向
+        const float overlapTop = A_top - B_bottom;
+        const float overlapBottom = B_top - A_bottom;
+        if (overlapTop < overlapBottom)
+            Y_state = CollisionState::Top;
+        else
+            Y_state = CollisionState::Bottom;
+    }
 
-    if (minOverlap == atop - bbottom) Y_state = CollisionState::Top;
-    else if (minOverlap == btop - abottom) Y_state = CollisionState::Bottom;
-
-    return Y_state != CollisionState::None;
+    return true;
 }
 
 bool Mario::GravityAndCollision(const float delta) {
@@ -218,7 +191,7 @@ bool Mario::GravityAndCollision(const float delta) {
         b_size.x *= box->GetScale().x;
         b_size.y *= box->GetScale().y;
 
-        collision = CCDDCollides({mario_x, mario_y}, box);
+        collision = CollidesAndSetDirection({mario_x, mario_y}, box, false);
 
         if (Y_state == CollisionState::Bottom) {
             // 固定瑪利歐在地板位置
@@ -240,7 +213,7 @@ bool Mario::GravityAndCollision(const float delta) {
         if (collectible->GetVisible() == false) {
             continue;
         }
-        if (CCDDCollides({mario_x, mario_y}, collectible)) {
+        if (CollidesAndSetDirection({mario_x, mario_y}, collectible, false)) {
             IncreaseCoin(1);
             collectible->SetVisible(false);
         }
@@ -258,7 +231,7 @@ bool Mario::GravityAndCollision(const float delta) {
         b_size.x *= block->GetScale().x;
         b_size.y *= block->GetScale().y;
 
-        collision = CCDDCollides({mario_x, mario_y}, block);
+        collision = CollidesAndSetDirection({mario_x, mario_y}, block, false);
 
         if (Y_state == CollisionState::Bottom) {
             // 固定瑪利歐在地板位置
@@ -272,7 +245,10 @@ bool Mario::GravityAndCollision(const float delta) {
             block->TriggerJumpAnimation();
 
             if (block->GetBlockType() == Block::TYPE::MysteryBlock) {
-                if (std::dynamic_pointer_cast<MysteryBlock>(block)->GetInsidePropType()[0] == Block::PROP_TYPE::Coin && block->GetCollisionTime() > 0) IncreaseCoin(1);
+                if (std::dynamic_pointer_cast<MysteryBlock>(block)->GetInsidePropType()[0] == Block::PROP_TYPE::Coin && block->GetCollisionTime() > 0) {
+                    IncreaseCoin(1);
+                    IncreaseScore(200);
+                }
                 if (std::dynamic_pointer_cast<MysteryBlock>(block)->GetInsidePropType()[1] != Block::PROP_TYPE::None && is_grow) std::dynamic_pointer_cast<MysteryBlock>(block)->SetChooseProp(false);
             }
 
@@ -571,9 +547,9 @@ void Mario::Die() {
         is_grow = false;
         is_fire = false;
 
-        std::shared_ptr<Util::SFX> powerdown_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/powerdown.mp3");
-        powerdown_sfx->SetVolume(70);
-        powerdown_sfx->Play();
+        const auto power_down_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/powerdown.mp3");
+        power_down_sfx->SetVolume(70);
+        power_down_sfx->Play();
 
         this->SetImages(this->AnimationStand, 100, 0);
 
@@ -642,7 +618,7 @@ float Mario::OnUpdate(const float delta) {
 void Mario::Fire() {
     if (shoot_fireball_timer != FIREBALL_SHOOT_TIME) return;
     shoot_fireball_timer = 0;
-    SetImages({RESOURCE_DIR"/Entities/mario_fire_throw.png"}, 1000, 0);
+    SetImages({RESOURCE_DIR"/Entities/mario_fire_throw.png"}, 100, 0);
 
     auto fball = std::make_shared<Fireball>();
     fball->SetPosition(GetPosition().x, GetPosition().y - BLOCK_SIZE / 4);
@@ -761,19 +737,35 @@ void Mario::SetGrow(bool is_grow) {
     this->is_grow = is_grow;
 }
 
-bool Mario::GetGrow() {
+bool Mario::GetGrow() const {
     return is_grow;
 }
 
-bool Mario::GetGrowing() {
+bool Mario::GetGrowing() const {
     return is_growing;
 }
 
-void Mario::SetFire(bool is_fire) {
+void Mario::SetFire(const bool is_fire) {
     this->is_fire = is_fire;
 }
 
-void Mario::SetPull(bool is_pull) {
+void Mario::SetDead(const bool is_dead) {
+    this->is_dead = is_dead;
+}
+
+bool Mario::GetDead() const {
+    return is_dead;
+}
+
+void Mario::SetDying(const bool is_dying) {
+    this->is_dying = is_dying;
+}
+
+bool Mario::GetDying() const {
+    return is_dying;
+}
+
+void Mario::SetPull(const bool is_pull) {
     if (!is_pull) return;
     if (!this->is_pull) {
         if (is_grow) {
@@ -785,27 +777,27 @@ void Mario::SetPull(bool is_pull) {
     this->is_pull = is_pull;
 }
 
-bool Mario::GetPull() {
+bool Mario::GetPull() const {
     return is_pull;
 }
 
-void Mario::SetDrill(bool is_drill) {
+void Mario::SetDrill(const bool is_drill) {
     this->is_drill = is_drill;
 }
 
-bool Mario::GetDrill() {
+bool Mario::GetDrill() const {
     return is_drill;
 }
 
-void Mario::SetDrillState(DrillState drill_state) {
+void Mario::SetDrillState(const DrillState drill_state) {
     this->drill_state = drill_state;
 }
 
-void Mario::SetDrillDistance(float drill_tube_dis) {
+void Mario::SetDrillDistance(const float drill_tube_dis) {
     this->drill_tube_dis = drill_tube_dis;
 }
 
-void Mario::SetInvincible(bool is_invincible) {
+void Mario::SetInvincible(const bool is_invincible) {
     this->is_invincible = is_invincible;
     if(is_invincible) {
         invincible_timer = 0.0f;
@@ -813,31 +805,35 @@ void Mario::SetInvincible(bool is_invincible) {
     }
 }
 
-bool Mario::GetInvincible() {
+bool Mario::GetInvincible() const {
     return is_invincible;
 }
 
-bool Mario::GetFire() {
+bool Mario::GetTempInvincible() const {
+    return is_temporarily_invincible;
+}
+
+bool Mario::GetFire() const {
     return is_fire;
 }
 
-void Mario::SetFireballManager(std::shared_ptr<FireballManager> FM) {
+void Mario::SetFireballManager(const std::shared_ptr<FireballManager> &FM) {
     this->m_FM = FM;
 }
 
-bool Mario::GetBackToCastle() {
+bool Mario::GetBackToCastle() const {
     return is_back_to_castle;
 }
 
-bool Mario::GetReadyNextPhase() {
+bool Mario::GetReadyNextPhase() const {
     return is_ready_for_next_phase;
 }
 
-bool Mario::GetTimeToMoveCamera() {
+bool Mario::GetTimeToMoveCamera() const {
     return is_time_to_move_camera_map2;
 }
 
-void Mario::SetTimeToMoveCamera(bool is_time_to_move_camera_map2) {
+void Mario::SetTimeToMoveCamera(const bool is_time_to_move_camera_map2) {
     this->is_time_to_move_camera_map2 = is_time_to_move_camera_map2;
 }
 
@@ -848,13 +844,13 @@ void Mario::ResetStateForNextPhase() {
     is_ready_for_next_phase = false;
 }
 
-float Mario::GetVelocityY() {
+float Mario::GetVelocityY() const {
     return velocityY;
 }
 
 void Mario::IncreaseCoin(const int coin) {
     this->coin += coin;
-    std::shared_ptr<Util::SFX> coin_sfx = std::make_shared<Util::SFX >(RESOURCE_DIR"/Sound/Effects/coin.mp3");
+    const auto coin_sfx = std::make_shared<Util::SFX >(RESOURCE_DIR"/Sound/Effects/coin.mp3");
     coin_sfx->SetVolume(70);
     coin_sfx->Play();
 }
@@ -879,7 +875,7 @@ int Mario::GetScore() const {
     return score;
 }
 
-void Mario::AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) {
+void Mario::AddCollisionBoxes(const std::vector<std::shared_ptr<BackgroundImage>>& boxes) {
     for (const auto& box : boxes) {
         collision_boxes.push_back(box);
     }
@@ -889,7 +885,7 @@ void Mario::ClearCollisionBoxes() {
     collision_boxes.clear();
 }
 
-void Mario::AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) {
+void Mario::AddCollisionBlocks(const std::vector<std::shared_ptr<Block>>& blocks) {
     for (const auto& block : blocks) {
         collision_blocks.push_back(block);
     }
@@ -899,7 +895,7 @@ void Mario::ClearCollisionBlocks() {
     collision_blocks.clear();
 }
 
-void Mario::AddCollectibles(std::vector<std::shared_ptr<BackgroundImage>> collectibles) {
+void Mario::AddCollectibles(const std::vector<std::shared_ptr<BackgroundImage>>& collectibles) {
     for (const auto& collectible : collectibles) {
         collision_collectibles.push_back(collectible);
     }

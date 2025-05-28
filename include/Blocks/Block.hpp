@@ -16,6 +16,7 @@ class Block : public BackgroundImage {
 
 public:
     enum class TYPE{
+        None,
         MysteryBlock,
         CommonBlock,
         ImmovableBlock
@@ -46,7 +47,7 @@ protected:
     bool isoverworld = true;
     bool isbreak = false;
     bool iscollision = false;
-    TYPE Blocktype;
+    TYPE Blocktype = TYPE::None;
     int collision_time = 1;
 
     // animation
@@ -54,9 +55,6 @@ protected:
     float velocityY = 0.0f;
     float remaining_distance = 0.0f;
     bool is_goingup = true;
-private:
-
-    // TODO block up and down animation
 };
 
 #endif //BLOCK_HPP

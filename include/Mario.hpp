@@ -27,13 +27,10 @@ enum class DrillState {
     None
 };
 
-class Mario : public AnimatedCharacter {
+class Mario final : public AnimatedCharacter {
 public:
-    Mario(int coin, int live, int score, const std::vector<std::string>& AnimationPaths): AnimatedCharacter(AnimationPaths){
-        this->coin = coin;
-        this->live = live;
-        this->score = score;
-    };
+    explicit Mario(const std::vector<std::string>& AnimationPaths): AnimatedCharacter(AnimationPaths){};
+    ~Mario() override = default;
 
     // move function
     void OnJump();
@@ -46,14 +43,12 @@ public:
     void Die(); // Handle Mario's death sequence
 
     // collision function
-    bool AABBCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> box);
-    bool CCDDCollides(glm::vec2 mario_pos, std::shared_ptr<BackgroundImage> box);
+    bool CollidesAndSetDirection(glm::vec2 mario_pos, const std::shared_ptr<BackgroundImage>& box, bool is_checkX);
     bool GravityAndCollision(float delta);
 
     // animation
     void UpdateAnimation();
     void SetGrowingAnimation();
-
     void SetJumpAnimation();
     void UpdateGrowingState();
     void UpdateDeadState(float delta); // Update function for when Mario is dead
@@ -67,38 +62,42 @@ public:
     [[nodiscard]] int GetLive() const;
     void IncreaseScore(int score);
     [[nodiscard]] int GetScore() const;
-    float GetVelocityY();
+    [[nodiscard]] float GetVelocityY() const;
+    void SetFireballManager(const std::shared_ptr<FireballManager> &FM);
+
+    // state
     void SetGrow(bool is_grow);
-    bool GetGrowing();
-    bool GetGrow();
+    [[nodiscard]] bool GetGrow() const;
+    [[nodiscard]] bool GetGrowing() const;
     void SetFire(bool is_fire);
     void SetInvincible(bool is_invincible);
-    bool GetInvincible();
-    bool GetFire();
+    [[nodiscard]] bool GetInvincible() const;
+    [[nodiscard]] bool GetTempInvincible() const;
+    [[nodiscard]] bool GetFire() const;
+    void SetDead(bool is_dead);
+    [[nodiscard]] bool GetDead() const;
+    void SetDying(bool is_dying);
+    [[nodiscard]] bool GetDying() const;
+
     void SetPull(bool is_pull);
-    bool GetPull();
+    [[nodiscard]] bool GetPull() const;
     void SetDrill(bool is_drill);
-    bool GetDrill();
+    [[nodiscard]] bool GetDrill() const;
     void SetDrillState(DrillState drill_state);
     void SetDrillDistance(float drill_tube_dis);
-    bool GetBackToCastle();
-    bool GetReadyNextPhase();
+    [[nodiscard]] bool GetBackToCastle() const;
+    [[nodiscard]] bool GetReadyNextPhase() const;
     void SetTimeToMoveCamera(bool is_time_to_move_camera_map2);
-    bool GetTimeToMoveCamera();
-    void ResetStateForNextPhase();
-    void SetFireballManager(std::shared_ptr<FireballManager> FM);
+    [[nodiscard]] bool GetTimeToMoveCamera() const;
 
-    void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
-    void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
-    void AddCollectibles(std::vector<std::shared_ptr<BackgroundImage>> collectibles);
+    void ResetStateForNextPhase();
+
+    void AddCollisionBoxes(const std::vector<std::shared_ptr<BackgroundImage>>& boxes);
+    void AddCollisionBlocks(const std::vector<std::shared_ptr<Block>>& blocks);
+    void AddCollectibles(const std::vector<std::shared_ptr<BackgroundImage>>& collectibles);
     void ClearCollisionBoxes();
     void ClearCollectibles();
     void ClearCollisionBlocks();
-
-    bool is_dead = false; // game over or not
-    bool is_dying = false; // Transitional state between alive and dead
-
-    bool is_temporarily_invincible = false;
 
 private:
     int coin = 0;
@@ -108,10 +107,10 @@ private:
     bool is_right_key_down = false;
     bool is_down_key_down = false;
     bool is_run_key_down = false;
+
     // track death state
     float death_timer = 0.0f; // Time to start jumping
     const float DEATH_PAUSE_TIME = 60.0f; // 1 second at 60fps
-    const float DEATH_JUMP_DURATION = 120.0f;
     const float DEATH_JUMP_VELOCITY = 300.0f;
 
     // track invincible state
@@ -141,6 +140,9 @@ private:
     bool is_growing = false;
     bool is_fire = false;
     bool is_invincible = false;
+    bool is_temporarily_invincible = false;
+    bool is_dead = false; // game over or not
+    bool is_dying = false; // Transitional state between alive and dead
 
     bool is_pull = false;
     bool is_drill = false;
@@ -153,7 +155,7 @@ private:
     float drill_tube_dis = 0.0f;
 
     float velocityX = 5.0f;
-    float velocityY = 0.0f; // Y axis speed
+    float velocityY = 0.0f;
     float GRAVITY = -300.0f; // 重力值，以 px/s² 為單位
     float JUMP_VELOCITY = 360.0f;
     float SMALL_JUMP_VELOCITY = 250.0f;

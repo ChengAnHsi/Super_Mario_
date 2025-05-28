@@ -55,7 +55,7 @@ void Goomba::ClearEnemies() {
 }
 
 bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
-    if (is_dead || !GetVisible() || mario->is_dying) {
+    if (is_dead || !GetVisible() || mario->GetDying()) {
         return false; // No collision if already dead or not visible
     }
 
@@ -126,9 +126,9 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
 
         // Collision from the side or bottom - Mario gets hurt if not invincible
 
-        if (!mario->is_dying && mario->GetLive() > 0) {
+        if (!mario->GetDying() && mario->GetLive() > 0) {
             // Mario shrunk after a collision
-            if (mario->is_temporarily_invincible == false) {
+            if (mario->GetTempInvincible() == false) {
                 mario->Die(); // Call our new Die method instead
                 return true;
             }

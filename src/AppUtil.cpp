@@ -175,16 +175,11 @@ void App::ResetPhase() {
                 prop2->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
                 prop2->SetZIndex(-30);
                 props.push_back(prop2);
-                mysteryBlock->SetProps(prop, prop2, true);
-            }else {
-                mysteryBlock->SetProps(prop, nullptr, false);
             }
+            mysteryBlock->SetProps(prop, prop2);
 
             // Special case: Level 1-2 specific coordinates coin can be triggered 7 times
-            if (m_Phase == Phase::Level1_2 &&
-                ((tmpx[i] == 29 || tmpx[i] == 73) && tmpy[i] == 6)) {
-                mysteryBlock->SetCollisionTime(7);
-            }
+            if (m_Phase == Phase::Level1_2 && ((tmpx[i] == 29 || tmpx[i] == 73) && tmpy[i] == 6)) mysteryBlock->SetCollisionTime(7);
 
             block = mysteryBlock;
         }else {
@@ -350,9 +345,5 @@ void App::NextPhase(bool is_nextphase) {
             break;
         default:
             break;
-        /**
-            if (m_Giraffe->GetImagePath() == GA_RESOURCE_DIR"/Image/Character/giraffe.png")
-            std::for_each(m_Doors.begin(), m_Doors.end(), [](const auto& door) { door->SetVisible(true); });
-            std::for_each(m_Doors.begin(), m_Doors.end(), [](const auto& door) { door->SetVisible(false); });**/
     }
 }

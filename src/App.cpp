@@ -11,7 +11,7 @@
 void App::Start() {
     LOG_TRACE("Start");
     std::vector<std::string> marioImages = {RESOURCE_DIR"/Entities/mario_stand.png"};
-    m_Mario = std::make_shared<Mario>(0,3,0,marioImages);
+    m_Mario = std::make_shared<Mario>(marioImages);
     m_Mario->SetPosition(-380.0f + 2.5f * BLOCK_SIZE, -232.0f);
     m_Mario->SetZIndex(50);
     m_Mario->SetPlaying(true);
@@ -122,14 +122,14 @@ void App::Update() {
 
     // lower than ground
     if(m_Mario->GetPosition().y < -360 && !m_Mario->GetTimeToMoveCamera()) {
-        m_Mario->is_dying = false;
+        m_Mario->SetDying(false);
         m_Mario->SetLive(m_Mario->GetLive() - 1);
         if (m_Mario->GetLive() > 0) {
             // reset phase
             NextPhase(false);
         }else {
             // game over
-            m_Mario->is_dead = true;
+            m_Mario->SetDead(true);
         }
     }
 

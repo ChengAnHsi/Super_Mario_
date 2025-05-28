@@ -5,7 +5,7 @@ Flower::Flower() {
     this->SetZIndex(-20);
 }
 bool Flower::CheckMarioCollision(std::shared_ptr<Mario> mario){
-    if (is_dead || !GetVisible() || mario->is_dying) {
+    if (is_dead || !GetVisible() || mario->GetDying()) {
         return false; // No collision if already dead or not visible
     }
 
@@ -38,7 +38,7 @@ bool Flower::CheckMarioCollision(std::shared_ptr<Mario> mario){
             SetVisible(false);
             return true;
         }
-        if (!mario->is_dying && mario->GetLive() > 0 && !mario->is_temporarily_invincible) {
+        if (!mario->GetDying() && mario->GetLive() > 0 && !mario->GetTempInvincible()) {
             mario->Die();
             return true;
         }

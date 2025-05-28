@@ -9,9 +9,7 @@ MysteryBlock::MysteryBlock(){
 }
 
 void MysteryBlock::AfterCollisionEvents() {
-    if(iscollision == true) {
-        return;
-    }
+    if(iscollision == true) return;
 
     if (collision_time > 0) {
         auto prop_to_spawn = GetProps();
@@ -49,14 +47,12 @@ void MysteryBlock::SetChooseProp(bool choose1prop) {
     this->choose_1prop = choose1prop;
 }
 
-void MysteryBlock::SetProps(std::shared_ptr<Props> prop1, std::shared_ptr<Props> prop2, bool multipleProps) {
+void MysteryBlock::SetProps(std::shared_ptr<Props> prop1, std::shared_ptr<Props> prop2) {
     inside_prop1 = prop1;
     inside_prop2 = prop2;
-    hasMultipleProps = multipleProps;
 }
 
 std::shared_ptr<Props> MysteryBlock::GetProps() {
-    //if (hasMultipleProps && mario->GetGrow()) {
     if (choose_1prop) {
         // return fire flower
         return inside_prop1;
