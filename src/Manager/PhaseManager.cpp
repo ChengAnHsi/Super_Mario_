@@ -230,7 +230,13 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_CollisionBoxes.back()->SetScale(tube_magnification[1], -tube_magnification[1]);
         m_CollisionBoxes.back()->SetZIndex(100);
 
-        // todo add one tube on the over world stair(immovable) left side
+        // todo tube length not enough
+        // over world spawn tube
+        m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
+        m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-large-tube.png");
+        m_CollisionBoxes.back()->SetPosition(168 * BLOCK_SIZE + tubex_offset[1], 18 * BLOCK_SIZE + tubey_offset[1]);
+        m_CollisionBoxes.back()->SetScale(tube_magnification[2], tube_magnification[2]);
+        m_CollisionBoxes.back()->SetZIndex(100);
 
         for (size_t i = 0; i < collisionboxes_x2.size(); i++) {
             m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
