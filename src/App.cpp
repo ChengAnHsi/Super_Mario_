@@ -57,10 +57,9 @@ void App::Start() {
 }
 
 void App::Update() {
+    m_Coin->SetLooping(m_Phase != Phase::Start);
+    m_Coin->SetPlaying(m_Phase != Phase::Start);
     if(m_Phase != Phase::Start) {
-        m_Coin->SetLooping(true);
-        m_Coin->SetPlaying(true);
-
         // decrease time after start game
         if (!m_Mario->GetReadyNextPhase()) m_PRM->DecreaseTime();
 
@@ -161,8 +160,8 @@ void App::Update() {
     }
 
     if (m_Mario->GetLive() == 0) {
-        // TODO gameover
-        m_CurrentState = State::END;
+        m_Phase = Phase::Level1_3;
+        NextPhase(true);
     }
 
     m_PRM->CheckMarioCollisionFlag(m_Mario);

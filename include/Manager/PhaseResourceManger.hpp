@@ -13,7 +13,7 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren(const bool is_init) const {
         std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
         if (is_init){
-            all_obj = {m_ScoreText, m_MoneyText, m_WorldText, m_TimeText, m_OtherText};
+            all_obj = {m_ScoreText, m_MoneyText, m_WorldText, m_TimeText, m_OtherText, m_TopScoreText};
         }
         for (const auto & img : m_Background) {
             all_obj.emplace_back(img);
@@ -56,7 +56,7 @@ public:
     std::vector<std::shared_ptr<BackgroundImage>> GetCollisionBoxes();
     void SetCoin(int coin) const;
     std::vector<std::shared_ptr<BackgroundImage>> GetCollectibleCoins();
-    void SetScore(int score) const;
+    void SetScore(int score);
 
 private:
     std::shared_ptr<TaskText> m_ScoreText;
@@ -64,11 +64,14 @@ private:
     std::shared_ptr<TaskText> m_WorldText;
     std::shared_ptr<TaskText> m_TimeText;
     std::shared_ptr<TaskText> m_OtherText;
+    std::shared_ptr<TaskText> m_TopScoreText;
     std::vector<std::shared_ptr<BackgroundImage>> m_Background;
     std::vector<std::shared_ptr<BackgroundImage>> m_CollisionBoxes;
     std::vector<std::shared_ptr<BackgroundImage>> m_CollectibleCoins;
 
     int time = 400;
+    int top_score = 0;
+
     std::chrono::steady_clock::time_point last_update;
 
     // image index 0-2: tube

@@ -29,7 +29,7 @@ void App::ResetPhase() {
     // if(m_Phase == Phase::Level1_2) {
     //     m_Mario->SetPosition({-380.0f + 3.0f * BLOCK_SIZE, -240.0f + 7.5 * BLOCK_SIZE});
     // }else {
-    m_Mario->SetPosition(-380.0f + 2.5f * BLOCK_SIZE, -222.0f);
+    m_Mario->SetPosition(-380.0f + 2.5f * BLOCK_SIZE, -232.0f);
     //}
     m_Mario->SetImages({RESOURCE_DIR"/Entities/mario_stand.png"}, 1000, 0);
     m_Mario->m_Transform.scale = {MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
@@ -57,6 +57,31 @@ void App::ResetPhase() {
     for (const auto & img : tmp) {
         std::shared_ptr<Util::GameObject> tmp3 = img;
         m_Root.RemoveChild(tmp3);
+    }
+
+    // remove old enemy
+    std::vector<std::shared_ptr<Enemy>> ftmp = m_EM->GetEnemies();
+    for (const auto & img : ftmp) {
+        std::shared_ptr<Util::GameObject> ftmp2 = img;
+        m_Root.RemoveChild(ftmp2);
+    }
+
+    // remove tube and other things
+    // The castle and flag are removed and use the updated new locations
+    tmp = m_PRM->GetBackground();
+    for (const auto & img : tmp) {
+        const std::shared_ptr<Util::GameObject> tmp2 = img;
+        m_Root.RemoveChild(tmp2);
+    }
+    tmp = m_PRM->GetCollisionBoxes();
+    for (const auto & img : tmp) {
+        const std::shared_ptr<Util::GameObject> tmp2 = img;
+        m_Root.RemoveChild(tmp2);
+    }
+    tmp = m_PRM->GetCollectibleCoins();
+    for (const auto & img : tmp) {
+        const std::shared_ptr<Util::GameObject> tmp2 = img;
+        m_Root.RemoveChild(tmp2);
     }
 
     // add new block to render
@@ -206,13 +231,6 @@ void App::ResetPhase() {
     m_Root.AddChildren(m_BM->GetChildren());
     m_Root.AddChildren(m_PM->GetChildren());
 
-    // remove old enemy
-    std::vector<std::shared_ptr<Enemy>> ftmp = m_EM->GetEnemies();
-    for (const auto & img : ftmp) {
-        std::shared_ptr<Util::GameObject> ftmp2 = img;
-        m_Root.RemoveChild(ftmp2);
-    }
-
     // add new enemy to render
     std::vector<std::shared_ptr<Enemy>> eneimes;
     std::vector<float> ftmpx = m_EM->GetX(static_cast<int>(m_Phase));
@@ -253,24 +271,6 @@ void App::ResetPhase() {
     }
     m_EM->SetEnemies(eneimes);
     m_Root.AddChildren(m_EM->GetChildren());
-
-    // remove tube and other things
-    // The castle and flag are removed and use the updated new locations
-    tmp = m_PRM->GetBackground();
-    for (const auto & img : tmp) {
-        const std::shared_ptr<Util::GameObject> tmp2 = img;
-        m_Root.RemoveChild(tmp2);
-    }
-    tmp = m_PRM->GetCollisionBoxes();
-    for (const auto & img : tmp) {
-        const std::shared_ptr<Util::GameObject> tmp2 = img;
-        m_Root.RemoveChild(tmp2);
-    }
-    tmp = m_PRM->GetCollectibleCoins();
-    for (const auto & img : tmp) {
-        const std::shared_ptr<Util::GameObject> tmp2 = img;
-        m_Root.RemoveChild(tmp2);
-    }
 }
 
 void App::NextPhase(bool is_nextphase) {
@@ -290,7 +290,7 @@ void App::NextPhase(bool is_nextphase) {
                 break;
             case Phase::Level1_3:
                 LOG_DEBUG("Congratulations! You have completed Super Mario!");
-                m_CurrentState = State::END;
+                m_Phase = Phase::Start;
                 break;
             default:
                 break;
@@ -301,6 +301,21 @@ void App::NextPhase(bool is_nextphase) {
         m_Mario->SetFire(false);
     }
     switch (m_Phase) {
+        case Phase::Start:
+            ResetPhase();
+            // score <= 0
+            m_Mario->IncreaseScore(-m_Mario->GetScore());
+            // coin <= 0
+            m_Mario->IncreaseCoin(-m_Mario->GetCoin());
+            m_Mario->SetFire(false);
+            m_Mario->SetGrow(false);
+            m_Mario->SetInvincible(false);
+            m_Mario->SetLive(3);
+            m_PRM->NextPhase(static_cast<int>(m_Phase));
+            m_Root.AddChildren(m_PRM->GetChildren(false));
+            m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
+            m_BGM->Play();
+            break;
         case Phase::Level1_1:
             ResetPhase();
             m_PRM->NextPhase(static_cast<int>(m_Phase));

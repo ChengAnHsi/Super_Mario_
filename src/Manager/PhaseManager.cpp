@@ -12,22 +12,32 @@ PhaseResourceManger::PhaseResourceManger() {
     m_ScoreText = std::make_shared<TaskText>();
     m_ScoreText->SetPosition(-250, 300);
     m_ScoreText->SetTxtIdx(1, 0);
+    m_ScoreText->SetZIndex(100);
 
     m_MoneyText = std::make_shared<TaskText>();
     m_MoneyText->SetPosition(-70, 285);
     m_MoneyText->SetTxtIdx(2, 0);
+    m_MoneyText->SetZIndex(100);
 
     m_WorldText = std::make_shared<TaskText>();
     m_WorldText->SetPosition(100, 300);
     m_WorldText->SetTxtIdx(3, 1);
+    m_WorldText->SetZIndex(100);
 
     m_TimeText = std::make_shared<TaskText>();
     m_TimeText->SetPosition(300, 300);
     m_TimeText->SetTxtIdx(4, 400);
+    m_TimeText->SetZIndex(100);
 
     m_OtherText = std::make_shared<TaskText>();
-    m_OtherText->SetPosition(0, -200);
+    m_OtherText->SetPosition(0, -100);
     m_OtherText->SetTxtIdx(0, 0);
+    m_OtherText->SetZIndex(100);
+
+    m_TopScoreText = std::make_shared<TaskText>();
+    m_TopScoreText->SetPosition(0, -200);
+    m_TopScoreText->SetTxtIdx(6, 0);
+    m_TopScoreText->SetZIndex(100);
 
     std::vector<std::string> imageFiles = {
         RESOURCE_DIR"/Scenery/Overworld/bush1.png",
@@ -43,7 +53,7 @@ PhaseResourceManger::PhaseResourceManger() {
     // initial screen: background image setting
     // [0]: logo
     m_Background.push_back(std::make_shared<BackgroundImage>());
-    m_Background.back()->SetPosition(0, 0);
+    m_Background.back()->SetPosition(0, 100);
     m_Background.back()->SetScale(3.0f,3.0f);
     // The background z-index is placed at the bottom
     m_Background.back()->SetZIndex(-50);
@@ -144,7 +154,41 @@ bool PhaseResourceManger::CheckMarioCollisionTube(std::shared_ptr<Mario> mario) 
 }
 
 void PhaseResourceManger::NextPhase(int m_Phase) {
-    LOG_DEBUG("Passed! Next phase: {}", m_Phase);
+    // LOG_DEBUG("Passed! Next phase: {}", m_Phase);
+    if(m_Phase == 0) {
+        std::vector<std::string> imageFiles = {
+            RESOURCE_DIR"/Scenery/Overworld/bush1.png",
+            RESOURCE_DIR"/Scenery/Overworld/bush2.png",
+            RESOURCE_DIR"/Scenery/Overworld/cloud1.png",
+            RESOURCE_DIR"/Scenery/Overworld/cloud2.png",
+            RESOURCE_DIR"/Scenery/Overworld/mountain1.png",
+            RESOURCE_DIR"/Scenery/Overworld/mountain2.png",
+            RESOURCE_DIR"/Scenery/castle.png",
+            RESOURCE_DIR"/Scenery/flag-mast.png"
+        };
+
+        // initial screen: background image setting
+        m_Background.clear();
+        // [0]: logo
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetPosition(0, 100);
+        m_Background.back()->SetScale(3.0f,3.0f);
+        // The background z-index is placed at the bottom
+        m_Background.back()->SetZIndex(-50);
+        // [1]: start mountain(left)
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(imageFiles[5]);
+        m_Background.back()->SetPosition(-240.0f, 2.5 * BLOCK_SIZE - 315.0f);
+        m_Background.back()->SetScale(1.5f,1.5f);
+        // [2]: start bush(right)
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(imageFiles[0]);
+        m_Background.back()->SetPosition(11 * BLOCK_SIZE - 360.0f, 2 * BLOCK_SIZE- 325.0f);
+        m_Background.back()->SetScale(1.3f,1.3f);
+
+        m_CollisionBoxes.clear();
+        m_CollectibleCoins.clear();
+    }
     if (m_Phase == 1){
         m_Background.clear();
         // [0]: blue background image
@@ -179,7 +223,7 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
             m_CollisionBoxes.back()->SetImage(imagePaths[collisionboxes_imgidx[i]]);
             m_CollisionBoxes.back()->SetPosition(collisionboxes_x[i] * BLOCK_SIZE + tubex_offset[collisionboxes_imgidx[i]], collisionboxes_y[i] * BLOCK_SIZE  + tubey_offset[collisionboxes_imgidx[i]]);
             m_CollisionBoxes.back()->SetScale(tube_magnification[collisionboxes_imgidx[i]], tube_magnification[collisionboxes_imgidx[i]]);
-            m_CollisionBoxes.back()->SetZIndex(100);
+            m_CollisionBoxes.back()->SetZIndex(80);
         }
     }
     if (m_Phase == 2){
@@ -216,19 +260,19 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/horizontal-final-tube.png");
         m_CollisionBoxes.back()->SetPosition(167 * BLOCK_SIZE + tubex_offset[1], 6 * BLOCK_SIZE + tubey_offset[0]);
         m_CollisionBoxes.back()->SetScale(tube_magnification[0], tube_magnification[0]);
-        m_CollisionBoxes.back()->SetZIndex(100);
+        m_CollisionBoxes.back()->SetZIndex(80);
         // end vertical tube
         m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
         m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-xlarge-tube.png");
         m_CollisionBoxes.back()->SetPosition(168 * BLOCK_SIZE + tubex_offset[0], 11 * BLOCK_SIZE + tubey_offset[2]);
         m_CollisionBoxes.back()->SetScale(tube_magnification[0], tube_magnification[0]);
-        m_CollisionBoxes.back()->SetZIndex(100);
+        m_CollisionBoxes.back()->SetZIndex(80);
         // top tube
         m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
         m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-medium-tube.png");
         m_CollisionBoxes.back()->SetPosition(2 * BLOCK_SIZE + tubex_offset[1], 14 * BLOCK_SIZE + tubey_offset[1]);
         m_CollisionBoxes.back()->SetScale(tube_magnification[1], -tube_magnification[1]);
-        m_CollisionBoxes.back()->SetZIndex(100);
+        m_CollisionBoxes.back()->SetZIndex(80);
 
         // todo tube length not enough
         // over world spawn tube
@@ -236,14 +280,14 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-large-tube.png");
         m_CollisionBoxes.back()->SetPosition(168 * BLOCK_SIZE + tubex_offset[1], 18 * BLOCK_SIZE + tubey_offset[1]);
         m_CollisionBoxes.back()->SetScale(tube_magnification[2], tube_magnification[2]);
-        m_CollisionBoxes.back()->SetZIndex(100);
+        m_CollisionBoxes.back()->SetZIndex(80);
 
         for (size_t i = 0; i < collisionboxes_x2.size(); i++) {
             m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
             m_CollisionBoxes.back()->SetImage(imagePaths[collisionboxes_imgidx2[i]]);
             m_CollisionBoxes.back()->SetPosition(collisionboxes_x2[i] * BLOCK_SIZE + tubex_offset[collisionboxes_imgidx2[i]], collisionboxes_y2[i] * BLOCK_SIZE  + tubey_offset[collisionboxes_imgidx2[i]]);
             m_CollisionBoxes.back()->SetScale(tube_magnification[collisionboxes_imgidx2[i]], tube_magnification[collisionboxes_imgidx2[i]]);
-            m_CollisionBoxes.back()->SetZIndex(100);
+            m_CollisionBoxes.back()->SetZIndex(80);
         }
 
         // coin init(map 1-2)
@@ -294,7 +338,16 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
 
     SetTime(LEVEL_TIME[m_Phase]);
     m_WorldText->SetTxtIdx(3, m_Phase);
-    m_OtherText->SetTxtIdx(5, 0);
+    m_OtherText->SetVisible(false);
+    m_TopScoreText->SetVisible(false);
+    if(m_Phase == 0) {
+        SetCoin(0);
+        SetScore(0);
+        m_TimeText->SetTxtIdx(4, time);
+        m_WorldText->SetTxtIdx(3, 1);
+        m_OtherText->SetVisible(true);
+        m_TopScoreText->SetVisible(true);
+    }
 }
 
 void PhaseResourceManger::ResetPosition(float disx, float disy) const {
@@ -302,11 +355,15 @@ void PhaseResourceManger::ResetPosition(float disx, float disy) const {
     m_MoneyText->m_Transform.translation.x += disx;
     m_WorldText->m_Transform.translation.x += disx;
     m_TimeText->m_Transform.translation.x += disx;
+    m_OtherText->m_Transform.translation.x += disx;
+    m_TopScoreText->m_Transform.translation.x += disx;
 
     m_ScoreText->m_Transform.translation.y += disy;
     m_MoneyText->m_Transform.translation.y += disy;
     m_WorldText->m_Transform.translation.y += disy;
     m_TimeText->m_Transform.translation.y += disy;
+    m_OtherText->m_Transform.translation.y += disy;
+    m_TopScoreText->m_Transform.translation.y += disy;
 }
 
 void PhaseResourceManger::ConvertTimeToScore(std::shared_ptr<Mario> mario) {
@@ -354,6 +411,10 @@ std::vector<std::shared_ptr<BackgroundImage>> PhaseResourceManger::GetCollectibl
     return m_CollectibleCoins;
 }
 
-void PhaseResourceManger::SetScore(const int score) const {
+void PhaseResourceManger::SetScore(const int score) {
     m_ScoreText->SetTxtIdx(1, score);
+    if(top_score < score) {
+        m_TopScoreText->SetTxtIdx(6, score);
+        top_score = score;
+    }
 }

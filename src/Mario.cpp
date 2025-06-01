@@ -677,6 +677,12 @@ float Mario::Move() {
         is_right_key_down = false;
         is_run_key_down = false;
     }
+    if (is_ready_for_next_phase) {
+        is_left_key_down = false;
+        is_right_key_down = false;
+        is_run_key_down = false;
+        return 0.0f;
+    }
 
     if (shoot_fireball_timer < FIREBALL_SHOOT_TIME) {
         if (shoot_fireball_timer == 10) SetImages(AnimationFireLast, 1000, 0);
