@@ -1,4 +1,5 @@
 #include "Enemies/Koopa.hpp"
+#include <iostream>
 #include "Global.hpp"
 #include "Mario.hpp"
 #include "App.hpp"
@@ -243,14 +244,28 @@ bool Koopa::KickShell(std::shared_ptr<Mario> mario) {
 
     return true;
 }
+void Koopa::UpdateShellInvalidState(){
+        if (!GetIsShell()) {
+            return;
+        }
+        if (GetPosition().x < -370.0f || GetPosition().x > 370.0f) {
+            SetLive(0);
+            SetVisible(false);
+        }
+        if (GetPosition().y < -370.0f) {
+            SetLive(0);
+            SetVisible(false);
+        }
+}
 
 void Koopa::TurnToShell() {
     if (!is_shell) {
         is_shell = true;
         shell_is_moving = false;
         shell_timer = 0.0f;
-
-        if (GetOverworld()) {
+        if (GetFromFly()){
+            SetImage(AnimationUnflyDead,1000,0);}
+        else if (GetOverworld()) {
             SetImage(AnimationDead, 1000, 0);
         } else {
             SetImage(AnimationUnderWorldDead, 1000, 0);
@@ -530,7 +545,9 @@ void Koopa::UpdateAnimation() {
         shell_timer += delta_time;
 
         if (shell_timer >= 500.0f && shell_timer < 800.0f) {
-            if (GetOverworld()) {
+            if (GetFromFly()){
+                SetImage({RESOURCE_DIR"/Entities/unfly_koopa_shell1"},1000,0);}
+            else if (GetOverworld()) {
                 SetImage({RESOURCE_DIR"/Entities/shell0.png"}, 1000, 0);
             } else {
                 SetImage({RESOURCE_DIR"/Entities/Underworld/shell0.png"}, 1000, 0);
@@ -539,8 +556,9 @@ void Koopa::UpdateAnimation() {
             is_shell = false;
             shell_timer = 0.0f;
             SetMoving(true);
-
-            if (GetOverworld()) {
+            if (GetFromFly()){
+                SetImage(AnimationUnflyRun,500,0);}
+            else if (GetOverworld()) {
                 SetImage(AnimationRun, 500, 0);
             } else {
                 SetImage(AnimationUnderWorldRun, 500, 0);
@@ -568,7 +586,7 @@ void Koopa::OnUpdate(const float delta) {
 
     GravityAndCollision(3 * delta);
     UpdateAnimation();
-
+    UpdateShellInvalidState();
     if (is_shell && !shell_is_moving) return;
 
     float distance = GetMoveVelocity() * delta;
@@ -584,8 +602,11 @@ void Koopa::Move() {
     OnUpdate(1);
 
     if (!is_shell && is_set_runanimation == false) {
-        if (GetOverworld()) {
+        if (GetFromFly()){
+            SetImage(AnimationUnflyRun,500,0);
+        }else if (GetOverworld()) {
             SetImage(AnimationRun, 500, 0);
+            std::cout<<GetFromFly();
         } else {
             SetImage(AnimationUnderWorldRun, 500, 0);
         }
@@ -597,7 +618,9 @@ void Koopa::SetLive(const int live) {
     this->live = live;
     is_dead = false;
     if (live == 0) {
-        if (GetOverworld()) {
+        if (GetFromFly()){
+            SetImage(AnimationUnflyDead,1000,0);}
+        else if (GetOverworld() && GetFromFly() ) {
             SetImage(AnimationDead, 1000, 0);
         } else {
             SetImage(AnimationUnderWorldDead, 1000, 0);
@@ -630,3 +653,13 @@ void Koopa::AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) {
 void Koopa::ClearCollisionBlocks() {
     collision_blocks.clear();
 }
+void Koopa::SetFromFly(){
+    FromFly = true;
+}
+bool Koopa::GetFromFly(){
+    return FromFly;
+}
+bool Koopa::GetIsShell(){
+    return is_shell;
+}
+

@@ -68,6 +68,7 @@ bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         is_dead = true;
         inside_self->SetVelocityY(0.0f);
         inside_self->SetLive(1);
+        inside_self->SetFromFly();
         inside_self->SetVisible(true);
         inside_self->SetPosition(GetPosition().x, GetPosition().y);
         return false;
@@ -507,10 +508,12 @@ void FlyKoopa::SetLive(const int live) {
         SetVisible(false);
 
         inside_self->SetLive(0);
+        inside_self->SetFromFly();
         inside_self->SetVisible(true);
         inside_self->SetPosition(GetPosition().x, GetPosition().y);
         inside_self->SetVelocityY(0.0f);
-        inside_self->SetDeadState(DeadState::Hit);
+        inside_self->SetDeadState(DeadState::Shot);
+        inside_self->SetScale(KOOPA_MAGNIFICATION,-KOOPA_MAGNIFICATION);
     }
 
     this->live = live;
