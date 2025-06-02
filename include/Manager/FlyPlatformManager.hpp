@@ -1,0 +1,8 @@
+//
+// Created by loedd on 2025/6/2.
+//
+
+#ifndef FLYPLATFORMMANAGER_HPP
+#define FLYPLATFORMMANAGER_HPP
+
+#endif //FLYPLATFORMMANAGER_HPP
