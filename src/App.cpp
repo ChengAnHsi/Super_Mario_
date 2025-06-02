@@ -142,7 +142,6 @@ void App::Update() {
 
     // move camera
     m_Root.Update({dis,0.0f});
-    std::cout << camera_movement_dis << std::endl;
     // if mario drill tube then move the camera
     if(m_Mario->GetTimeToMoveCamera()) {
         // todo update 1-2 background sky image(blue)
