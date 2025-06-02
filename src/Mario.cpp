@@ -808,6 +808,20 @@ void Mario::SetInvincible(const bool is_invincible) {
     if(is_invincible) {
         invincible_timer = 0.0f;
         // todo update BGM
+        // set animation at the first time
+        if(isJumping) {
+            if(is_grow && is_fire) this->SetImages(AnimationJumpGrowFireInvincible, 100, 0);
+            else if(is_grow) this->SetImages(AnimationJumpGrowInvincible, 100, 0);
+            else this->SetImages(AnimationJumpInvincible, 100, 0);
+        }else if(isRunning) {
+            if(is_grow && is_fire) this->SetImages(AnimationRunGrowFireInvincible, 100, 0);
+            else if(is_grow) this->SetImages(AnimationRunGrowInvincible, 100, 0);
+            else this->SetImages(AnimationRunInvincible, 100, 0);
+        }else {
+            if(is_grow && is_fire) this->SetImages(AnimationStandGrowFireInvincible, 100, 0);
+            else if(is_grow) this->SetImages(AnimationStandGrowInvincible, 100, 0);
+            else this->SetImages(AnimationStandInvincible, 100, 0);
+        }
     }
 }
 
