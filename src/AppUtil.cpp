@@ -307,10 +307,13 @@ void App::NextPhase(bool is_nextphase) {
             m_Mario->IncreaseScore(-m_Mario->GetScore());
             // coin <= 0
             m_Mario->IncreaseCoin(-m_Mario->GetCoin());
+            // reset mario state
             m_Mario->SetFire(false);
             m_Mario->SetGrow(false);
             m_Mario->SetInvincible(false);
+            m_Mario->SetDead(false);
             m_Mario->SetLive(3);
+
             m_PRM->NextPhase(static_cast<int>(m_Phase));
             m_Root.AddChildren(m_PRM->GetChildren(false));
             m_BGM->LoadMedia(RESOURCE_DIR"/Sound/Music/Overworld/theme.mp3");
