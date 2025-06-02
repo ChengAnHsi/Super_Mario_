@@ -50,6 +50,8 @@ add_executable(${PROJECT_NAME}
         src/Props/Coin.cpp
         src/Props/Fireball.cpp
         src/Manager/FireballManager.cpp
+        include/Manager/FlyPlatform.hpp
+        src/Manager/FlyPlatform.cpp
 )
 
 if(MSVC)

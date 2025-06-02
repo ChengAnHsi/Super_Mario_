@@ -41,12 +41,15 @@ public:
     // getter and setter
     void SetLive(int live) override;
     [[nodiscard]] int GetLive() const;
-
+    void UpdateShellInvalidState();
+    bool GetFromFly();
+    bool GetIsShell();
+    void SetFromFly();
 private:
     bool TouchGrand = false;
     std::vector<std::shared_ptr<Enemy>> other_enemies;
     float shell_timer = 0.0f;  // Timer for shell state management
-
+    bool FromFly = false;
     bool is_shell = false;  // Flag to track if Koopa is in shell state
     bool shell_is_moving = false;  // Flag to track if shell is moving
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/koopa0.png",RESOURCE_DIR"/Entities/koopa1.png"};
@@ -54,6 +57,8 @@ private:
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/shell1.png"};
     std::vector<std::string> AnimationUnderWorldDead = {RESOURCE_DIR"/Entities/Underworld/shell1.png"};
 
+    std::vector<std::string> AnimationUnflyRun = {RESOURCE_DIR"/Entities/unfly_koopa0.png",RESOURCE_DIR"/Entities/unfly_koopa1.png"};
+    std::vector<std::string> AnimationUnflyDead = {RESOURCE_DIR"/Entities/unfly_koopa_shell1.png"};
     bool is_set_runanimation = false;
 };
 #endif //KOOPA_HPP
