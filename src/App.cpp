@@ -6,6 +6,8 @@
 #include "Global.hpp"
 #include "App.hpp"
 
+#include <iostream>
+
 #include "Manager/EnemyManager.hpp"
 
 void App::Start() {
@@ -28,7 +30,7 @@ void App::Start() {
     m_Coin = std::make_shared<AnimatedCharacter>(coinImages);
     m_Coin->SetImages(coinImages, 1000, 0);
     m_Coin->SetPosition(-135.f, 285.f);
-    m_Coin->SetZIndex(5);
+    m_Coin->SetZIndex(100);
     m_Coin->SetPlaying(false);
     m_Coin->m_Transform.scale = glm::vec2(MARIO_MAGNIFICATION, MARIO_MAGNIFICATION);
     m_Root.AddChild(m_Coin);
@@ -140,6 +142,7 @@ void App::Update() {
 
     // move camera
     m_Root.Update({dis,0.0f});
+    std::cout << camera_movement_dis << std::endl;
     // if mario drill tube then move the camera
     if(m_Mario->GetTimeToMoveCamera()) {
         // todo update 1-2 background sky image(blue)
@@ -149,9 +152,10 @@ void App::Update() {
         m_Mario->SetDrillDistance(4 * BLOCK_SIZE);
 
         // fix pos
-        m_Root.Update({360.0f + BLOCK_SIZE,720.0f});
-        m_PRM->ResetPosition(360.0f + BLOCK_SIZE, 720.0f);
-        m_Coin->SetPosition(m_Coin->GetPosition().x + 360.0f + BLOCK_SIZE, m_Coin->GetPosition().y + 720.0f);
+        float camera_move_dis = 167.5f * BLOCK_SIZE - camera_movement_dis;
+        m_Root.Update({camera_move_dis,720.0f});
+        m_PRM->ResetPosition(camera_move_dis, 720.0f);
+        m_Coin->SetPosition(m_Coin->GetPosition().x + camera_move_dis, m_Coin->GetPosition().y + 720.0f);
         m_Mario->SetTimeToMoveCamera(false);
     }
 

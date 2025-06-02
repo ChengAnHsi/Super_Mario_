@@ -274,6 +274,7 @@ void App::ResetPhase() {
 }
 
 void App::NextPhase(bool is_nextphase) {
+    camera_movement_dis = 112.5f;
     if(is_nextphase) {
         switch (m_Phase) {
             case Phase::Start:

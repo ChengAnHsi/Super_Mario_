@@ -59,7 +59,7 @@ private:
     std::shared_ptr<Util::BGM> m_BGM;
     std::shared_ptr<Util::SFX> m_SFX;
 
-    float camera_movement_dis = 0;//-380.0f + 2.5f * BLOCK_SIZE;
+    float camera_movement_dis = 112.5f;
     bool m_EnterDown = false;
 };
 

@@ -704,7 +704,7 @@ float Mario::Move() {
     if (Util::Input::IsKeyPressed(Util::Keycode::SPACE) && !is_back_to_castle) {
         OnSmallJump();
     }
-    if (Util::Input::IsKeyPressed(Util::Keycode::LSHIFT) || Util::Input::IsKeyPressed(Util::Keycode::RSHIFT) && !is_back_to_castle) {
+    if ((Util::Input::IsKeyPressed(Util::Keycode::LSHIFT) || Util::Input::IsKeyPressed(Util::Keycode::RSHIFT)) && !is_back_to_castle) {
         if (is_fire) Fire();
         if (isJumping && is_run_key_down);
         else is_run_key_down = true;

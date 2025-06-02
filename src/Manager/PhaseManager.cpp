@@ -264,7 +264,7 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         // end vertical tube
         m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
         m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-xlarge-tube.png");
-        m_CollisionBoxes.back()->SetPosition(168 * BLOCK_SIZE + tubex_offset[0], 11 * BLOCK_SIZE + tubey_offset[2]);
+        m_CollisionBoxes.back()->SetPosition(168 * BLOCK_SIZE + tubex_offset[0], 12 * BLOCK_SIZE + tubey_offset[2]);
         m_CollisionBoxes.back()->SetScale(tube_magnification[0], tube_magnification[0]);
         m_CollisionBoxes.back()->SetZIndex(80);
         // top tube
@@ -274,11 +274,10 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_CollisionBoxes.back()->SetScale(tube_magnification[1], -tube_magnification[1]);
         m_CollisionBoxes.back()->SetZIndex(80);
 
-        // todo tube length not enough
         // over world spawn tube
         m_CollisionBoxes.push_back(std::make_shared<BackgroundImage>());
-        m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-large-tube.png");
-        m_CollisionBoxes.back()->SetPosition(168 * BLOCK_SIZE + tubex_offset[1], 18 * BLOCK_SIZE + tubey_offset[1]);
+        m_CollisionBoxes.back()->SetImage(RESOURCE_DIR"/Scenery/vertical-xslarge-tube.png");
+        m_CollisionBoxes.back()->SetPosition(168 * BLOCK_SIZE + tubex_offset[1] + 3, 17 * BLOCK_SIZE + tubey_offset[1]);
         m_CollisionBoxes.back()->SetScale(tube_magnification[2], tube_magnification[2]);
         m_CollisionBoxes.back()->SetZIndex(80);
 
