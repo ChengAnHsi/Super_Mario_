@@ -9,7 +9,7 @@
 #include "Renderer.hpp"
 #include "AnimatedCharacter.hpp"
 #include "Mario.hpp"
-
+#include "Manager/FlyPlatformManager.hpp"
 #include "Manager/PhaseResourceManger.hpp"
 #include "Manager/BlockManager.hpp"
 #include "Manager/EnemyManager.hpp"
@@ -58,7 +58,7 @@ private:
     std::shared_ptr<FireballManager> m_FM;
     std::shared_ptr<Util::BGM> m_BGM;
     std::shared_ptr<Util::SFX> m_SFX;
-
+    std::shared_ptr<FlyPlatformManager> m_FPM;
     float camera_movement_dis = 112.5f;
     bool m_EnterDown = false;
 };

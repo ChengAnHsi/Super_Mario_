@@ -52,6 +52,8 @@ add_executable(${PROJECT_NAME}
         src/Manager/FireballManager.cpp
         include/Manager/FlyPlatformManager.hpp
         src/Manager/FlyPlatformManager.cpp
+        src/Blocks/FlyPlatfrom.cpp
+        include/Blocks/FlyPlatfrom.hpp
 )
 
 if(MSVC)

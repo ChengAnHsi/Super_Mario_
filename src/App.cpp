@@ -55,6 +55,8 @@ void App::Start() {
     m_FM = std::make_shared<FireballManager>();
     m_Mario->SetFireballManager(m_FM);
 
+    m_FPM = std::make_shared<FlyPlatformManager>();
+    m_Root.AddChildren(m_FPM->GetChildren());
     m_CurrentState = State::UPDATE;
 }
 
