@@ -112,15 +112,28 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
            return false;
        }
        bool mario_moving_down = mario->GetVelocityY() <= 0;
-
+       float overlaps[4] = {
+           goomba_right - mario_left,   // Mario from left
+           mario_right - goomba_left,   // Mario from right
+           goomba_top - mario_bottom,   // Mario from bottom (stomp)
+           mario_top - goomba_bottom    // Mario from top
+       };
 
        float vertical_overlap = std::min(mario_top, goomba_top) - std::max(mario_bottom, goomba_bottom);
        float mario_height = mario_top - mario_bottom;
        float overlap_percentage = vertical_overlap / mario_height;
+       int min_index = 0;
 
+       float min_overlap = overlaps[0];
+       for (int i = 1; i < 4; i++) {
+           if (overlaps[i] < min_overlap) {
+               min_overlap = overlaps[i];
+               min_index = i;
+           }
+       }
 
        float overlap_threshold = 12.0f;
-       if (mario_bottom <= goomba_top + overlap_threshold && mario_moving_down && overlap_percentage < 0.2f && mario_bottom >= (goomba_top)/2) {
+       if (min_index == 2 && mario_moving_down && overlap_percentage > -0.5f) {
            dead_state = DeadState::Trampled;
            KillGoomba();
            mario->OnKillJump();
