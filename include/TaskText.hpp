@@ -54,6 +54,14 @@ public:
                 temp->SetText(std::string(s_text[6]) + score);
                 break;
             }
+            case 7: {
+                std::string live = std::to_string(other);
+                if (other < 10)
+                    live = "0" + live;
+                live = " " + live;
+                temp->SetText(append_string_views(std::string(s_text[7]),live));
+                break;
+            }
             default:
                 break;
         }
@@ -68,18 +76,17 @@ private:
         return std::string(sv1) + "\n" + std::string(sv2);
     }
 
-    static constexpr std::string_view s_text[7] = {
+    static constexpr std::string_view s_text[8] = {
             "1 PLAYER GAME",
             "MARIO",
             "x",
             "WORLD",
             "TIME",
             "",
-            "Top- "
+            "Top- ",
+            "Live"
     };
     static constexpr std::string_view s_Validation = "Press Enter to validate";
-
 };
-
 
 #endif //TASKTEXT_HPP

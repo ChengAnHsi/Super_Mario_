@@ -13,7 +13,7 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren(const bool is_init) const {
         std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};
         if (is_init){
-            all_obj = {m_ScoreText, m_MoneyText, m_WorldText, m_TimeText, m_OtherText, m_TopScoreText};
+            all_obj = {m_ScoreText, m_MoneyText, m_WorldText, m_TimeText, m_OtherText, m_TopScoreText, m_LiveText};
         }
         for (const auto & img : m_Background) {
             all_obj.emplace_back(img);
@@ -58,6 +58,7 @@ public:
     void SetCoin(int coin) const;
     std::vector<std::shared_ptr<BackgroundImage>> GetCollectibleCoins();
     void SetScore(int score);
+    void SetLive(int live);
 
 private:
     std::shared_ptr<TaskText> m_ScoreText;
@@ -66,6 +67,7 @@ private:
     std::shared_ptr<TaskText> m_TimeText;
     std::shared_ptr<TaskText> m_OtherText;
     std::shared_ptr<TaskText> m_TopScoreText;
+    std::shared_ptr<TaskText> m_LiveText;
     std::vector<std::shared_ptr<BackgroundImage>> m_Background;
     std::vector<std::shared_ptr<BackgroundImage>> m_CollisionBoxes;
     std::vector<std::shared_ptr<BackgroundImage>> m_CollectibleCoins;

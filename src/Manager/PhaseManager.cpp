@@ -1,4 +1,4 @@
-#include "Util/Logger.hpp"
+//#include "Util/Logger.hpp"
 
 #include "AnimatedImage.hpp"
 #include "App.hpp"
@@ -15,17 +15,17 @@ PhaseResourceManger::PhaseResourceManger() {
     m_ScoreText->SetZIndex(100);
 
     m_MoneyText = std::make_shared<TaskText>();
-    m_MoneyText->SetPosition(-70, 285);
+    m_MoneyText->SetPosition(-85, 285);
     m_MoneyText->SetTxtIdx(2, 0);
     m_MoneyText->SetZIndex(100);
 
     m_WorldText = std::make_shared<TaskText>();
-    m_WorldText->SetPosition(100, 300);
+    m_WorldText->SetPosition(35, 300);
     m_WorldText->SetTxtIdx(3, 1);
     m_WorldText->SetZIndex(100);
 
     m_TimeText = std::make_shared<TaskText>();
-    m_TimeText->SetPosition(300, 300);
+    m_TimeText->SetPosition(175, 300);
     m_TimeText->SetTxtIdx(4, 400);
     m_TimeText->SetZIndex(100);
 
@@ -38,6 +38,11 @@ PhaseResourceManger::PhaseResourceManger() {
     m_TopScoreText->SetPosition(0, -200);
     m_TopScoreText->SetTxtIdx(6, 0);
     m_TopScoreText->SetZIndex(100);
+
+    m_LiveText = std::make_shared<TaskText>();
+    m_LiveText->SetPosition(300, 300);
+    m_LiveText->SetTxtIdx(7, 3);
+    m_LiveText->SetZIndex(100);
 
     std::vector<std::string> imageFiles = {
         RESOURCE_DIR"/Scenery/Overworld/bush1.png",
@@ -321,8 +326,7 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/final-flag.png");
         m_Background.back()->SetPosition(151.5 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 11 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        // TODO append lifting platform to background
-        // TODO getter: lifting platform, add them to mario's collision box
+
         m_CollisionBoxes.clear();
 
         // coin init(map 1-3)
@@ -356,6 +360,7 @@ void PhaseResourceManger::ResetPosition(float disx, float disy) const {
     m_TimeText->m_Transform.translation.x += disx;
     m_OtherText->m_Transform.translation.x += disx;
     m_TopScoreText->m_Transform.translation.x += disx;
+    m_LiveText->m_Transform.translation.x += disx;
 
     m_ScoreText->m_Transform.translation.y += disy;
     m_MoneyText->m_Transform.translation.y += disy;
@@ -363,6 +368,7 @@ void PhaseResourceManger::ResetPosition(float disx, float disy) const {
     m_TimeText->m_Transform.translation.y += disy;
     m_OtherText->m_Transform.translation.y += disy;
     m_TopScoreText->m_Transform.translation.y += disy;
+    m_LiveText->m_Transform.translation.y += disy;
 }
 
 void PhaseResourceManger::ConvertTimeToScore(std::shared_ptr<Mario> mario) {
@@ -416,4 +422,8 @@ void PhaseResourceManger::SetScore(const int score) {
         m_TopScoreText->SetTxtIdx(6, score);
         top_score = score;
     }
+}
+
+void PhaseResourceManger::SetLive(const int live) {
+    m_LiveText->SetTxtIdx(7, live);
 }

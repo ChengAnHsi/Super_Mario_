@@ -29,7 +29,7 @@ void App::Start() {
     }
     m_Coin = std::make_shared<AnimatedCharacter>(coinImages);
     m_Coin->SetImages(coinImages, 1000, 0);
-    m_Coin->SetPosition(-135.f, 285.f);
+    m_Coin->SetPosition(-150.f, 285.f);
     m_Coin->SetZIndex(100);
     m_Coin->SetPlaying(false);
     m_Coin->m_Transform.scale = glm::vec2(MARIO_MAGNIFICATION, MARIO_MAGNIFICATION);
@@ -63,6 +63,8 @@ void App::Start() {
 void App::Update() {
     m_Coin->SetLooping(m_Phase != Phase::Start);
     m_Coin->SetPlaying(m_Phase != Phase::Start);
+
+    m_PRM->SetLive(m_Mario->GetLive());
     if(m_Phase != Phase::Start) {
         // decrease time after start game
         if (!m_Mario->GetReadyNextPhase()) m_PRM->DecreaseTime();
