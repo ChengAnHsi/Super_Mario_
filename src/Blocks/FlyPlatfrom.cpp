@@ -1,37 +1,4 @@
 #include "Blocks/FlyPlatfrom.hpp"
-#include "BackgroundImage.hpp"
-#include "Core/Texture.hpp"
-#include "Core/Drawable.hpp"
-
-FlyPlatform::FlyPlatform()
-
-    : InitialPosition(0, 0),
-      MoveRangeX(0),
-      MoveRangeY(50),
-      SpeedX(0.0f),
-      SpeedY(1.0f),
-      TempMoveX(0.0f),
-      TempMoveY(0.0f),
-      MovingRightX(true),
-      MovingUpY(true) {
-}
-
-FlyPlatform::FlyPlatform(int x, int y, int moveRangeX, int moveRangeY,
-                         float speedX, float speedY)
-    : InitialPosition(x, y),
-      MoveRangeX(moveRangeX),
-      MoveRangeY(moveRangeY),
-      SpeedX(speedX),
-      SpeedY(speedY),
-      TempMoveX(0.0f),
-      TempMoveY(0.0f),
-      MovingRightX(true),
-      MovingUpY(true) {
-
-    // Set initial position
-    m_Transform.translation = glm::vec2(x * PLATFORM_SIZE + BACKGROUND_X_OFFSET,
-                                       y * PLATFORM_SIZE + BACKGROUND_Y_OFFSET);
-}
 
 void FlyPlatform::Update(float deltaTime) {
     // Update X movement if range is set
@@ -73,16 +40,7 @@ void FlyPlatform::Update(float deltaTime) {
     }
 }
 
-
-void FlyPlatform::SetScale(float scaleX, float scaleY) {
-    m_Transform.scale = glm::vec2(scaleX, scaleY);
-}
-
-glm::vec2 FlyPlatform::GetPosition() const {
-    return m_Transform.translation;
-}
-
-void FlyPlatform::SetMovementRange(int rangeX, int rangeY) {
+void FlyPlatform::SetMovementRange(float rangeX, float rangeY) {
     MoveRangeX = rangeX;
     MoveRangeY = rangeY;
 }
@@ -93,18 +51,9 @@ void FlyPlatform::SetMovementSpeed(float speedX, float speedY) {
 }
 
 void FlyPlatform::ResetToInitialPosition() {
-    m_Transform.translation = InitialPosition;
+    m_Transform.translation.y -= TempMoveY;
     TempMoveX = 0.0f;
     TempMoveY = 0.0f;
-    MovingRightX = true;
+    MovingRightX = false;
     MovingUpY = true;
-}
-
-void FlyPlatform::CheckRepositioning(float ceilingHeight) {
-    // If platform moves above ceiling, reposition to bottom
-    if (m_Transform.translation.y > ceilingHeight) {
-        m_Transform.translation.y = BACKGROUND_Y_OFFSET; // Reset to bottom
-        TempMoveY = 0.0f;
-        MovingUpY = true;
-    }
 }

@@ -1,33 +1,26 @@
 #ifndef FLY_PLATFORM_MANAGER_HPP
 #define FLY_PLATFORM_MANAGER_HPP
 
-#include "pch.hpp"
 #include "Blocks/FlyPlatfrom.hpp"
-#include "Util/GameObject.hpp"
-#include "Global.hpp"
 #include "BackgroundImage.hpp"
+
 class FlyPlatformManager {
 public:
-
-    FlyPlatformManager();
-
+    FlyPlatformManager() = default;
     ~FlyPlatformManager() = default;
 
-    void Update(float deltaTime);
-
-    void AddPlatform(std::shared_ptr<FlyPlatform> platform);
+    void UpdatePlatforms(float deltaTime);
 
     std::vector<std::shared_ptr<Util::GameObject>> GetChildren();
 
-    std::shared_ptr<FlyPlatform> GetNewPlatform();
-
+    void AddPlatform(std::shared_ptr<FlyPlatform> platform);
+    void SetPlatforms(std::vector<std::shared_ptr<FlyPlatform>> platforms);
     std::vector<std::shared_ptr<FlyPlatform>> GetPlatforms();
     void ClearPlatforms();
-    void InitializePlatformsForPhase(int phase);
 
     std::vector<int> GetPlatformX(int phase);
-
     std::vector<int> GetPlatformY(int phase);
+
     void SetCeilingHeight(float height);
 
 private:
@@ -35,24 +28,27 @@ private:
     float m_CeilingHeight;
 
     // Platform spawn positions for different phases
-    // Phase 1 positions
-    std::vector<int> platform_x_phase1 = {22, 94, 109, 129, 130,
-                                          64,
-                                          16, 21, 23, 78, 94, 101, 106, 109, 112, 170};
-    std::vector<int> platform_y_phase1 = {9, 9, 9, 9, 9,
-                                          6,
-                                          5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
+    // Phase 1 positions(no platforms here)
+    std::vector<int> platform_x_phase1 = {};
+    std::vector<int> platform_y_phase1 = {};
+    std::vector<bool> platform_direcion_is_X_phase1 = {};
+    std::vector<bool> platform_direcion_up_phase1 = {};
+    std::vector<bool> platform_direcion_left_phase1 = {};
 
     // Phase 2 positions
-    std::vector<int> platform_x_phase2 = {30, 50, 70, 90, 110, 130, 150};
-    std::vector<int> platform_y_phase2 = {8, 7, 6, 8, 9, 7, 6};
+    std::vector<int> platform_x_phase2 = {141, 156, 141, 156};
+    std::vector<int> platform_y_phase2 = {9, 9, 3, 3};
+    std::vector<bool> platform_direcion_is_X_phase2 = {false, false, false, false};
+    std::vector<bool> platform_direcion_up_phase2 = {false, false, true, true};
+    std::vector<bool> platform_direcion_left_phase2 = {false, false, false, false};
 
     // Phase 3 positions
-    std::vector<int> platform_x_phase3 = {40, 80, 120, 160, 200};
-    std::vector<int> platform_y_phase3 = {10, 8, 6, 9, 7};
-
-
-    void CreatePlatformsForPhase(int phase);
+    // todo up down
+    std::vector<int> platform_x_phase3 = {131, 87, 92, 56};
+    std::vector<int> platform_y_phase3 = {8, 6, 5, 4};
+    std::vector<bool> platform_direcion_is_X_phase3 = {false, true, true, true};
+    std::vector<bool> platform_direcion_up_phase3 = {false, true, true, true};
+    std::vector<bool> platform_direcion_left_phase3 = {false, true, true, true};
 };
 
 #endif // FLY_PLATFORM_MANAGER_HPP

@@ -1,59 +1,38 @@
 #ifndef FLY_PLATFORM_HPP
 #define FLY_PLATFORM_HPP
 
-#include "pch.hpp"
-#include "Util/GameObject.hpp"
-#include "Global.hpp"
+#include "BackgroundImage.hpp"
 
-
-static std::vector<std::string> PlatFromImg = {
-    RESOURCE_DIR"/Scenery/FlyPlatfrom.png"
-};
-
-class FlyPlatform : public Util::GameObject {
+class FlyPlatform final : public BackgroundImage {
 public:
-    FlyPlatform();
-    FlyPlatform(int x, int y, int moveRangeX = 0, int moveRangeY = 50,
-                float speedX = 0.0f, float speedY = 1.0f);
+    FlyPlatform() = default;
 
-    virtual ~FlyPlatform() = default;
+    ~FlyPlatform() override = default;
 
+    void Update(float delta);
 
-    void Update(float deltaTime);
-
-    void SetScale(float scaleX, float scaleY);
-
-    glm::vec2 GetPosition() const;
-
-    void SetMovementRange(int rangeX, int rangeY);
-
+    void SetMovementRange(float rangeX, float rangeY);
     void SetMovementSpeed(float speedX, float speedY);
 
     void ResetToInitialPosition();
-
-    void CheckRepositioning(float ceilingHeight);
 
 private:
     // Initial position
     glm::vec2 InitialPosition;
 
     // Movement properties
-    int MoveRangeX;
-    int MoveRangeY;
-    float SpeedX;
-    float SpeedY;
+    float MoveRangeX = 0.0f;
+    float MoveRangeY = 0.0f;
+    float SpeedX = 0.0f;
+    float SpeedY = 0.0f;
 
     // Movement counters
-    float TempMoveX;
-    float TempMoveY;
+    float TempMoveX = 0.0f;
+    float TempMoveY = 0.0f;
 
     // Movement direction flags
-    bool MovingRightX;
-    bool MovingUpY;
-
-    // Platform properties
-    static constexpr float PLATFORM_MAGNIFICATION = 1.0f;
-    static constexpr int PLATFORM_SIZE = 32; // Assuming 32x32 platform size
+    bool MovingRightX = false;
+    bool MovingUpY = false;
 };
 
 #endif // FLY_PLATFORM_HPP

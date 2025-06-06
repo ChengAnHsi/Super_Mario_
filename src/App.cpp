@@ -56,7 +56,7 @@ void App::Start() {
     m_Mario->SetFireballManager(m_FM);
 
     m_FPM = std::make_shared<FlyPlatformManager>();
-    m_Root.AddChildren(m_FPM->GetChildren());
+    m_FPM->SetCeilingHeight(360.0f);
     m_CurrentState = State::UPDATE;
 }
 
@@ -100,6 +100,9 @@ void App::Update() {
 
         // check for collisions with enemies
         m_EM->CheckMarioCollisions(m_Mario);
+
+        // platform moving
+        m_FPM->UpdatePlatforms(1.0f);
 
         // update each fireball pos and collision
         m_FM->UpdateFireballInvalidState();

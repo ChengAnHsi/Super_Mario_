@@ -59,6 +59,13 @@ void App::ResetPhase() {
         m_Root.RemoveChild(tmp3);
     }
 
+    std::vector<std::shared_ptr<FlyPlatform>> tmp3 = m_FPM->GetPlatforms();
+    for (const auto & flyplatform : tmp3) {
+        std::shared_ptr<Util::GameObject> tmp3 = flyplatform;
+        m_Root.RemoveChild(tmp3);
+    }
+    m_FPM->ClearPlatforms();
+
     // remove old enemy
     std::vector<std::shared_ptr<Enemy>> ftmp = m_EM->GetEnemies();
     for (const auto & img : ftmp) {
@@ -271,6 +278,24 @@ void App::ResetPhase() {
     }
     m_EM->SetEnemies(eneimes);
     m_Root.AddChildren(m_EM->GetChildren());
+
+
+    tmpx = m_FPM->GetPlatformX(static_cast<int>(m_Phase));
+    tmpy = m_FPM->GetPlatformY(static_cast<int>(m_Phase));
+    std::vector<std::shared_ptr<BackgroundImage>> platforms;
+    for (size_t i = 0; i < tmpx.size(); i++) {
+        auto platform = std::make_shared<FlyPlatform>();
+        platform->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        platform->SetImage(RESOURCE_DIR"/Scenery/FlyPlatfrom.png");
+        platform->SetScale(3.5f, 3.5f);
+        platform->SetMovementRange(3.5 * BLOCK_SIZE, 0);
+        // platform->SetMovementRange(0, 3.5 * BLOCK_SIZE);
+        platform->SetMovementSpeed(2.0f, 2.0f);
+        platforms.push_back(platform);
+        m_FPM->AddPlatform(platform);
+    }
+    m_Mario->AddCollisionBoxes(platforms);
+    m_Root.AddChildren(m_FPM->GetChildren());
 }
 
 void App::NextPhase(bool is_nextphase) {
