@@ -4,6 +4,7 @@
 #include "Mario.hpp"
 #include "App.hpp"
 #include "Enemies/Enemy.hpp"
+#include "Enemies/FlyKoopa.hpp"
 #include "Enemies/Goomba.hpp"
 
 void Koopa::AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies) {
@@ -202,7 +203,15 @@ void Koopa::KillEnemy(std::shared_ptr<Enemy> enemy) {
             koopa->SetVelocityY(200.0f);
             kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
         }
-    }
+    }  else if (auto flykoopa = std::dynamic_pointer_cast<FlyKoopa>(enemy)) {
+        if (!flykoopa->GetIsDead()) {
+            flykoopa->SetDeadState(DeadState::Hit);
+            flykoopa->SetLive(0);
+            flykoopa->SetScale(KOOPA_MAGNIFICATION, -KOOPA_MAGNIFICATION);
+            flykoopa->SetVelocityY(200.0f);
+            kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
+            }
+        }
     if (kick_sfx) {
         kick_sfx->SetVolume(200);
         kick_sfx->Play();
