@@ -181,12 +181,6 @@ bool Mario::CollidesAndSetDirection(const glm::vec2 mario_pos, const std::shared
     return true;
 }
 
-CollisionState Mario::DetermineVerticalCollisionDirection(glm::vec2 prev, glm::vec2 curr, glm::vec2 b_pos) {
-    if (prev.y >= b_pos.y && curr.y < b_pos.y) return CollisionState::Bottom; // 往下降
-    if (prev.y <= b_pos.y && curr.y > b_pos.y) return CollisionState::Top;    // 往上撞
-    return CollisionState::None;
-}
-
 bool Mario::GravityAndCollision(const float delta) {
     if (is_growing) return isJumping;
     glm::vec2 mario_size = this->m_Drawable->GetSize();
@@ -501,6 +495,7 @@ void Mario::SetGrowingAnimation() {
 
     is_grow = true;
     is_growing = true;
+    growing_timer = 0.0f;
 
     float mario_x = this->GetPosition().x;
     float mario_y = this->GetPosition().y;
@@ -527,8 +522,10 @@ void Mario::SetGrowingAnimation() {
 
 void Mario::UpdateGrowingState() {
     if (is_grow == false) return;
-
-    if(IfAnimationEnds()) {
+    growing_timer += 1.0f;
+//    if(IfAnimationEnds()) {
+    if(growing_timer >= GROWING_TIME) {
+        growing_timer = 0.0f;
         if(is_invincible) {
             if (is_fire) {
                 this->SetImages(this->AnimationStandGrowFireInvincible, 100, 0);
