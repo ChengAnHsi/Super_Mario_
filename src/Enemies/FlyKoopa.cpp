@@ -70,6 +70,7 @@ bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         inside_self->SetLive(1);
         inside_self->SetFromFly();
         inside_self->SetVisible(true);
+        inside_self->SetImage(AnimationDead,1000,0);
         inside_self->SetPosition(GetPosition().x, GetPosition().y);
         return false;
     }
@@ -510,6 +511,7 @@ void FlyKoopa::SetLive(const int live) {
         inside_self->SetLive(0);
         inside_self->SetFromFly();
         inside_self->SetVisible(true);
+        inside_self->SetImage(AnimationShell,1000,0);
         inside_self->SetPosition(GetPosition().x, GetPosition().y);
         inside_self->SetVelocityY(0.0f);
         inside_self->SetDeadState(DeadState::Shot);

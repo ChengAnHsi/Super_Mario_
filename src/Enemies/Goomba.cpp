@@ -99,7 +99,7 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
            goomba_top - mario_bottom,   // Mario from bottom (stomp)
            mario_top - goomba_bottom    // Mario from top
        };
-            
+
        float vertical_overlap = std::min(mario_top, goomba_top) - std::max(mario_bottom, goomba_bottom);
        float mario_height = mario_top - mario_bottom;
        float overlap_percentage = vertical_overlap / mario_height;

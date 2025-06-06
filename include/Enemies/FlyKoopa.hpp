@@ -64,7 +64,7 @@ private:
     // Animation paths
     std::vector<std::string> AnimationRun = {RESOURCE_DIR"/Entities/fly_koopa0.png",RESOURCE_DIR"/Entities/fly_koopa1.png"};
     std::vector<std::string> AnimationDead = {RESOURCE_DIR"/Entities/unfly_koopa0.png",RESOURCE_DIR"/Entities/unfly_koopa1.png"};
-    std::vector<std::string> AnimationShell = {RESOURCE_DIR"/Entities/unfly_koopa_shell0.png",RESOURCE_DIR"/Entities/unfly_koopa_shell1.png"};
+    std::vector<std::string> AnimationShell = {RESOURCE_DIR"/Entities/unfly_koopa_shell1.png"};
     std::vector<std::string> AnimationMovingShell = {RESOURCE_DIR"/Entities/unfly_koopa_shell0.png",RESOURCE_DIR"/Entities/unfly_koopa_shell1.png"};
 
     bool is_set_runanimation = false;

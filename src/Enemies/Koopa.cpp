@@ -629,7 +629,7 @@ void Koopa::SetLive(const int live) {
     if (live == 0) {
         if (GetFromFly()){
             SetImage(AnimationUnflyDead,1000,0);}
-        else if (GetOverworld() && GetFromFly() ) {
+        else if (GetOverworld()) {
             SetImage(AnimationDead, 1000, 0);
         } else {
             SetImage(AnimationUnderWorldDead, 1000, 0);
