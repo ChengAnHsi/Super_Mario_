@@ -282,15 +282,44 @@ void App::ResetPhase() {
 
     tmpx = m_FPM->GetPlatformX(static_cast<int>(m_Phase));
     tmpy = m_FPM->GetPlatformY(static_cast<int>(m_Phase));
+    std::vector<float> tmprange = m_FPM->GetPlatformRange(static_cast<int>(m_Phase));
+    std::vector tmpdir_is_X = m_FPM->GetPlatformDirection(static_cast<int>(m_Phase));
+
     std::vector<std::shared_ptr<BackgroundImage>> platforms;
     for (size_t i = 0; i < tmpx.size(); i++) {
         auto platform = std::make_shared<FlyPlatform>();
         platform->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         platform->SetImage(RESOURCE_DIR"/Scenery/FlyPlatfrom.png");
         platform->SetScale(3.5f, 3.5f);
-        //platform->SetMovementRange(3.5 * BLOCK_SIZE, 0);
-        platform->SetMovementRange(0, 3.5 * BLOCK_SIZE);
         platform->SetMovementSpeed(2.0f, 2.0f);
+
+        switch (tmpdir_is_X[i]) {
+            case 0: { // left
+                platform->SetMovementRange(tmprange[i] * BLOCK_SIZE, 0);
+                platform->SetMovingDirection(false, false);
+                platform->SetTempMoveXY(tmprange[i] * BLOCK_SIZE, 0);
+                break;
+            }
+            case 1: { // right
+                platform->SetMovementRange(tmprange[i] * BLOCK_SIZE, 0);
+                platform->SetMovingDirection(true, false);
+                break;
+            }
+            case 2: { // up
+                platform->SetMovementRange(0, tmprange[i] * BLOCK_SIZE);
+                platform->SetMovingDirection(false, true);
+                break;
+            }
+            case 3: { // down
+                platform->SetMovementRange(0, tmprange[i] * BLOCK_SIZE);
+                platform->SetMovingDirection(false, false);
+                platform->SetTempMoveXY(0, tmprange[i] * BLOCK_SIZE);
+                break;
+            }
+            default: {
+                break;
+            }
+        }
         platforms.push_back(platform);
         m_FPM->AddPlatform(platform);
     }

@@ -50,10 +50,22 @@ void FlyPlatform::SetMovementSpeed(float speedX, float speedY) {
     SpeedY = speedY;
 }
 
+void FlyPlatform::SetMovingDirection(bool directionRightX, bool directionUpY) {
+    this->MovingRightX = directionRightX;
+    this->MovingUpY = directionUpY;
+}
+
+void FlyPlatform::SetTempMoveXY(float tmepX, float tempY) {
+    this->TempMoveX = tmepX;
+    this->TempMoveY = tempY;
+}
+
 void FlyPlatform::ResetToInitialPosition() {
-    m_Transform.translation.y -= TempMoveY;
+    if (m_Transform.translation.y >= 360.0f) {
+        m_Transform.translation.y = -360.0f;
+    }else {
+        m_Transform.translation.y = 360.0f;
+    }
     TempMoveX = 0.0f;
     TempMoveY = 0.0f;
-    MovingRightX = false;
-    MovingUpY = true;
 }

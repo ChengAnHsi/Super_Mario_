@@ -6,7 +6,7 @@ void FlyPlatformManager::UpdatePlatforms(float deltaTime) {
         platform->Update(deltaTime);
 
         // Check if platform needs repositioning due to ceiling
-        if (platform->GetPosition().y >= m_CeilingHeight) {
+        if (platform->GetPosition().y >= m_CeilingHeight || platform->GetPosition().y <= -m_CeilingHeight) {
             platform->ResetToInitialPosition();
         }
     }
@@ -39,26 +39,52 @@ void FlyPlatformManager::ClearPlatforms() {
 std::vector<int> FlyPlatformManager::GetPlatformX(int phase) {
     switch (phase) {
         case 1:
-            return platform_x_phase1;
+            return {};
         case 2:
             return platform_x_phase2;
         case 3:
             return platform_x_phase3;
         default:
-            return platform_x_phase1;
+            return {};
     }
 }
 
 std::vector<int> FlyPlatformManager::GetPlatformY(int phase) {
     switch (phase) {
         case 1:
-            return platform_y_phase1;
+            return {};
         case 2:
             return platform_y_phase2;
         case 3:
             return platform_y_phase3;
         default:
-            return platform_y_phase1;
+            return {};
+    }
+}
+
+std::vector<float> FlyPlatformManager::GetPlatformRange(int phase) {
+    switch (phase) {
+        case 1:
+            return {};
+        case 2:
+            return platform_range_phase2;
+        case 3:
+            return platform_range_phase3;
+        default:
+            return {};
+    }
+}
+
+std::vector<int> FlyPlatformManager::GetPlatformDirection(int phase) {
+    switch (phase) {
+        case 1:
+            return {};
+        case 2:
+            return platform_direcion_phase2;
+        case 3:
+            return platform_direcion_phase3;
+        default:
+            return {};
     }
 }
 

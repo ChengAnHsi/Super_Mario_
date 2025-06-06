@@ -20,6 +20,8 @@ public:
 
     std::vector<int> GetPlatformX(int phase);
     std::vector<int> GetPlatformY(int phase);
+    std::vector<float> GetPlatformRange(int phase);
+    std::vector<int> GetPlatformDirection(int phase);
 
     void SetCeilingHeight(float height);
 
@@ -28,27 +30,28 @@ private:
     float m_CeilingHeight;
 
     // Platform spawn positions for different phases
+    // XY
+    // move range(one direction)
+    // updown
+    // leftright
+
     // Phase 1 positions(no platforms here)
-    std::vector<int> platform_x_phase1 = {};
-    std::vector<int> platform_y_phase1 = {};
-    std::vector<bool> platform_direcion_is_X_phase1 = {};
-    std::vector<bool> platform_direcion_up_phase1 = {};
-    std::vector<bool> platform_direcion_left_phase1 = {};
 
     // Phase 2 positions
     std::vector<int> platform_x_phase2 = {141, 156, 141, 156};
     std::vector<int> platform_y_phase2 = {9, 9, 3, 3};
-    std::vector<bool> platform_direcion_is_X_phase2 = {false, false, false, false};
-    std::vector<bool> platform_direcion_up_phase2 = {false, false, true, true};
-    std::vector<bool> platform_direcion_left_phase2 = {false, false, false, false};
+    // phase 2 all platform is one direction, so use bigger range(30.0f) to achieve it(no turn direction)
+    std::vector<float> platform_range_phase2 = {30.0f, 30.0f, 30.0f, 30.0f};
+
+    // X:left(0), right(1), Y:up(2), down(3)
+    std::vector<int> platform_direcion_phase2 = {3, 2, 3, 2};
 
     // Phase 3 positions
-    // todo up down
-    std::vector<int> platform_x_phase3 = {131, 87, 92, 56};
-    std::vector<int> platform_y_phase3 = {8, 6, 5, 4};
-    std::vector<bool> platform_direcion_is_X_phase3 = {false, true, true, true};
-    std::vector<bool> platform_direcion_up_phase3 = {false, true, true, true};
-    std::vector<bool> platform_direcion_left_phase3 = {false, true, true, true};
+    std::vector<int> platform_x_phase3 = {56, 131, 87, 95};
+    std::vector<int> platform_y_phase3 = {9, 8, 6, 5};
+    std::vector<float> platform_range_phase3 = {6, 6, 3, 4};
+
+    std::vector<int> platform_direcion_phase3 = {3, 0 ,0 ,0};
 };
 
 #endif // FLY_PLATFORM_MANAGER_HPP

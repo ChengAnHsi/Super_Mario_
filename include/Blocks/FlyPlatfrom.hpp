@@ -13,6 +13,8 @@ public:
 
     void SetMovementRange(float rangeX, float rangeY);
     void SetMovementSpeed(float speedX, float speedY);
+    void SetMovingDirection(bool directionRightX, bool directionUpY);
+    void SetTempMoveXY(float tmepX, float tempY);
 
     void ResetToInitialPosition();
 
