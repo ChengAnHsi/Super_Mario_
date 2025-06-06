@@ -25,7 +25,6 @@
 - 其餘素材來源：https://github.com/Gold872/Super-Mario-Bros/tree/master
 - 遊玩網站：https://supermarioplay.com/
 - 製作參考：https://www.youtube.com/watch?v=7D4uoSoQsjw&t=60s
-- 製作參考(camera)：https://github.com/MitchellSternke/Mario/blob/master/source/Camera.cpp
 - 移動參考：https://www.youtube.com/watch?v=dMbP4nvwONc
 - 移動參考(github)：https://github.com/Cakez77/CelesteClone/blob/master/src/game.cpp
 - 重力參考(js)：https://www.youtube.com/watch?v=RFPn9r9mKe0&t=70s
@@ -113,7 +112,7 @@
     - [x] 碰撞邏輯
 - Week 14：怪物移動邏輯與動畫
     - [x] 怪物移動路徑
-    - [ ] 碰撞邏輯
+    - [x] 碰撞邏輯
 
 - Week 15：移動平台
     - [x] 上升與下降
@@ -125,8 +124,9 @@
     - [x] 復活地圖更新
     - [x] 拉旗子
   
-- Week 17：收尾
+- Week 17：收尾與作弊模式
     - [x] 針對遊戲細節進行優化
+    - [x] 作弊模式
 
 - 代辦清單 緊急程度：隨緣 1 - 5 緊急
 - Lo
@@ -149,4 +149,3 @@
   - 積分、1UP文字顯示 2
   - 跳躍時落下圖片更新 1
   - 1-3 更新大城堡 1
-  - 遇到栗子掉落砸在頭上，要縮小然後把栗子踩死?

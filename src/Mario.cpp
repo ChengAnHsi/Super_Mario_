@@ -677,6 +677,10 @@ void Mario::Fire() {
 }
 
 float Mario::Move() {
+    if (is_dead) {
+        SetPosition(-380.0f + 2.5f * BLOCK_SIZE, -232.0f);
+        return 0.0f;
+    }
     if (is_dying) {
         // clear key down state
         is_left_key_down = false;
@@ -781,8 +785,8 @@ float Mario::Move() {
             SetVisible(false);
         }
     }
-    // test locate to center
-    if (Util::Input::IsKeyDown(Util::Keycode::A)) SetPosition(160.0f, 200.0f);
+
+    if (Util::Input::IsKeyDown(Util::Keycode::A)) SetInvincible(true);
 
     return OnUpdate(1);
 }
