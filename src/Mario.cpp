@@ -211,10 +211,11 @@ bool Mario::GravityAndCollision(const float delta) {
             this->SetPosition(mario_x, mario_y);
             return false;  // on ground
         }
-        if(Y_state == CollisionState::Top) {
+        if(Y_state == CollisionState::Top & velocityY > 0) {
             // 固定在方塊下方開始下墜
             mario_y = box->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
             this->SetPosition(mario_x, mario_y);
+            velocityY = 0;
             break;
         }
     }
@@ -237,12 +238,11 @@ bool Mario::GravityAndCollision(const float delta) {
             is_on_platform = true;
             break;
         }
-        if(Y_state == CollisionState::Top) {
-            standing_platform = platform;
+        if(Y_state == CollisionState::Top && velocityY > 0) {
             // 固定在方塊下方開始下墜
             mario_y = platform->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
             this->SetPosition(mario_x, mario_y);
-            is_on_platform = true;
+            velocityY = 0;
             break;
         }
     }
@@ -289,7 +289,7 @@ bool Mario::GravityAndCollision(const float delta) {
             return false;  // 碰撞到地面，不在滯空狀態
         }
 
-        if(Y_state == CollisionState::Top) {
+        if(Y_state == CollisionState::Top & velocityY > 0) {
             block->TriggerJumpAnimation();
 
             if (block->GetBlockType() == Block::TYPE::MysteryBlock) {
@@ -311,14 +311,13 @@ bool Mario::GravityAndCollision(const float delta) {
             // 固定在方塊下方開始下墜
             mario_y = block->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
             this->SetPosition(mario_x, mario_y);
+            velocityY = 0;
             break;
         }
     }
     if (Y_state == CollisionState::Top) {
-        velocityY = 0;
-
         if(collision_top_block) {
-            // check collect collectible
+            // check collect top position collectible
             for (const auto& collectible : collision_collectibles) {
                 // collectible had already been collected
                 if (collectible->GetVisible() == false) {
@@ -353,7 +352,6 @@ bool Mario::GravityAndCollision(const float delta) {
 
     this->SetPosition(mario_x, mario_y);
 
-    // 如果沒有碰撞，表示在滯空狀態
     return !collision;
 }
 
@@ -523,7 +521,6 @@ void Mario::SetGrowingAnimation() {
 void Mario::UpdateGrowingState() {
     if (is_grow == false) return;
     growing_timer += 1.0f;
-//    if(IfAnimationEnds()) {
     if(growing_timer >= GROWING_TIME) {
         growing_timer = 0.0f;
         if(is_invincible) {
@@ -910,6 +907,7 @@ void Mario::SetTimeToMoveCamera(const bool is_time_to_move_camera_map2) {
 
 void Mario::ResetStateForNextPhase() {
     SetVisible(true);
+    back_to_castle_dis = 0.0f;
     is_pull = false;
     is_back_to_castle = false;
     is_ready_for_next_phase = false;
