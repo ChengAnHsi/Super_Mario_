@@ -23,6 +23,7 @@ public:
     std::vector<float> GetPlatformRange(int phase);
     std::vector<int> GetPlatformDirection(int phase);
 
+    void CheckMovingPlatform();
     void SetCeilingHeight(float height);
 
 private:
@@ -32,8 +33,7 @@ private:
     // Platform spawn positions for different phases
     // XY
     // move range(one direction)
-    // updown
-    // leftright
+    // direction
 
     // Phase 1 positions(no platforms here)
 
@@ -49,7 +49,7 @@ private:
     // Phase 3 positions
     std::vector<int> platform_x_phase3 = {56, 131, 87, 95};
     std::vector<int> platform_y_phase3 = {9, 8, 6, 5};
-    std::vector<float> platform_range_phase3 = {6, 6, 3, 4};
+    std::vector<float> platform_range_phase3 = {8, 3, 3, 3};
 
     std::vector<int> platform_direcion_phase3 = {3, 0 ,0 ,0};
 };

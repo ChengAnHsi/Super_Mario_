@@ -6,7 +6,6 @@
 class FlyPlatform final : public BackgroundImage {
 public:
     FlyPlatform() = default;
-
     ~FlyPlatform() override = default;
 
     void Update(float delta);
@@ -15,13 +14,12 @@ public:
     void SetMovementSpeed(float speedX, float speedY);
     void SetMovingDirection(bool directionRightX, bool directionUpY);
     void SetTempMoveXY(float tmepX, float tempY);
+    void SetMoving(bool isMoving);
+    bool GetMoving();
 
     void ResetToInitialPosition();
 
 private:
-    // Initial position
-    glm::vec2 InitialPosition;
-
     // Movement properties
     float MoveRangeX = 0.0f;
     float MoveRangeY = 0.0f;
@@ -35,6 +33,8 @@ private:
     // Movement direction flags
     bool MovingRightX = false;
     bool MovingUpY = false;
+
+    bool isMoving = false;
 };
 
 #endif // FLY_PLATFORM_HPP

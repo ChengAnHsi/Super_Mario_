@@ -3,7 +3,7 @@
 void FlyPlatformManager::UpdatePlatforms(float deltaTime) {
     // Update all platforms
     for (auto& platform : m_Platforms) {
-        platform->Update(deltaTime);
+        if (platform->GetMoving()) platform->Update(deltaTime);
 
         // Check if platform needs repositioning due to ceiling
         if (platform->GetPosition().y >= m_CeilingHeight || platform->GetPosition().y <= -m_CeilingHeight) {
@@ -22,6 +22,14 @@ std::vector<std::shared_ptr<Util::GameObject>> FlyPlatformManager::GetChildren()
         all_obj.push_back(std::static_pointer_cast<Util::GameObject>(platform));
     }
     return all_obj;
+}
+
+void FlyPlatformManager::CheckMovingPlatform() {
+    for (auto& platform : m_Platforms) {
+        if (platform->GetPosition().x <= 400.0f) {
+            platform->SetMoving(true);
+        }
+    }
 }
 
 void FlyPlatformManager::SetPlatforms(std::vector<std::shared_ptr<FlyPlatform>> platforms) {

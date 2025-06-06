@@ -60,12 +60,19 @@ void FlyPlatform::SetTempMoveXY(float tmepX, float tempY) {
     this->TempMoveY = tempY;
 }
 
+void FlyPlatform::SetMoving(bool isMoving) {
+    this->isMoving = isMoving;
+}
+
+bool FlyPlatform::GetMoving() {
+    return isMoving;
+}
+
 void FlyPlatform::ResetToInitialPosition() {
     if (m_Transform.translation.y >= 360.0f) {
         m_Transform.translation.y = -360.0f;
     }else {
         m_Transform.translation.y = 360.0f;
     }
-    TempMoveX = 0.0f;
-    TempMoveY = 0.0f;
+    if (MovingUpY) TempMoveY = 0.0f;
 }

@@ -69,6 +69,9 @@ void App::Update() {
 
         // check mario is in enemy visiion
         m_EM->SetEnemyMoving();
+
+        // check platform can move
+        m_FPM->CheckMovingPlatform();
     }
 
     if(m_PRM->GetTime() == 0) {

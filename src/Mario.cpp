@@ -107,6 +107,7 @@ void Mario::OnRun(const float distance) {
             }
             if (CollidesAndSetDirection({next_x, mario_y}, collectible, true)) {
                 IncreaseCoin(1);
+                IncreaseScore(200);
                 collectible->SetVisible(false);
             }
         }
@@ -227,6 +228,7 @@ bool Mario::GravityAndCollision(const float delta) {
         }
         if (CollidesAndSetDirection({mario_x, mario_y}, collectible, false)) {
             IncreaseCoin(1);
+            IncreaseScore(200);
             collectible->SetVisible(false);
         }
     }
