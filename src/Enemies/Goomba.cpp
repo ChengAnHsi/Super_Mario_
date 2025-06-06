@@ -4,49 +4,40 @@
 #include "Util/SFX.hpp"
 #include "Enemies/Koopa.hpp"
 
-
 bool Goomba::CheckEnemyCollision(std::shared_ptr<Enemy> enemy) {
    // Don't check collision with self or if either enemy is dead or not visible
    if (this == enemy.get() || is_dead || !GetVisible()) {
        return false;
    }
 
-
    if(enemy->GetIsDead()) {
        return false;
    }
-
 
    glm::vec2 this_pos = GetPosition();
    glm::vec2 this_size = m_Drawable->GetSize();
    this_size *= GOOMBA_MAGNIFICATION;
 
-
    glm::vec2 enemy_pos = enemy->GetPosition();
    glm::vec2 enemy_size = enemy->GetSize();
    enemy_size *= ENEMY_MAGNIFICATION;
-
 
    float this_left = this_pos.x - this_size.x / 2;
    float this_right = this_pos.x + this_size.x / 2;
    float this_top = this_pos.y + this_size.y / 2;
    float this_bottom = this_pos.y - this_size.y / 2;
 
-
    float enemy_left = enemy_pos.x - enemy_size.x / 2;
    float enemy_right = enemy_pos.x + enemy_size.x / 2;
    float enemy_top = enemy_pos.y + enemy_size.y / 2;
    float enemy_bottom = enemy_pos.y - enemy_size.y / 2;
 
-
    float EPSILON = 0.01f;  // Small error tolerance
    bool collision_x = (this_left < enemy_right - EPSILON) && (this_right > enemy_left + EPSILON);
    bool collision_y = (this_bottom < enemy_top - EPSILON) && (this_top > enemy_bottom + EPSILON);
 
-
    return collision_x && collision_y;
 }
-
 
 void Goomba::AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies) {
    for (const auto& enemy : enemies) {
@@ -56,43 +47,35 @@ void Goomba::AddEnemies(std::vector<std::shared_ptr<Enemy>> enemies) {
    }
 }
 
-
 void Goomba::ClearEnemies() {
    other_enemies.clear();
 }
-
 
 bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
    if (is_dead || !GetVisible() || mario->GetDying()) {
        return false;
    }
 
-
    glm::vec2 goomba_pos = GetPosition();
    glm::vec2 goomba_size = m_Drawable->GetSize();
    goomba_size *= GOOMBA_MAGNIFICATION;
 
-
    glm::vec2 mario_pos = mario->GetPosition();
    glm::vec2 mario_size = mario->GetSize();
    mario_size *= MARIO_MAGNIFICATION;
-
 
    float goomba_left = goomba_pos.x - goomba_size.x / 2;
    float goomba_right = goomba_pos.x + goomba_size.x / 2;
    float goomba_top = goomba_pos.y + goomba_size.y / 2;
    float goomba_bottom = goomba_pos.y - goomba_size.y / 2;
 
-
    float mario_left = mario_pos.x - mario_size.x / 2;
    float mario_right = mario_pos.x + mario_size.x / 2;
    float mario_top = mario_pos.y + mario_size.y / 2;
    float mario_bottom = mario_pos.y - mario_size.y / 2;
 
-
    bool collision_x = (mario_left < goomba_right) && (mario_right > goomba_left);
    bool collision_y = (mario_bottom < goomba_top) && (mario_top > goomba_bottom);
-
 
    if (collision_x && collision_y) {
        if(mario->GetInvincible()) {
@@ -102,11 +85,9 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
            death_timer = 0.0f;
            velocityY = DEATH_JUMP_VELOCITY * 1.5f;
 
-
            std::shared_ptr<Util::SFX> kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
            kick_sfx->SetVolume(200);
            kick_sfx->Play();
-
 
            mario->IncreaseScore(score);
            return false;
@@ -118,7 +99,7 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
            goomba_top - mario_bottom,   // Mario from bottom (stomp)
            mario_top - goomba_bottom    // Mario from top
        };
-
+            
        float vertical_overlap = std::min(mario_top, goomba_top) - std::max(mario_bottom, goomba_bottom);
        float mario_height = mario_top - mario_bottom;
        float overlap_percentage = vertical_overlap / mario_height;
@@ -141,7 +122,6 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
            return false;
        }
 
-
        if (!mario->GetDying() && mario->GetLive() > 0) {
            if (mario->GetTempInvincible() == false) {
                mario->Die();
@@ -151,7 +131,6 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
    }
    return false;
 }
-
 
 void Goomba::KillGoomba() {
    if (GetLive() > 0) {
@@ -164,30 +143,25 @@ void Goomba::KillGoomba() {
    }
 }
 
-
 void Goomba::Action(const float distance) {
    float goomba_x = GetPosition().x;
    float goomba_y = GetPosition().y;
    glm::vec2 goomba_size = m_Drawable->GetSize();
    goomba_size *= GOOMBA_MAGNIFICATION;
 
-
    const float step = BLOCK_SIZE / 4.0f;
    float remaining_distance = distance;
    float step_distance = std::min(step, std::abs(distance));
 
-
    if (!isFacingRight){
        step_distance *= -1;
    }
-
 
    bool collision = false;
    while (std::abs(remaining_distance) > 0.0f) {
        float step_distance = (remaining_distance > 0.0f) ? std::min(step, remaining_distance)
                                                          : std::max(-step, remaining_distance);
        float next_x = goomba_x + step_distance;
-
 
        for (const auto& box : collision_boxes) {
            if (box->GetVisible() == false) {
@@ -236,34 +210,28 @@ void Goomba::Action(const float distance) {
            break;
        }
 
-
        goomba_x = next_x;
        this->SetPosition(goomba_x, goomba_y);
        remaining_distance -= step_distance;
    }
-
 
    if (collision) {
        isFacingRight = !isFacingRight;
    }
 }
 
-
 bool Goomba::AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box) {
    glm::vec2 a = goomba_pos;
    glm::vec2 goomba_size = this->m_Drawable->GetSize();
    goomba_size *= GOOMBA_MAGNIFICATION;
 
-
    glm::vec2 b = box->m_Transform.translation;
    glm::vec2 b_size = box->GetSize();
-
 
    b_size.x *= box->GetScale().x;
    b_size.y *= box->GetScale().y;
    if(b_size.x < 0) b_size.x *= -1;
    if(b_size.y < 0) b_size.y *= -1;
-
 
    X_state = CollisionState::None;
    float aleft = a.x - goomba_size.x / 2;
@@ -271,47 +239,38 @@ bool Goomba::AABBCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage>
    float atop = a.y + goomba_size.y / 2;
    float abottom = a.y - goomba_size.y / 2;
 
-
    float bleft = b.x - b_size.x / 2;
    float bright = b.x + b_size.x / 2;
    float btop = b.y + b_size.y / 2;
    float bbottom = b.y - b_size.y / 2;
 
-
    float EPSILON = 0.0f;
    bool collisionX = (aleft < bright - EPSILON) && (aright > bleft + EPSILON);
    bool collisionY = (abottom < btop - EPSILON) && (atop > bbottom + EPSILON);
-
 
    if (!(collisionX && collisionY)) {
        return false;
    }
 
-
    float minOverlap = std::min({bright - aleft, aright - bleft});
    if (minOverlap == bright - aleft) X_state = CollisionState::Left;
    else if (minOverlap == aright - bleft) X_state = CollisionState::Right;
 
-
    return X_state != CollisionState::None;
 }
-
 
 bool Goomba::CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage> box) {
    glm::vec2 a = goomba_pos;
    glm::vec2 goomba_size = this->m_Drawable->GetSize();
    goomba_size *= GOOMBA_MAGNIFICATION;
 
-
    glm::vec2 b = box->m_Transform.translation;
    glm::vec2 b_size = box->GetSize();
-
 
    b_size.x *= box->GetScale().x;
    b_size.y *= box->GetScale().y;
    if(b_size.x < 0) b_size.x *= -1;
    if(b_size.y < 0) b_size.y *= -1;
-
 
    Y_state = CollisionState::None;
    float aleft = a.x - goomba_size.x / 2;
@@ -319,31 +278,25 @@ bool Goomba::CCDDCollides(glm::vec2 goomba_pos, std::shared_ptr<BackgroundImage>
    float atop = a.y + goomba_size.y / 2;
    float abottom = a.y - goomba_size.y / 2;
 
-
    float bleft = b.x - b_size.x / 2;
    float bright = b.x + b_size.x / 2;
    float btop = b.y + b_size.y / 2;
    float bbottom = b.y - b_size.y / 2;
 
-
    float EPSILON = 0.0f;
    bool collisionX = (aleft < bright - EPSILON) && (aright > bleft + EPSILON);
    bool collisionY = (abottom < btop - EPSILON) && (atop > bbottom + EPSILON);
-
 
    if (!(collisionX && collisionY)) {
        return false;
    }
 
-
    float minOverlap = std::min({atop - bbottom, btop - abottom});
    if (minOverlap == atop - bbottom) Y_state = CollisionState::Top;
    else if (minOverlap == btop - abottom) Y_state = CollisionState::Bottom;
 
-
    return Y_state != CollisionState::None;
 }
-
 
 bool Goomba::GravityAndCollision(const float delta) {
    glm::vec2 goomba_size = this->m_Drawable->GetSize();
@@ -351,13 +304,10 @@ bool Goomba::GravityAndCollision(const float delta) {
    float goomba_x = this->GetPosition().x;
    float goomba_y = this->GetPosition().y;
 
-
    velocityY += GRAVITY * (delta / 60.0f);
    goomba_y += velocityY * (delta / 60.0f);
 
-
    bool collision = false; // Declare collision variable here
-
 
    if (is_dead) {
        this->SetPosition(goomba_x, goomba_y);
@@ -367,7 +317,6 @@ bool Goomba::GravityAndCollision(const float delta) {
        return true;
    }
 
-
    for (const auto &box : collision_boxes){
        if(box->GetVisible() == false) {
            continue;
@@ -375,7 +324,6 @@ bool Goomba::GravityAndCollision(const float delta) {
        glm::vec2 b_size = box->GetSize();
        b_size.x *= box->GetScale().x;
        b_size.y *= box->GetScale().y;
-
 
        collision = CCDDCollides({goomba_x, goomba_y}, box);
        if (Y_state == CollisionState::Bottom) {
@@ -426,7 +374,6 @@ bool Goomba::GravityAndCollision(const float delta) {
    return true;
 }
 
-
 void Goomba::UpdateAnimation() {
    if (isFacingRight == false) {
        m_Transform.scale = glm::vec2{-GOOMBA_MAGNIFICATION, GOOMBA_MAGNIFICATION};
@@ -435,7 +382,6 @@ void Goomba::UpdateAnimation() {
        m_Transform.scale = glm::vec2{GOOMBA_MAGNIFICATION, GOOMBA_MAGNIFICATION};
    }
 }
-
 
 void Goomba::OnUpdate(const float delta) {
    if (is_dead) {
@@ -452,18 +398,15 @@ void Goomba::OnUpdate(const float delta) {
        return;
    }
 
-
    float distance = GetMoveVelocity() * delta;
    if (isFacingRight == false) {
        distance *= -1;
    }
 
-
    GravityAndCollision(3 * delta);
    UpdateAnimation();
    Action(distance);
 }
-
 
 void Goomba::Move(){
    if (!GetMoving()) return;
@@ -477,7 +420,6 @@ void Goomba::Move(){
        is_set_runanimation = true;
    }
 }
-
 
 void Goomba::SetLive(int live){
    this->live = live;
@@ -495,13 +437,9 @@ void Goomba::SetLive(int live){
    }
 }
 
-
 int Goomba::GetLive() const {
    return live;
 }
-
-
-
 
 void Goomba::AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) {
    for (const auto& box : boxes) {
@@ -509,11 +447,9 @@ void Goomba::AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> box
    }
 }
 
-
 void Goomba::ClearCollisionBoxes() {
    collision_boxes.clear();
 }
-
 
 void Goomba::AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) {
    for (const auto& block : blocks) {
@@ -521,8 +457,6 @@ void Goomba::AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) {
    }
 }
 
-
 void Goomba::ClearCollisionBlocks() {
    collision_blocks.clear();
 }
-
