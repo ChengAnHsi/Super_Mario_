@@ -16,10 +16,19 @@ public:
     void SetTempMoveXY(float tmepX, float tempY);
     void SetMoving(bool isMoving);
     bool GetMoving();
+    float GetDeltaX() const;
+    float GetDeltaY() const;
+
 
     void ResetToInitialPosition();
 
 private:
+    // FlyPlatform.hpp
+    float previousY = 0.0f;
+    float previousX = 0.0f;
+    float deltaX = 0.0f;
+    float deltaY = 0.0f;
+
     // Movement properties
     float MoveRangeX = 0.0f;
     float MoveRangeY = 0.0f;

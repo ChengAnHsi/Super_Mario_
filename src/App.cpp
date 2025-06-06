@@ -122,6 +122,8 @@ void App::Update() {
 
     // If Mario's position is less than this pos(<= -112.5), the camera does not need to move to the right
     if(m_Mario->GetPosition().x <= -112.5f) dis = 0.0f;
+    // camera need to update faster, when mario is standing on platform
+    if (m_Mario->GetPosition().x >= -105.0f) dis += 2.0f;
 
     // to solve mario left margin
     if(m_Mario->GetPosition().x < -360) {

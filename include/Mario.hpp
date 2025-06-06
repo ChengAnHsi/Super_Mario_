@@ -46,6 +46,7 @@ public:
     // collision function
     bool CollidesAndSetDirection(glm::vec2 mario_pos, const std::shared_ptr<BackgroundImage>& box, bool is_checkX);
     bool GravityAndCollision(float delta);
+    CollisionState DetermineVerticalCollisionDirection(glm::vec2 prev, glm::vec2 curr, glm::vec2 b_pos);
 
     // animation
     void UpdateAnimation();

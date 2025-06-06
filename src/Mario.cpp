@@ -181,6 +181,12 @@ bool Mario::CollidesAndSetDirection(const glm::vec2 mario_pos, const std::shared
     return true;
 }
 
+CollisionState Mario::DetermineVerticalCollisionDirection(glm::vec2 prev, glm::vec2 curr, glm::vec2 b_pos) {
+    if (prev.y >= b_pos.y && curr.y < b_pos.y) return CollisionState::Bottom; // 往下降
+    if (prev.y <= b_pos.y && curr.y > b_pos.y) return CollisionState::Top;    // 往上撞
+    return CollisionState::None;
+}
+
 bool Mario::GravityAndCollision(const float delta) {
     if (is_growing) return isJumping;
     glm::vec2 mario_size = this->m_Drawable->GetSize();
@@ -218,6 +224,9 @@ bool Mario::GravityAndCollision(const float delta) {
             break;
         }
     }
+    // record Mario current standing on which platform
+    std::shared_ptr<FlyPlatform> standing_platform = nullptr;
+    bool is_on_platform = false;
     for (const auto& platform : collision_flyplatforms) {
         glm::vec2 b_size = platform->GetSize();
         b_size.x *= platform->GetScale().x;
@@ -226,19 +235,31 @@ bool Mario::GravityAndCollision(const float delta) {
         collision = CollidesAndSetDirection({mario_x, mario_y}, platform, false);
 
         if (Y_state == CollisionState::Bottom) {
+            standing_platform = platform;
             // fix mario on the floor
             mario_y = platform->GetTransform().translation.y + b_size.y / 2 + mario_size.y / 2;
             velocityY = 0;
             this->SetPosition(mario_x, mario_y);
-            return false;  // on ground
+            is_on_platform = true;
+            break;
         }
         if(Y_state == CollisionState::Top) {
+            standing_platform = platform;
             // 固定在方塊下方開始下墜
             mario_y = platform->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
             this->SetPosition(mario_x, mario_y);
+            is_on_platform = true;
             break;
         }
     }
+
+    if (!is_right_key_down && !is_left_key_down && standing_platform) {
+        float dx = standing_platform->GetDeltaX();
+        float dy = standing_platform->GetDeltaY();
+        SetPosition(GetPosition().x + dx, GetPosition().y + dy);
+    }
+    if (is_on_platform) return false;  // on ground
+
     // check collect collectible
     for (const auto& collectible : collision_collectibles) {
         // collectible had already been collected

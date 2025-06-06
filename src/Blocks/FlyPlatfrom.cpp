@@ -1,6 +1,9 @@
 #include "Blocks/FlyPlatfrom.hpp"
 
 void FlyPlatform::Update(float deltaTime) {
+    previousX = m_Transform.translation.x;
+    previousY = m_Transform.translation.y;
+
     // Update X movement if range is set
     if (MoveRangeX > 0) {
         if (MovingRightX) {
@@ -38,6 +41,9 @@ void FlyPlatform::Update(float deltaTime) {
             }
         }
     }
+
+    deltaX = m_Transform.translation.x - previousX;
+    deltaY = m_Transform.translation.y - previousY;
 }
 
 void FlyPlatform::SetMovementRange(float rangeX, float rangeY) {
@@ -66,6 +72,13 @@ void FlyPlatform::SetMoving(bool isMoving) {
 
 bool FlyPlatform::GetMoving() {
     return isMoving;
+}
+
+float FlyPlatform::GetDeltaX() const {
+    return deltaX;
+}
+float FlyPlatform::GetDeltaY() const {
+    return deltaY;
 }
 
 void FlyPlatform::ResetToInitialPosition() {
