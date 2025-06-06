@@ -288,8 +288,8 @@ void App::ResetPhase() {
         platform->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         platform->SetImage(RESOURCE_DIR"/Scenery/FlyPlatfrom.png");
         platform->SetScale(3.5f, 3.5f);
-        platform->SetMovementRange(3.5 * BLOCK_SIZE, 0);
-        // platform->SetMovementRange(0, 3.5 * BLOCK_SIZE);
+        //platform->SetMovementRange(3.5 * BLOCK_SIZE, 0);
+        platform->SetMovementRange(0, 3.5 * BLOCK_SIZE);
         platform->SetMovementSpeed(2.0f, 2.0f);
         platforms.push_back(platform);
         m_FPM->AddPlatform(platform);

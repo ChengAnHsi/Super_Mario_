@@ -130,8 +130,10 @@ bool Mario::CollidesAndSetDirection(const glm::vec2 mario_pos, const std::shared
     if(b_size.x < 0) b_size.x *= -1;
     if(b_size.y < 0) b_size.y *= -1;
 
-    if(is_checkX) X_state = CollisionState::None;
-    else Y_state = CollisionState::None;
+    // if(is_checkX) X_state = CollisionState::None;
+    // else Y_state = CollisionState::None;
+    X_state = CollisionState::None;
+    Y_state = CollisionState::None;
 
     const float A_left = a.x - a_size.x / 2;
     const float A_right = a.x + a_size.x / 2;
@@ -149,23 +151,33 @@ bool Mario::CollidesAndSetDirection(const glm::vec2 mario_pos, const std::shared
     if (!(collisionX && collisionY)) return false;
 
     // calculate minimum overlap area
-    if(is_checkX) {
-        // 判斷 X 軸碰撞方向
-        const float overlapLeft = B_right - A_left;
-        const float overlapRight = A_right - B_left;
-        if (overlapLeft < overlapRight)
-            X_state = CollisionState::Left;
-        else
-            X_state = CollisionState::Right;
-    }else {
-        // 判斷 Y 軸碰撞方向
-        const float overlapTop = A_top - B_bottom;
-        const float overlapBottom = B_top - A_bottom;
-        if (overlapTop < overlapBottom)
-            Y_state = CollisionState::Top;
-        else
-            Y_state = CollisionState::Bottom;
-    }
+    // if(is_checkX) {
+    //     // 判斷 X 軸碰撞方向
+    //     const float overlapLeft = B_right - A_left;
+    //     const float overlapRight = A_right - B_left;
+    //     if (overlapLeft < overlapRight)
+    //         X_state = CollisionState::Left;
+    //     else
+    //         X_state = CollisionState::Right;
+    // }else {
+    //     // 判斷 Y 軸碰撞方向
+    //     const float overlapTop = A_top - B_bottom;
+    //     const float overlapBottom = B_top - A_bottom;
+    //     if (overlapTop < overlapBottom)
+    //         Y_state = CollisionState::Top;
+    //     else
+    //         Y_state = CollisionState::Bottom;
+    // }
+
+    const float overlapLeft = B_right - A_left;
+    const float overlapRight = A_right - B_left;
+    const float overlapTop = A_top - B_bottom;
+    const float overlapBottom = B_top - A_bottom;
+
+    if (overlapLeft == std::min(overlapLeft, std::min(overlapRight, std::min(overlapTop, overlapBottom)))) X_state = CollisionState::Left;
+    if (overlapRight == std::min(overlapLeft, std::min(overlapRight, std::min(overlapTop, overlapBottom)))) X_state = CollisionState::Right;
+    if (overlapTop == std::min(overlapLeft, std::min(overlapRight, std::min(overlapTop, overlapBottom)))) Y_state = CollisionState::Top;
+    if (overlapBottom == std::min(overlapLeft, std::min(overlapRight, std::min(overlapTop, overlapBottom)))) Y_state = CollisionState::Bottom;
 
     return true;
 }
