@@ -9,6 +9,7 @@
 
 #include "AnimatedCharacter.hpp"
 #include "CollisionState.hpp"
+#include "Blocks/FlyPlatfrom.hpp"
 
 #include "Manager/FireballManager.hpp"
 
@@ -94,9 +95,11 @@ public:
 
     void AddCollisionBoxes(const std::vector<std::shared_ptr<BackgroundImage>>& boxes);
     void AddCollisionBlocks(const std::vector<std::shared_ptr<Block>>& blocks);
+    void AddCollisionFlyPlatForms(const std::vector<std::shared_ptr<FlyPlatform>>& platforms);
     void AddCollectibles(const std::vector<std::shared_ptr<BackgroundImage>>& collectibles);
     void ClearCollisionBoxes();
     void ClearCollectibles();
+    void ClearFlyPlatForms();
     void ClearCollisionBlocks();
 
 private:
@@ -124,6 +127,7 @@ private:
 
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
+    std::vector<std::shared_ptr<FlyPlatform>> collision_flyplatforms;
     std::vector<std::shared_ptr<BackgroundImage>> collision_collectibles;
     std::shared_ptr<FireballManager> m_FM;
 

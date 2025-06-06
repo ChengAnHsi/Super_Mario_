@@ -78,6 +78,16 @@ void Mario::OnRun(const float distance) {
                 break;
             }
         }
+        for (const auto& platform : collision_flyplatforms) {
+            CollidesAndSetDirection({next_x, mario_y}, platform, true);
+            // check next step will collision or not
+            if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
+                CollidesAndSetDirection({next_x, mario_y}, platform, false);
+                if (Y_state == CollisionState::Top) {
+                    // ignore
+                }
+            }
+        }
         // if next step will collision, then do not move
         if (collision) {
             break;
@@ -133,8 +143,6 @@ bool Mario::CollidesAndSetDirection(const glm::vec2 mario_pos, const std::shared
 
     if(is_checkX) X_state = CollisionState::None;
     else Y_state = CollisionState::None;
-    // X_state = CollisionState::None;
-    // Y_state = CollisionState::None;
 
     const float A_left = a.x - a_size.x / 2;
     const float A_right = a.x + a_size.x / 2;
@@ -170,16 +178,6 @@ bool Mario::CollidesAndSetDirection(const glm::vec2 mario_pos, const std::shared
             Y_state = CollisionState::Bottom;
     }
 
-    // const float overlapLeft = B_right - A_left;
-    // const float overlapRight = A_right - B_left;
-    // const float overlapTop = A_top - B_bottom;
-    // const float overlapBottom = B_top - A_bottom;
-    //
-    // if (overlapLeft == std::min(overlapLeft, std::min(overlapRight, std::min(overlapTop, overlapBottom)))) X_state = CollisionState::Left;
-    // if (overlapRight == std::min(overlapLeft, std::min(overlapRight, std::min(overlapTop, overlapBottom)))) X_state = CollisionState::Right;
-    // if (overlapTop == std::min(overlapLeft, std::min(overlapRight, std::min(overlapTop, overlapBottom)))) Y_state = CollisionState::Top;
-    // if (overlapBottom == std::min(overlapLeft, std::min(overlapRight, std::min(overlapTop, overlapBottom)))) Y_state = CollisionState::Bottom;
-
     return true;
 }
 
@@ -207,15 +205,36 @@ bool Mario::GravityAndCollision(const float delta) {
         collision = CollidesAndSetDirection({mario_x, mario_y}, box, false);
 
         if (Y_state == CollisionState::Bottom) {
-            // 固定瑪利歐在地板位置
+            // fix mario on the floor
             mario_y = box->GetTransform().translation.y + b_size.y / 2 + mario_size.y / 2;
             velocityY = 0;
             this->SetPosition(mario_x, mario_y);
-            return false;  // 碰撞到地面，不在滯空狀態
+            return false;  // on ground
         }
         if(Y_state == CollisionState::Top) {
             // 固定在方塊下方開始下墜
             mario_y = box->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
+            this->SetPosition(mario_x, mario_y);
+            break;
+        }
+    }
+    for (const auto& platform : collision_flyplatforms) {
+        glm::vec2 b_size = platform->GetSize();
+        b_size.x *= platform->GetScale().x;
+        b_size.y *= platform->GetScale().y;
+
+        collision = CollidesAndSetDirection({mario_x, mario_y}, platform, false);
+
+        if (Y_state == CollisionState::Bottom) {
+            // fix mario on the floor
+            mario_y = platform->GetTransform().translation.y + b_size.y / 2 + mario_size.y / 2;
+            velocityY = 0;
+            this->SetPosition(mario_x, mario_y);
+            return false;  // on ground
+        }
+        if(Y_state == CollisionState::Top) {
+            // 固定在方塊下方開始下墜
+            mario_y = platform->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
             this->SetPosition(mario_x, mario_y);
             break;
         }
@@ -927,6 +946,16 @@ void Mario::AddCollisionBlocks(const std::vector<std::shared_ptr<Block>>& blocks
 
 void Mario::ClearCollisionBlocks() {
     collision_blocks.clear();
+}
+
+void Mario::AddCollisionFlyPlatForms(const std::vector<std::shared_ptr<FlyPlatform>>& platforms) {
+    for (const auto& platform : platforms) {
+        collision_flyplatforms.push_back(platform);
+    }
+}
+
+void Mario::ClearFlyPlatForms() {
+    collision_flyplatforms.clear();
 }
 
 void Mario::AddCollectibles(const std::vector<std::shared_ptr<BackgroundImage>>& collectibles) {

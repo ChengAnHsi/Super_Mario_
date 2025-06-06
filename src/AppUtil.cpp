@@ -38,6 +38,7 @@ void App::ResetPhase() {
     // update next level block
     m_Mario->ClearCollisionBoxes();
     m_Mario->ClearCollisionBlocks();
+    m_Mario->ClearFlyPlatForms();
 
     // remove last level and set next level items
     std::vector<std::shared_ptr<Props>> tmp2 = m_PM->GetProps();
@@ -285,7 +286,7 @@ void App::ResetPhase() {
     std::vector<float> tmprange = m_FPM->GetPlatformRange(static_cast<int>(m_Phase));
     std::vector tmpdir_is_X = m_FPM->GetPlatformDirection(static_cast<int>(m_Phase));
 
-    std::vector<std::shared_ptr<BackgroundImage>> platforms;
+    std::vector<std::shared_ptr<FlyPlatform>> platforms;
     for (size_t i = 0; i < tmpx.size(); i++) {
         auto platform = std::make_shared<FlyPlatform>();
         platform->SetPosition(tmpx[i] * BLOCK_SIZE + BACKGROUND_X_OFFSET, tmpy[i] * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
@@ -323,7 +324,7 @@ void App::ResetPhase() {
         platforms.push_back(platform);
         m_FPM->AddPlatform(platform);
     }
-    m_Mario->AddCollisionBoxes(platforms);
+    m_Mario->AddCollisionFlyPlatForms(platforms);
     m_Root.AddChildren(m_FPM->GetChildren());
 }
 
