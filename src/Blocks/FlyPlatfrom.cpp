@@ -88,4 +88,5 @@ void FlyPlatform::ResetToInitialPosition() {
         m_Transform.translation.y = 360.0f;
     }
     if (MovingUpY) TempMoveY = 0.0f;
+    else TempMoveY = MoveRangeY;
 }

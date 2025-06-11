@@ -74,11 +74,7 @@ bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         inside_self->SetPosition(GetPosition().x, GetPosition().y);
         return false;
     }
-    if (mario->GetTempInvincible() == false )  {
-        if (mario->GetLive() > 0) {
-            mario->Die();
-        }
-     }
+    if (mario->GetTempInvincible() == false && mario->GetLive() > 0) mario->Die();
     return true;
 }
 
@@ -162,6 +158,7 @@ bool FlyKoopa::DetectHole(float next_x, float y) {
         }
     }
     return !has_ground;
+    return false;
 }
 
 void FlyKoopa::Action(const float distance) {
@@ -185,7 +182,7 @@ void FlyKoopa::Action(const float distance) {
         }
 
         // 更新位置（不重計算範圍）
-        Enemy::SetPosition(FlyKoopa_x, next_y);
+        SetPosition(FlyKoopa_x, next_y);
     }
 
     else if (isShell && isMovingShell) {
@@ -387,10 +384,20 @@ bool FlyKoopa::GravityAndCollision(const float delta) {
 
     glm::vec2 FlyKoopa_size = this->m_Drawable->GetSize();
     FlyKoopa_size *= KOOPA_MAGNIFICATION;
+
     float FlyKoopa_x = this->GetPosition().x;
     float FlyKoopa_y = this->GetPosition().y;
+
     velocityY += GRAVITY * (delta / 60.0f);
     FlyKoopa_y += velocityY * (delta / 60.0f);
+
+    if (is_dead) {
+        this->SetPosition(FlyKoopa_x, FlyKoopa_y);
+        if (FlyKoopa_y < -50) {
+            SetVisible(false);
+        }
+        return true;
+    }
 
     bool collision = false;
     for (const auto &box : collision_boxes){
@@ -455,29 +462,24 @@ void FlyKoopa::ConvertToUnfly() {
 }
 
 void FlyKoopa::UpdateAnimation() {
-    if (isFlying) {
-        m_Transform.scale = glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
-    }
-    else if (isShell) {
-        if (isMovingShell) {
-            m_Transform.scale = isFacingRight ?
-                glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION} :
-                glm::vec2{-KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
-        } else {
-            m_Transform.scale = glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
-        }
-    }
-    else {
-        // 標準水平移動動畫
-        if (isFacingRight) {
-            m_Transform.scale = glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
-        } else {
-            m_Transform.scale = glm::vec2{-KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
-        }
-    }
+    m_Transform.scale = glm::vec2{KOOPA_MAGNIFICATION, KOOPA_MAGNIFICATION};
 }
 
 void FlyKoopa::OnUpdate(const float delta) {
+    if (is_dead) {
+        death_timer += delta;
+        if(GetPosition().y >= -360.0f && (dead_state == DeadState::Hit || dead_state == DeadState::Shot)){
+            velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
+            float enemy_x = GetPosition().x;
+            float enemy_y = GetPosition().y + velocityY * (delta / 60.0f);
+            SetPosition(enemy_x, enemy_y);
+        }
+        if (death_timer >= DEATH_ANIMATION_TIME) {
+            SetVisible(false);
+        }
+        return;
+    }
+
     float distance = GetMoveVelocity() * delta;
 
     if (!isFlying) {
@@ -504,7 +506,7 @@ void FlyKoopa::Move() {
 
 void FlyKoopa::SetLive(const int live) {
     // If it is not dead yet, turn it into a dead shell.
-    if(dead_state == DeadState::Shot && this->live != 0) {
+    if((dead_state == DeadState::Shot || dead_state == DeadState::Hit) && this->live != 0) {
         this->is_dead = true;
         SetVisible(false);
 
@@ -514,14 +516,15 @@ void FlyKoopa::SetLive(const int live) {
         inside_self->SetImage(AnimationShell,1000,0);
         inside_self->SetPosition(GetPosition().x, GetPosition().y);
         inside_self->SetVelocityY(0.0f);
-        inside_self->SetDeadState(DeadState::Shot);
+        inside_self->SetDeadState(dead_state);
         inside_self->SetScale(KOOPA_MAGNIFICATION,-KOOPA_MAGNIFICATION);
     }
 
     this->live = live;
 
     if (live == 0) {
-        if(GetPosition().y >= -360.0f && dead_state == DeadState::Shot) {
+        this->is_dead = true;
+        if(GetPosition().y >= -360.0f && (dead_state == DeadState::Shot || dead_state == DeadState::Hit)) {
             float delta = 1.0f;
             velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
 

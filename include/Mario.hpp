@@ -113,7 +113,7 @@ private:
 
     // growing timer
     float growing_timer = 0.0f;
-    float GROWING_TIME = 90.0f;
+    float GROWING_TIME = 60.0f;
 
     // track death state
     float death_timer = 0.0f; // Time to start jumping

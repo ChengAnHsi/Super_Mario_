@@ -523,20 +523,22 @@ void Mario::UpdateGrowingState() {
     growing_timer += 1.0f;
     if(growing_timer >= GROWING_TIME) {
         growing_timer = 0.0f;
-        if(is_invincible) {
-            if (is_fire) {
-                this->SetImages(this->AnimationStandGrowFireInvincible, 100, 0);
-                AnimationFireLast = AnimationStandGrowFireInvincible;
-            }else {
-                this->SetImages(this->AnimationStandGrowInvincible, 100, 0);
-            }
+        // set animation at the first time
+        if(isJumping) {
+            if(is_fire && is_invincible) this->SetImages(AnimationJumpGrowFireInvincible, 100, 0);
+            else if(is_fire) this->SetImages(AnimationJumpGrowFire, 100, 0);
+            else if(is_invincible) this->SetImages(AnimationJumpGrowInvincible, 100, 0);
+            else this->SetImages(AnimationJumpGrow, 100, 0);
+        }else if(isRunning) {
+            if(is_fire && is_invincible) this->SetImages(AnimationRunGrowFireInvincible, 100, 0);
+            else if(is_fire) this->SetImages(AnimationRunGrowFire, 100, 0);
+            else if(is_invincible) this->SetImages(AnimationRunGrowInvincible, 100, 0);
+            else this->SetImages(AnimationRunGrow, 100, 0);
         }else {
-            if (is_fire) {
-                this->SetImages(this->AnimationStandGrowFire, 100, 0);
-                AnimationFireLast = AnimationStandGrowFire;
-            }else {
-                this->SetImages(this->AnimationStandGrow, 100, 0);
-            }
+            if(is_fire && is_invincible) this->SetImages(AnimationStandGrowFireInvincible, 100, 0);
+            else if(is_fire) this->SetImages(AnimationStandGrowFire, 100, 0);
+            else if(is_invincible) this->SetImages(AnimationStandGrowInvincible, 100, 0);
+            else this->SetImages(AnimationStandGrow, 100, 0);
         }
         this->SetLooping(true);
         is_growing = false;
