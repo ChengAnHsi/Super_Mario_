@@ -29,7 +29,18 @@ public:
         RESOURCE_DIR"/Blocks/Overworld/platform0.png",
         RESOURCE_DIR"/Blocks/Overworld/platform1.png",
         RESOURCE_DIR"/Blocks/Overworld/platform2.png",
-        RESOURCE_DIR"/Blocks/Overworld/platform3.png" // 15
+        RESOURCE_DIR"/Blocks/Overworld/platform3.png",// 15
+        RESOURCE_DIR"/Scenery/Overworld/cloud1.png",
+        RESOURCE_DIR"/Scenery/Overworld/cloud2.png",
+        RESOURCE_DIR"/Scenery/Overworld/fence.png",
+        RESOURCE_DIR"/Scenery/Overworld/mountain1.png",
+        RESOURCE_DIR"/Scenery/Overworld/mountain2.png",//20
+        RESOURCE_DIR"/Scenery/Overworld/platform0.png",
+        RESOURCE_DIR"/Scenery/Overworld/platform1.png",
+        RESOURCE_DIR"/Scenery/Overworld/platform2.png",
+        RESOURCE_DIR"/Scenery/Overworld/platform3.png",//25
+        RESOURCE_DIR"/Scenery/Overworld/platform4.png",
+
     };
 
     void UpdateBlocksAnimation();
@@ -186,6 +197,7 @@ private:
         13,14,14,15,13,14,15,4,4,4,4,4,4,4,
         2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,13,14,14,15,13,14,14,14,15,13,14,14,14,15,13,14,15,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
         2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+
     };
     std::vector<std::shared_ptr<Block>> m_Blocks;
 };

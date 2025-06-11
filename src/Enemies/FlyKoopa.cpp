@@ -33,7 +33,7 @@ bool FlyKoopa::CheckMarioCollision(std::shared_ptr<Mario> mario) {
         SetScale(ENEMY_MAGNIFICATION, -ENEMY_MAGNIFICATION);
         death_timer = 0.0f;
         velocityY = DEATH_JUMP_VELOCITY * 1.5f;
-
+        SetImage(AnimationShell,1000,0);
         std::shared_ptr<Util::SFX> kick_sfx = std::make_shared<Util::SFX>(RESOURCE_DIR"/Sound/Effects/kick.wav");
         kick_sfx->SetVolume(200);
         kick_sfx->Play();
