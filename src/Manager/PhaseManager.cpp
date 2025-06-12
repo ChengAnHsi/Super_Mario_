@@ -218,6 +218,119 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.back()->SetPosition(197.5 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 11 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         // TODO [4]> mountain, cloud... set invisible use app->nextphase
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/mountain1.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(11 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/mountain2.png");
+        m_Background.back()->SetPosition(20 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2.2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/mountain1.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(66 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+/*        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/fence.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(66 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 1.85 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale( FENCE_MAGNIFICATION, FENCE_MAGNIFICATION);*/
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/mountain2.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(122 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2.2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/mountain1.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(97 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/mountain2.png");
+        m_Background.back()->SetPosition(146 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2.2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/mountain1.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(161 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/bush1.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(61 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale( MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/bush2.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(42 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/bush2.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(24 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+
+
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/bush1.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(92 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale( MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/bush2.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(71 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/bush2.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(100 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+
+
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/bush1.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(138 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale( MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/bush2.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(120 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/bush2.png");
+        m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(168 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
+
+
+        for (float x=1 ; x<=224 ; x+=30)
+        {
+            m_Background.push_back(std::make_shared<BackgroundImage>());
+            m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud1.png");
+            m_Background.back()->SetZIndex(-45);
+            m_Background.back()->SetPosition((12+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 11 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
+            m_Background.push_back(std::make_shared<BackgroundImage>());
+            m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud2.png");
+            m_Background.back()->SetPosition((17+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 13 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetZIndex(-45);
+            m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
+            m_Background.push_back(std::make_shared<BackgroundImage>());
+            m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud2.png");
+            m_Background.back()->SetPosition((21+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 12 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetZIndex(-45);
+            m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
+            m_Background.push_back(std::make_shared<BackgroundImage>());
+            m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud1.png");
+            m_Background.back()->SetPosition((26+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 13.5 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetZIndex(-45);
+            m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
+
+        }
 
         // TODO use function fix pos(not finish)
         // m_Tube.back()->SetPosition(28 * BLOCK_SIZE + BACKGROUND_X_OFFSET + m_Tube.back()->GetSize().x / 2, 2.5 * BLOCK_SIZE + BACKGROUND_Y_OFFSET - m_Tube.back()->GetSize().y / 2);
