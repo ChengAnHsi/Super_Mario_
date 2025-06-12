@@ -9,9 +9,10 @@
 #include "Blocks/Block.hpp"
 #include "CollisionState.hpp"
 
-class Fireball : public AnimatedImage {
+class Fireball final : public AnimatedImage {
 public:
     Fireball() = default;
+    ~Fireball() override = default;
 
     void Update(float delta); // update position and animation
 

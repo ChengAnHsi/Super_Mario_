@@ -9,6 +9,7 @@
 class PhaseResourceManger {
 public:
     PhaseResourceManger();
+    ~PhaseResourceManger() = default;
 
     [[nodiscard]] std::vector<std::shared_ptr<Util::GameObject>> GetChildren(const bool is_init) const {
         std::vector<std::shared_ptr<Util::GameObject>> all_obj = {};

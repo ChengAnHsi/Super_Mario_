@@ -10,8 +10,9 @@ public:
     TaskText() : GameObject(std::make_unique<Util::Text>(RESOURCE_DIR"/Font/SuperMario.ttf", 30, append_string_views(s_text[0], s_Validation), Util::Color::FromName(Util::Colors::WHITE)), 100) {
         m_Transform.translation = {0, 0};
     }
+    ~TaskText() override = default;
 
-    void SetTxtIdx(const int idx, const int other) {
+    void SetTxtIdx(const int idx, const int other) const {
         auto temp = std::dynamic_pointer_cast<Util::Text>(m_Drawable);
 
         switch (idx) {

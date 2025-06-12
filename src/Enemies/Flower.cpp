@@ -53,11 +53,6 @@ void Flower::UpdateYMovementRange() {
     }
 }
 
-void Flower::SetPosition(float x, float y) {
-    Enemy::SetPosition(x, y);
-    UpdateYMovementRange();
-}
-
 void Flower::Action(const float distance) {
     float Flower_x = GetPosition().x;
     float Flower_y = GetPosition().y;
@@ -85,7 +80,7 @@ void Flower::Action(const float distance) {
     }
 
     // Update position without recalculating the range
-    Enemy::SetPosition(Flower_x, next_y);
+    SetPosition(Flower_x, next_y);
 }
 
 bool Flower::AABBCollides(glm::vec2 Flower_pos, std::shared_ptr<BackgroundImage> box) {
@@ -173,15 +168,10 @@ bool Flower::GravityAndCollision(const float delta) {
 
 void Flower::UpdateAnimation() {
     m_Transform.scale = glm::vec2{FLOWER_MAGNIFICATION, FLOWER_MAGNIFICATION};
-    // if (isFacingUp) {
-    //     m_Transform.scale = glm::vec2{FLOWER_MAGNIFICATION, FLOWER_MAGNIFICATION};
-    // } else {
-    //     m_Transform.scale = glm::vec2{FLOWER_MAGNIFICATION, FLOWER_MAGNIFICATION};
-    // }
 }
 
 void Flower::OnUpdate(const float delta) {
-    float distance = GetMoveVelocity() * delta;
+    const float distance = GetMoveVelocity() * delta;
     UpdateAnimation();
     Action(distance);
 }
@@ -202,10 +192,6 @@ void Flower::SetLive(const int live) {
         is_dead = true;
         SetVisible(false);
     }
-}
-
-int Flower::GetLive() const {
-    return live;
 }
 
 void Flower::AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) {

@@ -12,6 +12,7 @@
 class BlockManager {
 public:
     BlockManager();
+    ~BlockManager() = default;
 
     std::vector<std::string> imagePaths = {
         RESOURCE_DIR"/Blocks/Overworld/block.png",

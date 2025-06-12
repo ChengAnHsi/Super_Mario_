@@ -87,3 +87,7 @@ void Enemy::SetFacingRight(bool facingRight) {
 int Enemy::GetScore() {
     return score;
 }
+
+int Enemy::GetLive() {
+    return live;
+}

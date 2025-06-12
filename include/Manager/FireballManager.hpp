@@ -11,6 +11,7 @@
 class FireballManager {
 public:
     FireballManager() = default;
+    ~FireballManager() = default;
 
     std::vector<std::string> imagePaths = {
         RESOURCE_DIR"/Entities/fireball0.png",
@@ -25,7 +26,7 @@ public:
     void UpdateFireballsAnimation();
     void UpdateFireballInvalidState();
 
-    void AddFireball(std::shared_ptr<Fireball> fireball);
+    void AddFireball(const std::shared_ptr<Fireball>& fireball);
 
     std::vector<std::shared_ptr<Util::GameObject>> GetChildren();
 

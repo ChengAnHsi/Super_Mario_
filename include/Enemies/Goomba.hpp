@@ -9,9 +9,10 @@
 #include "Blocks/Block.hpp"
 #include "Mario.hpp"
 
-class Goomba : public Enemy{
+class Goomba final : public Enemy{
 public:
     Goomba() = default;
+    ~Goomba() override = default;
 
     // move function
     void Action(float distance) override;
@@ -37,7 +38,6 @@ public:
 
     // getter and setter
     void SetLive(int live) override;
-    [[nodiscard]] int GetLive() const;
 
 private:
     std::vector<std::shared_ptr<Enemy>> other_enemies;

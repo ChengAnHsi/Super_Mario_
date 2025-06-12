@@ -11,6 +11,7 @@
 class PropsManager {
 public:
     PropsManager() = default;
+    ~PropsManager() = default;
 
     std::vector<std::shared_ptr<Util::GameObject>> GetChildren() const;
 

@@ -13,6 +13,8 @@
 class EnemyManager {
 public:
     EnemyManager();
+    ~EnemyManager() = default;
+
     [[nodiscard]] std::vector<std::shared_ptr<Enemy>> GetEnemies() const {
         return m_Enemies;
     }

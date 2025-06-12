@@ -217,7 +217,7 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/final-flag.png");
         m_Background.back()->SetPosition(197.5 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 11 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        // TODO [4]> mountain, cloud... set invisible use app->nextphase
+
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/mountain1.png");
         m_Background.back()->SetZIndex(-45);
@@ -334,6 +334,7 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
 
         // TODO use function fix pos(not finish)
         // m_Tube.back()->SetPosition(28 * BLOCK_SIZE + BACKGROUND_X_OFFSET + m_Tube.back()->GetSize().x / 2, 2.5 * BLOCK_SIZE + BACKGROUND_Y_OFFSET - m_Tube.back()->GetSize().y / 2);
+
         // tube init(map 1-1)
         m_CollisionBoxes.clear();
         for (size_t i = 0; i < collisionboxes_imgidx.size(); i++) {
@@ -417,8 +418,6 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         }
     }
     if (m_Phase == 3) {
-
-
         m_Background.clear();
         // [0]: black background image
         m_Background.push_back(std::make_shared<BackgroundImage>());
@@ -543,36 +542,36 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.back()->SetZIndex(-44);
         m_Background.back()->SetPosition(78.5 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 3.5 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
-        for (float x=0 ; x<=224 ; x+=56)
+        for (float x = 0 ; x <= 224 ; x += 56)
         {
             m_Background.push_back(std::make_shared<BackgroundImage>());
             m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud1.png");
             m_Background.back()->SetZIndex(-45);
-            m_Background.back()->SetPosition((7+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 11 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetPosition((7 + x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 11 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
             m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
             m_Background.push_back(std::make_shared<BackgroundImage>());
             m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud2.png");
-            m_Background.back()->SetPosition((10+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 7 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetPosition((10 + x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 7 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
             m_Background.back()->SetZIndex(-45);
             m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
             m_Background.push_back(std::make_shared<BackgroundImage>());
             m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud1.png");
-            m_Background.back()->SetPosition((19+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 12 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetPosition((19 + x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 12 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
             m_Background.back()->SetZIndex(-45);
             m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
             m_Background.push_back(std::make_shared<BackgroundImage>());
             m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud2.png");
-            m_Background.back()->SetPosition((36+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 7 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetPosition((36 + x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 7 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
             m_Background.back()->SetZIndex(-45);
             m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
             m_Background.push_back(std::make_shared<BackgroundImage>());
             m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud2.png");
-            m_Background.back()->SetPosition((39+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 8 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetPosition((39 + x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 8 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
             m_Background.back()->SetZIndex(-45);
             m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
             m_Background.push_back(std::make_shared<BackgroundImage>());
             m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud2.png");
-            m_Background.back()->SetPosition((47+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 3 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetPosition((47 + x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 3 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
             m_Background.back()->SetZIndex(-45);
             m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
         }
@@ -603,21 +602,13 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
 }
 
 void PhaseResourceManger::ResetPosition(float disx, float disy) const {
-    m_ScoreText->m_Transform.translation.x += disx;
-    m_MoneyText->m_Transform.translation.x += disx;
-    m_WorldText->m_Transform.translation.x += disx;
-    m_TimeText->m_Transform.translation.x += disx;
-    m_OtherText->m_Transform.translation.x += disx;
-    m_TopScoreText->m_Transform.translation.x += disx;
-    m_LiveText->m_Transform.translation.x += disx;
-
-    m_ScoreText->m_Transform.translation.y += disy;
-    m_MoneyText->m_Transform.translation.y += disy;
-    m_WorldText->m_Transform.translation.y += disy;
-    m_TimeText->m_Transform.translation.y += disy;
-    m_OtherText->m_Transform.translation.y += disy;
-    m_TopScoreText->m_Transform.translation.y += disy;
-    m_LiveText->m_Transform.translation.y += disy;
+    m_ScoreText->m_Transform.translation += glm::vec2{disx, disy};
+    m_MoneyText->m_Transform.translation += glm::vec2{disx, disy};
+    m_WorldText->m_Transform.translation += glm::vec2{disx, disy};
+    m_TimeText->m_Transform.translation += glm::vec2{disx, disy};
+    m_OtherText->m_Transform.translation += glm::vec2{disx, disy};
+    m_TopScoreText->m_Transform.translation += glm::vec2{disx, disy};
+    m_LiveText->m_Transform.translation += glm::vec2{disx, disy};
 }
 
 void PhaseResourceManger::ConvertTimeToScore(std::shared_ptr<Mario> mario) {

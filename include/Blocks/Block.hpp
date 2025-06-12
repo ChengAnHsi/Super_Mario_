@@ -32,7 +32,7 @@ public:
     };
 
     Block() = default;
-    virtual ~Block() = default;
+    ~Block() override = default;
 
     void TriggerJumpAnimation();
     void Update(float dt);

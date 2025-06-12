@@ -8,9 +8,10 @@
 #include "Manager/PropsManager.hpp"
 #include "Global.hpp"
 
-class MagicMushroom : public Props {
+class MagicMushroom final : public Props {
 public:
     MagicMushroom() = default;
+    ~MagicMushroom() override = default;
 
     void SpawnProps() override;
     void Update(float dt) override;

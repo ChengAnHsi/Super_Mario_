@@ -10,6 +10,7 @@
 class CommonBlock : public Block{
 public:
     CommonBlock();
+    ~CommonBlock() override = default;
 
     void AfterCollisionEvents() override;
 };

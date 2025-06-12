@@ -6,12 +6,12 @@
 #define FLOWER_HPP
 
 #include "Enemy.hpp"
-#include "CollisionState.hpp"
 #include "Mario.hpp"
-class Flower : public Enemy {
+
+class Flower final : public Enemy {
 public:
     Flower();
-
+    ~Flower() override = default;
 
     void Action(float distance) override;
     void OnUpdate(float delta);
@@ -27,12 +27,8 @@ public:
     // Re-calculate Y movement range based on current position
     void UpdateYMovementRange();
 
-    // Set position with range update
-    virtual void  SetPosition(float x, float y);
-
     // getter and setter
     void SetLive(int live) override;
-    [[nodiscard]] int GetLive() const;
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) override;
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) override;
     void ClearCollisionBoxes() override;

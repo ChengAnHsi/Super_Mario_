@@ -10,6 +10,7 @@
 class MysteryBlock : public Block {
 public:
     MysteryBlock();
+    ~MysteryBlock() override = default;
 
     void AfterCollisionEvents() override;
 

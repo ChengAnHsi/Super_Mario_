@@ -24,7 +24,7 @@ public:
         END,
     };
 
-    State GetCurrentState() const { return m_CurrentState; }
+    [[nodiscard]] State GetCurrentState() const { return m_CurrentState; }
 
     void Start();
 

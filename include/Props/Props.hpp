@@ -17,6 +17,7 @@ public:
     };
 
     Props() = default;
+    ~Props() override = default;
 
     virtual void Move();
     virtual void Action(float distance);
@@ -26,24 +27,25 @@ public:
 
     virtual void SpawnProps() = 0;
     virtual void Update(float dt) = 0;
-    bool CheckCollisionWithMario(std::shared_ptr<Mario> mario) const;
+    [[nodiscard]] bool CheckCollisionWithMario(std::shared_ptr<Mario> mario) const;
     virtual void AfterCollisionEvents(std::shared_ptr<Mario> mario);
 
     void SetState(PropsState props_state);
-    PropsState GetState() const;
+    [[nodiscard]] PropsState GetState() const;
 
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
     void ClearCollisionBoxes();
     void ClearCollisionBlocks();
+
 protected:
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
+
     bool isFacingRight = true;
+
     CollisionState X_state = CollisionState::None;
     CollisionState Y_state = CollisionState::None;
     PropsState state = PropsState::Not_Activated;
-private:
-    bool iscollision = false;
 };
 #endif //PROPS_HPP

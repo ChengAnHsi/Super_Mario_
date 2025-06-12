@@ -113,7 +113,6 @@ bool Goomba::CheckMarioCollision(std::shared_ptr<Mario> mario) {
            }
        }
 
-       float overlap_threshold = 12.0f;
        if (min_index == 2 && mario_moving_down && overlap_percentage > -0.5f) {
            dead_state = DeadState::Trampled;
            KillGoomba();
@@ -371,7 +370,7 @@ bool Goomba::GravityAndCollision(const float delta) {
        SetPosition(original_pos.x, original_pos.y);
    }
    this->SetPosition(goomba_x, goomba_y);
-   return true;
+   return collision;
 }
 
 void Goomba::UpdateAnimation() {
@@ -435,10 +434,6 @@ void Goomba::SetLive(int live){
        is_dead = true;
        death_timer = 0.0f;
    }
-}
-
-int Goomba::GetLive() const {
-   return live;
 }
 
 void Goomba::AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) {

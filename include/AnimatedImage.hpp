@@ -20,6 +20,7 @@ public:
         // use different instructor to setting animation
         SetImage(AnimationPaths, interval, cooldown);
     }
+    ~AnimatedImage() override = default;
 
     [[nodiscard]] bool IsLooping() const {
         return std::dynamic_pointer_cast<Util::Animation>(m_Drawable)->GetLooping();

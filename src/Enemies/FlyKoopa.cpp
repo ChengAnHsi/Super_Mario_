@@ -538,10 +538,6 @@ void FlyKoopa::SetLive(const int live) {
     }
 }
 
-int FlyKoopa::GetLive() const {
-    return live;
-}
-
 void FlyKoopa::AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes) {
     for (const auto& box : boxes) {
         collision_boxes.push_back(box);

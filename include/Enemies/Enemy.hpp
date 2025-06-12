@@ -14,6 +14,7 @@ class Enemy : public BackgroundImage {
 
 public:
     Enemy() = default;
+    ~Enemy() override = default;
 
     virtual void Move() = 0;
     virtual void Action(float distance) = 0;
@@ -23,6 +24,7 @@ public:
 
     // getter and setter
     virtual void SetLive(int live) = 0;
+    int GetLive();
     [[nodiscard]] bool GetMoving() const {return isMoving;}
     void SetMoving(const bool moving) {isMoving = moving;}
     float GetMoveVelocity();

@@ -10,8 +10,9 @@ class BackgroundImage : public Util::GameObject {
 public:
     BackgroundImage() : GameObject(std::make_unique<Util::Image>(RESOURCE_DIR"/Scenery/logo.png"), -10) {
     }
+    ~BackgroundImage() override = default;
 
-    void SetPhaseImgIsOverWorld(bool is_overworld) const {
+    void SetPhaseImgIsOverWorld(const bool is_overworld) const {
         const auto temp = std::dynamic_pointer_cast<Util::Image>(m_Drawable);
         if (is_overworld){
             temp->SetImage(RESOURCE_DIR"/Scenery/Overworld/sky.png");

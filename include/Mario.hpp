@@ -5,8 +5,6 @@
 #ifndef MARIO_HPP
 #define MARIO_HPP
 
-#include <string>
-
 #include "AnimatedCharacter.hpp"
 #include "CollisionState.hpp"
 #include "Blocks/FlyPlatfrom.hpp"

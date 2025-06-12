@@ -7,11 +7,12 @@
 
 #include "Enemy.hpp"
 #include "Blocks/Block.hpp"
-#include "CollisionState.hpp"
 #include "Mario.hpp"
-class Koopa : public Enemy{
+
+class Koopa final : public Enemy{
 public:
     Koopa() = default;
+    ~Koopa() override = default;
 
     // move function
     void Action(float distance) override;
@@ -40,7 +41,6 @@ public:
 
     // getter and setter
     void SetLive(int live) override;
-    [[nodiscard]] int GetLive() const;
     void UpdateShellInvalidState();
     bool GetFromFly();
     bool GetIsShell();

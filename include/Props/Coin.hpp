@@ -11,6 +11,7 @@
 class Coin : public Props {
 public:
     Coin() = default;
+    ~Coin() override = default;
 
     void SpawnProps() override;
     void Update(float dt) override;

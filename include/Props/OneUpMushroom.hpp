@@ -1,15 +1,18 @@
 //
 // Created by 112590007 on 2025/4/11.
 //
+
 #ifndef ONEUPMUSHROOM_HPP
 #define ONEUPMUSHROOM_HPP
 
 #include "Manager/PropsManager.hpp"
 #include "Global.hpp"
 
-class OneUpMushroom : public Props {
+class OneUpMushroom final : public Props {
 public:
     OneUpMushroom() = default;
+    ~OneUpMushroom() override = default;
+
     void SpawnProps() override;
     void Update(float dt) override;
     void AfterCollisionEvents(std::shared_ptr<Mario> mario) override;

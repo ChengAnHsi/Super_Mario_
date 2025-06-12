@@ -8,9 +8,10 @@
 #include "Manager/PropsManager.hpp"
 #include "Global.hpp"
 
-class FireFlower : public Props {
+class FireFlower final : public Props {
 public:
     FireFlower() = default;
+    ~FireFlower() override = default;
 
     void SpawnProps() override;
     void Update(float dt) override;

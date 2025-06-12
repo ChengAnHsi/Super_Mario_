@@ -8,9 +8,10 @@
 #include "Manager/PropsManager.hpp"
 #include "Global.hpp"
 
-class Starman : public Props {
+class Starman final : public Props {
 public:
     Starman() = default;
+    ~Starman() override = default;
 
     void SpawnProps() override;
     void Update(float dt) override;

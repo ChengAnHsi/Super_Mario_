@@ -211,7 +211,7 @@ bool Mario::GravityAndCollision(const float delta) {
             this->SetPosition(mario_x, mario_y);
             return false;  // on ground
         }
-        if(Y_state == CollisionState::Top & velocityY > 0) {
+        if(Y_state == CollisionState::Top && velocityY > 0) {
             // 固定在方塊下方開始下墜
             mario_y = box->GetTransform().translation.y - b_size.y / 2 - mario_size.y / 2;
             this->SetPosition(mario_x, mario_y);
@@ -289,7 +289,7 @@ bool Mario::GravityAndCollision(const float delta) {
             return false;  // 碰撞到地面，不在滯空狀態
         }
 
-        if(Y_state == CollisionState::Top & velocityY > 0) {
+        if(Y_state == CollisionState::Top && velocityY > 0) {
             block->TriggerJumpAnimation();
 
             if (block->GetBlockType() == Block::TYPE::MysteryBlock) {

@@ -28,7 +28,7 @@ public:
 
 private:
     std::vector<std::shared_ptr<FlyPlatform>> m_Platforms;
-    float m_CeilingHeight;
+    float m_CeilingHeight = 360.0f;
 
     // Platform spawn positions for different phases
     // XY

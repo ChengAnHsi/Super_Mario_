@@ -4,11 +4,11 @@
 #include "Enemy.hpp"
 #include "Enemies/Koopa.hpp"
 #include "Blocks/Block.hpp"
-#include "CollisionState.hpp"
 
-class FlyKoopa : public Enemy{
+class FlyKoopa final : public Enemy{
 public:
     FlyKoopa() = default;
+    ~FlyKoopa() override = default;
 
     // move function
     void Action(float distance) override;
@@ -34,7 +34,6 @@ public:
     void SetInsideKoopa(std::shared_ptr<Koopa> inside_koopa);
     // getter and setter
     void SetLive(int live) override;
-    [[nodiscard]] int GetLive() const;
     [[nodiscard]] int GetScore() const { return score; }
     [[nodiscard]] bool IsFlying() const { return isFlying; }
     [[nodiscard]] bool IsShell() const { return isShell; }

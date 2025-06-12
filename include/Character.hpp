@@ -24,43 +24,9 @@ public:
 
     void SetImage(const std::string& ImagePath);
 
-    void SetPosition(float posx, float posy) {
-        m_Transform.translation.x = posx;
-        m_Transform.translation.y = posy;
-    }
-
-    [[nodiscard]] bool IfCollides(const std::shared_ptr<Character>& other) const {
-        (void) other;
-        auto po1 = this->GetPosition();
-        auto po2 = this->GetPosition();
-        auto po3 = this->GetPosition();
-        auto po4 = this->GetPosition();
-        auto po_other = other->GetPosition();
-        po2.x += 80;
-        po3.y += 95;
-        po4.x += 80;
-        po4.y += 95;
-        if(po1.x >= po_other.x && po1.x <= po_other.x + 80) {
-            if(po1.y >= po_other.y && po1.y <= po_other.y + 100) {
-                return true;
-            }
-        }
-        if(po2.x >= po_other.x && po2.x <= po_other.x + 80) {
-            if(po2.y >= po_other.y && po2.y <= po_other.y + 100) {
-                return true;
-            }
-        }
-        if(po3.x >= po_other.x && po3.x <= po_other.x + 80) {
-            if(po3.y >= po_other.y && po3.y <= po_other.y + 100) {
-                return true;
-            }
-        }
-        if(po4.x >= po_other.x && po4.x <= po_other.x + 80) {
-            if(po4.y >= po_other.y && po4.y <= po_other.y + 100) {
-                return true;
-            }
-        }
-        return false;
+    void SetPosition(float posX, float posY) {
+        m_Transform.translation.x = posX;
+        m_Transform.translation.y = posY;
     }
 
 private:
