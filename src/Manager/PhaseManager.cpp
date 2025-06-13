@@ -477,6 +477,11 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/platform1.png");
         m_Background.back()->SetZIndex(-45);
+        m_Background.back()->SetPosition(37 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 0 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(-BLOCK_MAGNIFICATION, -BLOCK_MAGNIFICATION);
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/platform1.png");
+        m_Background.back()->SetZIndex(-45);
         m_Background.back()->SetPosition(61 * BLOCK_SIZE + BACKGROUND_X_OFFSET, -2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
         m_Background.push_back(std::make_shared<BackgroundImage>());
@@ -493,6 +498,11 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/platform0.png");
         m_Background.back()->SetZIndex(-44);
+        m_Background.back()->SetPosition(27.5 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 0 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(-BLOCK_MAGNIFICATION, -BLOCK_MAGNIFICATION);
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/platform0.png");
+        m_Background.back()->SetZIndex(-44);
         m_Background.back()->SetPosition(107.5 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2.5 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
 
@@ -501,6 +511,12 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.back()->SetZIndex(-44);
         m_Background.back()->SetPosition(43 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 5.5 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
+        m_Background.push_back(std::make_shared<BackgroundImage>());
+        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/platform5.png");
+        m_Background.back()->SetZIndex(-44);
+        m_Background.back()->SetPosition(43 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 0 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+        m_Background.back()->SetScale(-BLOCK_MAGNIFICATION, -BLOCK_MAGNIFICATION);
+
 
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/platform3.png");
