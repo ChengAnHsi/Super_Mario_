@@ -555,7 +555,7 @@ void Koopa::UpdateAnimation() {
 
         if (shell_timer >= 500.0f && shell_timer < 800.0f) {
             if (GetFromFly()){
-                SetImage({RESOURCE_DIR"/Entities/unfly_koopa_shell1"},1000,0);}
+                SetImage({RESOURCE_DIR"/Entities/unfly_koopa_shell0.png"},1000,0);}
             else if (GetOverworld()) {
                 SetImage({RESOURCE_DIR"/Entities/shell0.png"}, 1000, 0);
             } else {
