@@ -25,12 +25,6 @@
 
 // update all game object for next level
 void App::ResetPhase() {
-    // update mario spawn position
-    // if(m_Phase == Phase::Level1_2) {
-    //     m_Mario->SetPosition({-380.0f + 3.0f * BLOCK_SIZE, -240.0f + 7.5 * BLOCK_SIZE});
-    // }else {
-    m_Mario->SetPosition(-380.0f + 2.5f * BLOCK_SIZE, -232.0f);
-    //}
     m_Mario->SetImages({RESOURCE_DIR"/Entities/mario_stand.png"}, 1000, 0);
     m_Mario->m_Transform.scale = {MARIO_MAGNIFICATION, MARIO_MAGNIFICATION};
     m_Mario->ResetStateForNextPhase();
@@ -326,6 +320,13 @@ void App::ResetPhase() {
     }
     m_Mario->AddCollisionFlyPlatForms(platforms);
     m_Root.AddChildren(m_FPM->GetChildren());
+
+    // update mario spawn position
+    // if(m_Phase == Phase::Level1_2) {
+    //m_Mario->SetPosition(-380.0f + 3.0f * BLOCK_SIZE, -240.0f + 7.5 * BLOCK_SIZE);
+    // }else {
+    //    m_Mario->SetPosition(-380.0f + 2.5f * BLOCK_SIZE, -232.0f);
+    //}
 }
 
 void App::NextPhase(bool is_nextphase) {
@@ -420,4 +421,8 @@ void App::NextPhase(bool is_nextphase) {
         default:
             break;
     }
+    m_Coin->SetLooping(m_Phase != Phase::Start);
+    m_Coin->SetPlaying(m_Phase != Phase::Start);
+    m_PRM->SetLive(m_Mario->GetLive());
+    m_Mario->SetPosition(-380.0f + 3.0f * BLOCK_SIZE, -232.0f);
 }

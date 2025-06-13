@@ -40,8 +40,7 @@ public:
         RESOURCE_DIR"/Scenery/Overworld/platform1.png",
         RESOURCE_DIR"/Scenery/Overworld/platform2.png",
         RESOURCE_DIR"/Scenery/Overworld/platform3.png",//25
-        RESOURCE_DIR"/Scenery/Overworld/platform4.png",
-
+        RESOURCE_DIR"/Scenery/Overworld/platform4.png"
     };
 
     void UpdateBlocksAnimation();

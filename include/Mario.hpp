@@ -116,7 +116,8 @@ private:
     // track death state
     float death_timer = 0.0f; // Time to start jumping
     const float DEATH_PAUSE_TIME = 60.0f; // 1 second at 60fps
-    const float DEATH_JUMP_VELOCITY = 300.0f;
+    const float DEATH_JUMP_VELOCITY = 200.0f;
+    const float DEATH_GRAVITY = -150.0f;
 
     // track invincible state
     float invincible_timer = 0.0f; // The countdown ends when the invincibility time (3 sec) ends

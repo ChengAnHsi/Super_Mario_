@@ -61,31 +61,25 @@ void App::Start() {
 }
 
 void App::Update() {
-    m_Coin->SetLooping(m_Phase != Phase::Start);
-    m_Coin->SetPlaying(m_Phase != Phase::Start);
+    // Calculate how far the camera should move to the right
+    float dis = 0.0f;
 
-    m_PRM->SetLive(m_Mario->GetLive());
     if(m_Phase != Phase::Start) {
         // decrease time after start game
         if (!m_Mario->GetReadyNextPhase()) m_PRM->DecreaseTime();
+        if(m_PRM->GetTime() == 0) {
+            if (m_Mario->GetReadyNextPhase()) {
+                NextPhase(true);
+            }
+            else m_Mario->Die();
+        }
 
         // check mario is in enemy visiion
         m_EM->SetEnemyMoving();
 
         // check platform can move
         m_FPM->CheckMovingPlatform();
-    }
 
-    if(m_PRM->GetTime() == 0) {
-        if (m_Mario->GetReadyNextPhase()) {
-            NextPhase(true);
-        }
-        else m_Mario->Die();
-    }
-
-    // Calculate how far the camera should move to the right
-    float dis = 0.0f;
-    if(m_Phase != Phase::Start) {
         dis = m_Mario->Move();
 
         // show scores
@@ -118,9 +112,7 @@ void App::Update() {
     }
 
     // Camera cannot move left
-    if (dis < 0.0f) {
-        dis = 0.0f;
-    }
+    if (dis < 0.0f) dis = 0.0f;
 
     // If Mario's position is less than this pos(<= -112.5), the camera does not need to move to the right
     if(m_Mario->GetPosition().x <= -112.5f) dis = 0.0f;

@@ -638,7 +638,7 @@ void Mario::UpdateDeadState(float delta) {
             velocityY = DEATH_JUMP_VELOCITY * 1.5f;
         }
 
-        velocityY += GRAVITY * (delta / 60.0f) * 3.0f;
+        velocityY += DEATH_GRAVITY * (delta / 60.0f) * 3.0f;
 
         float mario_x = GetPosition().x;
         float mario_y = GetPosition().y + velocityY * (delta / 60.0f);
@@ -912,6 +912,7 @@ void Mario::SetTimeToMoveCamera(const bool is_time_to_move_camera_map2) {
 }
 
 void Mario::ResetStateForNextPhase() {
+    SetInvincible(false);
     SetVisible(true);
     back_to_castle_dis = 0.0f;
     is_pull = false;
