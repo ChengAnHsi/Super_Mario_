@@ -674,6 +674,7 @@ void Mario::Fire() {
     fball->SetPosition(GetPosition().x, GetPosition().y - BLOCK_SIZE / 4);
     fball->AddCollisionBlocks(collision_blocks);
     fball->AddCollisionBoxes(collision_boxes);
+    fball->AddCollisionPlatforms(collision_flyplatforms);
     fball->SetFacingRight(isFacingRight);
     m_FM->AddFireball(fball);
 }

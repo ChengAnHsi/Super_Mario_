@@ -319,13 +319,6 @@ void App::ResetPhase() {
     }
     m_Mario->AddCollisionFlyPlatForms(platforms);
     m_Root.AddChildren(m_FPM->GetChildren());
-
-    // update mario spawn position
-    // if(m_Phase == Phase::Level1_2) {
-    //m_Mario->SetPosition(-380.0f + 3.0f * BLOCK_SIZE, -240.0f + 7.5 * BLOCK_SIZE);
-    // }else {
-    //    m_Mario->SetPosition(-380.0f + 2.5f * BLOCK_SIZE, -232.0f);
-    //}
 }
 
 void App::NextPhase(bool is_nextphase) {

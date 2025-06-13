@@ -8,6 +8,7 @@
 #include "BackgroundImage.hpp"
 #include "Blocks/Block.hpp"
 #include "CollisionState.hpp"
+#include "Blocks/FlyPlatfrom.hpp"
 
 class Fireball final : public AnimatedImage {
 public:
@@ -26,8 +27,10 @@ public:
 
     void AddCollisionBoxes(std::vector<std::shared_ptr<BackgroundImage>> boxes);
     void AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks);
+    void AddCollisionPlatforms(std::vector<std::shared_ptr<FlyPlatform>> platforms);
     void ClearCollisionBoxes();
     void ClearCollisionBlocks();
+    void ClearCollisionPlatforms();
 
     void SetFacingRight(bool isFacingRight);
     void Exploded();
@@ -49,6 +52,7 @@ private:
     CollisionState Y_state = CollisionState::None;
     std::vector<std::shared_ptr<BackgroundImage>> collision_boxes;
     std::vector<std::shared_ptr<Block>> collision_blocks;
+    std::vector<std::shared_ptr<FlyPlatform>> collision_flyplatforms;
 };
 
 #endif //FIREBALL_HPP

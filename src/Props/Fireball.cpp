@@ -164,6 +164,14 @@ void Fireball::Action(const float distance) {
                 break;
             }
         }
+        for (const auto& platform : collision_flyplatforms) {
+            AABBCollides({next_x, char_y}, platform);
+            // check next step will collision or not
+            if (X_state == CollisionState::Left || X_state == CollisionState::Right) {
+                collision = true;
+                break;
+            }
+        }
         // if next step will collision, then do not move
         if (collision) {
             break;
@@ -232,6 +240,28 @@ bool Fireball::GravityAndCollision(const float delta) {
             break;
         }
     }
+    for (const auto& platform : collision_flyplatforms) {
+        glm::vec2 b_size = platform->GetSize();
+        b_size.x *= platform->GetScale().x;
+        b_size.y *= platform->GetScale().y;
+
+        collision = CCDDCollides({char_x, char_y}, platform);
+
+        if (Y_state == CollisionState::Bottom) {
+            // fix mario on the floor
+            char_y = platform->GetTransform().translation.y + b_size.y / 2 + prop_size.y / 2;
+            velocityY = 0;
+            this->SetPosition(char_x, char_y);
+            return false;
+        }
+        if(Y_state == CollisionState::Top && velocityY > 0) {
+            // 固定在方塊下方開始下墜
+            char_y = platform->GetTransform().translation.y - b_size.y / 2 - prop_size.y / 2;
+            this->SetPosition(char_x, char_y);
+            // velocityY = 0;
+            break;
+        }
+    }
     for (const auto &block : collision_blocks) {
         // block had already destroyed
         if(block->GetBroken() == true) {
@@ -279,12 +309,22 @@ void Fireball::AddCollisionBlocks(std::vector<std::shared_ptr<Block>> blocks) {
     }
 }
 
+void Fireball::AddCollisionPlatforms(std::vector<std::shared_ptr<FlyPlatform>> platforms) {
+    for (const auto& platform : platforms) {
+        collision_flyplatforms.push_back(platform);
+    }
+}
+
 void Fireball::ClearCollisionBoxes() {
     collision_boxes.clear();
 }
 
 void Fireball::ClearCollisionBlocks() {
     collision_blocks.clear();
+}
+
+void Fireball::ClearCollisionPlatforms() {
+    collision_flyplatforms.clear();
 }
 
 void Fireball::SetFacingRight(bool isFacingRight) {
