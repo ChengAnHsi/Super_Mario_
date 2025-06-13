@@ -724,6 +724,20 @@ float Mario::Move() {
         // 30sec
         if (invincible_timer >= INVINCIBLE_END_TIME) {
             is_invincible = false;
+            // set animation at the first time
+            if(isJumping) {
+                if(is_fire) this->SetImages(AnimationJumpGrowFire, 100, 0);
+                else if(is_grow) this->SetImages(AnimationJumpGrow, 100, 0);
+                else this->SetImages(AnimationJump, 100, 0);
+            }else if(isRunning) {
+                if(is_fire) this->SetImages(AnimationRunGrowFire, 100, 0);
+                else if(is_grow) this->SetImages(AnimationRunGrow, 100, 0);
+                else this->SetImages(AnimationRun, 100, 0);
+            }else {
+                if(is_fire) this->SetImages(AnimationStandGrowFire, 100, 0);
+                else if(is_grow) this->SetImages(AnimationStandGrow, 100, 0);
+                else this->SetImages(AnimationStand, 100, 0);
+            }
         }
     }
     if (!is_back_to_castle) {
@@ -760,12 +774,10 @@ float Mario::Move() {
     }
     if ((Util::Input::IsKeyPressed(Util::Keycode::LSHIFT) || Util::Input::IsKeyPressed(Util::Keycode::RSHIFT)) && !is_back_to_castle) {
         if (is_fire) Fire();
-        if (isJumping && is_run_key_down);
-        else is_run_key_down = true;
+        is_run_key_down = true;
     }
     if (Util::Input::IsKeyUp(Util::Keycode::LSHIFT)||Util::Input::IsKeyUp(Util::Keycode::RSHIFT)){
-        if (isJumping)is_run_key_down=is_run_key_down;
-        else is_run_key_down = false;
+       is_run_key_down = false;
     }
     if (Util::Input::IsKeyUp(Util::Keycode::LEFT)) {
         is_left_key_down = false;
