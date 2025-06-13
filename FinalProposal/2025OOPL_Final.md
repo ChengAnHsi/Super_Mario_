@@ -31,7 +31,44 @@
 ## 程式設計
 
 ### 程式架構
-
+- 主流程
+  - main：掌管遊戲開始過程與結束的狀態
+  - App：掌管遊戲開始過程與結束的過程
+  - AppUtil：負責關卡物件初始化及換關
+- Phase Resource Manager：掌管地圖上的水管、金幣、文字及其他背景圖片生成和更新狀態
+- Enemy Manager：掌管怪物移動、碰撞、生成和更新狀態
+  - 父類別：Enemy 怪物
+    - Goomba 栗子怪：一般怪物，無特殊功能
+    - Flower 食人花：生成在水管上，移動路徑為上下移動
+    - Koopa 烏龜：具有行走和龜殼狀態，當瑪利歐踩到時會變成龜殼狀態，再次踩龜殼可讓龜殼滑行去碰撞其他生物(包含瑪利歐)，如果一段時間未踩龜殼，會重新變回行走狀態
+    - FlyKoopa 飛天龜：在天空飛行的烏龜，當被踩到時會退化成一般烏龜，具有和一般烏龜相同特性，移動路徑為上下移動    
+- Block Manager：掌管方塊生成和更新狀態
+    - 父類別：Block 方塊
+        - Common Block 一般方塊：可被瑪利歐破壞
+        - Immovable Block 無法被破壞的方塊
+        - Mystery Block 問號箱：具有道具在裡面，當瑪利歐撞擊時會掉出道具或金幣
+- Prop Manager：掌管道具生成和更新狀態
+    - 父類別：Prop 道具
+        - Coin 金幣：吃下可獲得金幣及積分
+        - Magic Mushroom 魔法蘑菇(紅色)：吃下可獲得長大狀態及積分
+        - One Up Mushroom 加命菇(綠色)：吃下可加一條命
+        - Fire Flower 火焰花：當為長大狀態時吃下可獲得火焰狀態，若瑪利歐為一般狀態則吃下效果和魔法蘑菇相同，可獲得積分  
+        - Starman 無敵星星：吃下可獲得無敵狀態
+- Fly Platform Manager
+  - Fly Platform 移動平台：平台會上下或左右移動，分成會改變方向(到一定距離改變方向)和不會改變方向(到頂部或底部時生成在地圖另一側)的類型
+- Fireball Manager：掌管火球的移動及狀態更新等
+- 父類別：Background Image 背景圖片
+  - Animated Image 動畫圖片：包含父類別及動畫相關函式
+- 狀態
+  - Collision State 碰撞狀態
+  - Dead State 死亡狀態
+- 其餘類別 
+  - 父類別：Animated Character 動畫角色
+    - Mario 瑪利歐：遊戲主角，玩家可透過鍵盤操控來移動
+    - Fireball 火焰球：碰撞到怪物可讓怪物死亡，碰到牆壁時會爆炸，碰到地板時會持續跳躍
+  - Renderer 鏡頭及渲染
+  - TaskText 地圖的文字
+  - Global 尺寸與座標偏差變數
 ### 程式技術
 
 ## 結語
