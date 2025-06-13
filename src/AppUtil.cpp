@@ -172,7 +172,6 @@ void App::ResetPhase() {
                     prop_type2 = Block::PROP_TYPE::None;
                     break;
                 }
-
                 case 16: {
                     prop = std::make_shared<Coin>();
                     prop->SetImage({

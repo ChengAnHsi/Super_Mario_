@@ -615,7 +615,6 @@ void Koopa::Move() {
             SetImage(AnimationUnflyRun,500,0);
         }else if (GetOverworld()) {
             SetImage(AnimationRun, 500, 0);
-            std::cout<<GetFromFly();
         } else {
             SetImage(AnimationUnderWorldRun, 500, 0);
         }

@@ -61,7 +61,7 @@ EnemyManager::EnemyManager() {
 }
 
 std::vector<float> EnemyManager::GetX(int phase){
-    std::cout << phase;
+    // std::cout << phase;
     switch (phase)
     {
     case 1:
