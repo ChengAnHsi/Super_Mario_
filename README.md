@@ -14,26 +14,7 @@
 - 失敗情況：失去所有生命值
 - 關卡情形：每個關卡具有不同的地圖障礙及怪物擺放位置
 - 遊玩影片-初版(1-1)：https://youtu.be/-avspZlbOWU?si=w2jzLgnK2WW6tRMu
-- 遊玩影片-自製版(1-1)：https://www.youtube.com/watch?v=HkLZ9ESYxCU&ab_channel=FR
-- 遊玩影片-全(full walkthrough)：https://www.youtube.com/watch?v=JJR7ER4_jmk
-- 遊玩影片-全(1-1 ~ 8-4)：https://www.youtube.com/watch?v=rLl9XBg7wSs&ab_channel=Pii89
-- 講解內部細節影片(1-1)：https://www.youtube.com/watch?v=ZH2wGpEZVgE&ab_channel=ExtraHistory
-- 主要素材來源：https://github.com/pablogozalvez/Super-Mario-Phaser
-- 主要素材來源：https://www.mariomayhem.com/downloads/sprites/super_mario_bros_sprites.php
-- 其餘素材來源：https://github.com/feresr/super-mario-bros
-- 其餘素材來源：https://github.com/Kofybrek/Super-Mario-Bros
-- 其餘素材來源：https://github.com/Gold872/Super-Mario-Bros/tree/master
-- 遊玩網站：https://supermarioplay.com/
-- 製作參考：https://www.youtube.com/watch?v=7D4uoSoQsjw&t=60s
-- 移動參考：https://www.youtube.com/watch?v=dMbP4nvwONc
-- 移動參考(github)：https://github.com/Cakez77/CelesteClone/blob/master/src/game.cpp
-- 重力參考(js)：https://www.youtube.com/watch?v=RFPn9r9mKe0&t=70s
-- 重力參考(python)：https://pastebin.com/eJEjjQwv
-- 重力參考(C++)：https://www.youtube.com/watch?v=V0cGs2ZENSY&ab_channel=Voidmatrix
-- 跳躍參考(C++)：https://www.youtube.com/watch?v=JwRYJLI3P0Q&ab_channel=Voidmatrix
-- 碰撞參考(C++)：https://www.youtube.com/watch?v=eAjl4V61svE&ab_channel=Voidmatrix
-- 碰撞參考(C++)：https://www.youtube.com/watch?v=IaUcAt0jDqs
-- 移動平台參考(C++)：https://www.youtube.com/watch?v=X33Oj1jc9vc&ab_channel=Cakez
+
 
 # Development timeline
 
