@@ -58,19 +58,19 @@ PhaseResourceManger::PhaseResourceManger() {
     // initial screen: background image setting
     // [0]: logo
     m_Background.push_back(std::make_shared<BackgroundImage>());
-    m_Background.back()->SetPosition(0, 100);
+    m_Background.back()->SetPosition(0, 90);
     m_Background.back()->SetScale(3.0f,3.0f);
     // The background z-index is placed at the bottom
     m_Background.back()->SetZIndex(-50);
     // [1]: start mountain(left)
     m_Background.push_back(std::make_shared<BackgroundImage>());
     m_Background.back()->SetImage(imageFiles[5]);
-    m_Background.back()->SetPosition(-240.0f, 2.5 * BLOCK_SIZE - 315.0f);
+    m_Background.back()->SetPosition(-240.0f, 2.5 * BLOCK_SIZE - 325.0f);
     m_Background.back()->SetScale(1.5f,1.5f);
     // [2]: start bush(right)
     m_Background.push_back(std::make_shared<BackgroundImage>());
     m_Background.back()->SetImage(imageFiles[0]);
-    m_Background.back()->SetPosition(11 * BLOCK_SIZE - 360.0f, 2 * BLOCK_SIZE- 325.0f);
+    m_Background.back()->SetPosition(11 * BLOCK_SIZE - 360.0f, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
     m_Background.back()->SetScale(1.3f,1.3f);
 }
 
@@ -176,19 +176,19 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.clear();
         // [0]: logo
         m_Background.push_back(std::make_shared<BackgroundImage>());
-        m_Background.back()->SetPosition(0, 100);
+        m_Background.back()->SetPosition(0, 90);
         m_Background.back()->SetScale(3.0f,3.0f);
         // The background z-index is placed at the bottom
         m_Background.back()->SetZIndex(-50);
         // [1]: start mountain(left)
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background.back()->SetImage(imageFiles[5]);
-        m_Background.back()->SetPosition(-240.0f, 2.5 * BLOCK_SIZE - 315.0f);
+        m_Background.back()->SetPosition(-240.0f, 2.5 * BLOCK_SIZE - 325.0f);
         m_Background.back()->SetScale(1.5f,1.5f);
         // [2]: start bush(right)
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background.back()->SetImage(imageFiles[0]);
-        m_Background.back()->SetPosition(11 * BLOCK_SIZE - 360.0f, 2 * BLOCK_SIZE- 325.0f);
+        m_Background.back()->SetPosition(11 * BLOCK_SIZE - 360.0f, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         m_Background.back()->SetScale(1.3f,1.3f);
 
         m_CollisionBoxes.clear();
@@ -210,7 +210,7 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         // [2][3]: flag set
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/flag-mast.png");
-        m_Background.back()->SetPosition(198 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 8 * BLOCK_SIZE - 385.0f);
+        m_Background.back()->SetPosition(198 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 8 * BLOCK_SIZE - 395.0f);
         m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
 
         m_Background.push_back(std::make_shared<BackgroundImage>());
@@ -234,11 +234,6 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.back()->SetZIndex(-45);
         m_Background.back()->SetPosition(66 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
         m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
-/*        m_Background.push_back(std::make_shared<BackgroundImage>());
-        m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/fence.png");
-        m_Background.back()->SetZIndex(-45);
-        m_Background.back()->SetPosition(66 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 1.85 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
-        m_Background.back()->SetScale( FENCE_MAGNIFICATION, FENCE_MAGNIFICATION);*/
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/mountain2.png");
         m_Background.back()->SetZIndex(-45);
@@ -307,33 +302,30 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         m_Background.back()->SetScale(MOUNT_MAGNIFICATION, MOUNT_MAGNIFICATION);
 
 
-        for (float x=1 ; x<=224 ; x+=30)
+        for (float x = 1; x <= 224; x += 30)
         {
             m_Background.push_back(std::make_shared<BackgroundImage>());
             m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud1.png");
             m_Background.back()->SetZIndex(-45);
-            m_Background.back()->SetPosition((12+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 11 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetPosition((12 + x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 11 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
             m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
             m_Background.push_back(std::make_shared<BackgroundImage>());
             m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud2.png");
-            m_Background.back()->SetPosition((17+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 13 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetPosition((17 + x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 13 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
             m_Background.back()->SetZIndex(-45);
             m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
             m_Background.push_back(std::make_shared<BackgroundImage>());
             m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud2.png");
-            m_Background.back()->SetPosition((21+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 12 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetPosition((21 + x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 12 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
             m_Background.back()->SetZIndex(-45);
             m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
             m_Background.push_back(std::make_shared<BackgroundImage>());
             m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/Overworld/cloud1.png");
-            m_Background.back()->SetPosition((26+x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 13.5 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
+            m_Background.back()->SetPosition((26 + x) * BLOCK_SIZE + BACKGROUND_X_OFFSET, 13.5 * BLOCK_SIZE + BACKGROUND_Y_OFFSET);
             m_Background.back()->SetZIndex(-45);
             m_Background.back()->SetScale(CLOUD_MAGNIFICATION, CLOUD_MAGNIFICATION);
 
         }
-
-        // TODO use function fix pos(not finish)
-        // m_Tube.back()->SetPosition(28 * BLOCK_SIZE + BACKGROUND_X_OFFSET + m_Tube.back()->GetSize().x / 2, 2.5 * BLOCK_SIZE + BACKGROUND_Y_OFFSET - m_Tube.back()->GetSize().y / 2);
 
         // tube init(map 1-1)
         m_CollisionBoxes.clear();
@@ -364,7 +356,7 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         // [2][3]: flag set
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background.back()->SetImage(RESOURCE_DIR"/Scenery/flag-mast.png");
-        m_Background.back()->SetPosition(198 * BLOCK_SIZE + BACKGROUND_X_OFFSET + diff_x, 23 * BLOCK_SIZE - 385.0f);
+        m_Background.back()->SetPosition(198 * BLOCK_SIZE + BACKGROUND_X_OFFSET + diff_x, 23 * BLOCK_SIZE - 395.0f);
         m_Background.back()->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
 
         m_Background.push_back(std::make_shared<BackgroundImage>());
@@ -434,7 +426,7 @@ void PhaseResourceManger::NextPhase(int m_Phase) {
         // [2][3]: flag set
         m_Background.push_back(std::make_shared<BackgroundImage>());
         m_Background[2]->SetImage(RESOURCE_DIR"/Scenery/flag-mast.png");
-        m_Background[2]->SetPosition(152 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 8 * BLOCK_SIZE - 385.0f);
+        m_Background[2]->SetPosition(152 * BLOCK_SIZE + BACKGROUND_X_OFFSET, 8 * BLOCK_SIZE - 395.0f);
         m_Background[2]->SetScale(BLOCK_MAGNIFICATION, BLOCK_MAGNIFICATION);
 
         m_Background.push_back(std::make_shared<BackgroundImage>());

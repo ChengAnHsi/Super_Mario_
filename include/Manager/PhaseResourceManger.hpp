@@ -2,6 +2,7 @@
 #define PHASE_MANGER_HPP
 
 #include "Util/GameObject.hpp"
+#include "Global.hpp"
 #include "TaskText.hpp"
 #include "BackgroundImage.hpp"
 #include "Mario.hpp"
@@ -80,9 +81,9 @@ private:
 
     // image index 0-2: tube
     // tube
-    std::vector<float> tubex_offset = {-310, -313, -313, -313};
-    std::vector<float> tubey_offset = {-350, -375, -400, -375};
-    std::vector<float> tube_magnification = {3.0f, 3.0f, 3.0f, 3.0f};
+    std::vector<float> tubex_offset = {SMALL_TUBE_X_OFFSET, MID_TUBE_X_OFFSET, LARGE_TUBE_X_OFFSET, -313.0f};
+    std::vector<float> tubey_offset = {SMALL_TUBE_Y_OFFSET, MID_TUBE_Y_OFFSET, LARGE_TUBE_Y_OFFSET, -385.0f};
+    std::vector<float> tube_magnification = {SMALL_TUBE_MAGNIFICATION, MID_TUBE_MAGNIFICATION, LARGE_TUBE_MAGNIFICATION, 3.0f};
     // map 1-1 tube
     std::vector<int> collisionboxes_x = {28, 38, 46, 57, 163, 179};
     std::vector<int> collisionboxes_y = {3, 4, 5, 5, 3, 3};

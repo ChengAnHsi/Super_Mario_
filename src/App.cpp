@@ -14,7 +14,7 @@ void App::Start() {
     LOG_TRACE("Start");
     std::vector<std::string> marioImages = {RESOURCE_DIR"/Entities/mario_stand.png"};
     m_Mario = std::make_shared<Mario>(marioImages);
-    m_Mario->SetPosition(-380.0f + 2.5f * BLOCK_SIZE, -232.0f);
+    m_Mario->SetPosition(2.5f * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2.0f * BLOCK_SIZE + BACKGROUND_Y_OFFSET - 2.0f);
     m_Mario->SetZIndex(50);
     m_Mario->SetPlaying(true);
     m_Mario->SetLooping(true);
@@ -88,6 +88,9 @@ void App::Update() {
         // show coins
         m_PRM->SetCoin(m_Mario->GetCoin());
 
+        // show live
+        m_PRM->SetLive(m_Mario->GetLive());
+
         // update all activated props animation
         m_PM->UpdatePropsAnimation();
 
@@ -148,7 +151,7 @@ void App::Update() {
     m_Root.Update({dis,0.0f});
     // if mario drill tube then move the camera
     if(m_Mario->GetTimeToMoveCamera()) {
-        // todo update 1-2 background sky image(blue)
+        // update 1-2 background sky image(blue)
         m_Mario->SetPosition(m_Mario->GetPosition().x, m_Mario->GetPosition().y + 9 * BLOCK_SIZE);
         m_Mario->SetDrill(true);
         m_Mario->SetDrillState(DrillState::Up);

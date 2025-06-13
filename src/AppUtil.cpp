@@ -423,5 +423,5 @@ void App::NextPhase(bool is_nextphase) {
     m_Coin->SetLooping(m_Phase != Phase::Start);
     m_Coin->SetPlaying(m_Phase != Phase::Start);
     m_PRM->SetLive(m_Mario->GetLive());
-    m_Mario->SetPosition(-380.0f + 3.0f * BLOCK_SIZE, -232.0f);
+    m_Mario->SetPosition(2.5f * BLOCK_SIZE + BACKGROUND_X_OFFSET, 2.0f * BLOCK_SIZE + BACKGROUND_Y_OFFSET - 2.0f);
 }
